@@ -408,7 +408,7 @@
         }
     });
 </script>
-{{-- <script>
+<script>
     function updateStatus() {
         let date = new Date();
         let hours = date.getHours();
@@ -442,7 +442,7 @@
 
     setInterval(updateStatus, 60000);
     updateStatus();
-</script> --}}
+</script>
 
 
 <script>

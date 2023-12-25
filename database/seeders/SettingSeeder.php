@@ -25,7 +25,10 @@ class SettingSeeder extends Seeder
             'favicon' => 'favicon.png',
             'login_logo' => 'login-logo.png',
             'darijam' => 18,
-            'sampaijam' => 8,       
+            'sampaijam' => 8,
+            'pesan' => 'Pemesanan Dapat di Akses Melalui Web Resmi Kami, www.khalidr.my.id',
+            'logo_lunas' => 'logo-lunas.png',
+            'logo_blunas' => 'logo-blunas.png',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
