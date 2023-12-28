@@ -32,15 +32,15 @@
 <script src="{{ asset('/') }}assets/plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
 <script src="{{ asset('/') }}assets/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
 <script src="{{ asset('/') }}assets/js/plugins-init/jfsc.js"></script>
-<script src="{{ asset('/') }}assets/pluginsplugins/sweetalert2/sweetalert2.all.min.js"></script>
+<script src="{{ asset('/') }}assets/plugins/sweetalert2/sweetalert2.all.min.js"></script>
 <script src="{{ asset('/') }}assets/js/hitung.js"></script>
 <script src="{{ asset('/') }}assets/js/hitungGaji.js"></script>
 <script src="{{ asset('/') }}assets/js/hitungPengeluaran.js"></script>
 
-{{-- select2 --}}
-{{-- <script src="{{ asset('/') }}assets/plugins/select2/js/select2.full.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script src="{{ asset('/') }}assets/js/transaksi.js"></script>
 
 </body>
 

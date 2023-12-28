@@ -38,6 +38,7 @@
                         <ul aria-expanded="false">
                             <li><a href="{{ url('karyawan') }}">Data Karyawan</a></li>
                             <li><a href="{{ url('gaji-karyawan') }}">Gaji Karyawan</a></li>
+                            <li><a href="{{ url('gaji-karyawanv2') }}">Gaji Karyawan V2</a></li>
                         </ul>
                     </li>
                     <li class="nav-label">Keuangan</li>

@@ -62,7 +62,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-search"></i></span>
                             </div>
-                            <form method="POST" action="{{ url('orderan') }}" id="searchForm">
+                            <form method="get" action="{{ url('orderan') }}" id="searchForm">
                                 @csrf
                                 <input type="text" class="form-control" name="searchdata" id="searchInput"
                                     placeholder="Search..." />
@@ -81,7 +81,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="alert alert-info pesanoff mt-2"></div>
+                        <div id="pesanoff"></div>
                         <div class="pesan mt-2">
                             @if (session('msg'))
                                 <div class="alert alert-primary alert-dismissible fade show">
@@ -129,7 +129,8 @@
                                                         class="fa fa-search"></i> {{ $item->notrx }}</a>
                                             </td>
                                             <td>{{ $item->pelanggans->nama }}</td>
-                                            <td>{{ $item->formatted_date }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('l, d F Y') }}
+                                            </td>
                                             <td>{{ $item->name_kasir }}</td>
                                             <td>{{ number_format($item->subtotal, 0, ',', '.') }}</td>
                                             <td>{{ number_format($item->uangmuka, 0, ',', '.') }}</td>
@@ -184,6 +185,13 @@
                                             </td>
                                         </tr>
                                     @endforeach
+                                    @if ($dataOrderan->count() == 0)
+                                        <tr>
+                                            <td colspan="10" class="text-center">
+                                                <h5>Tidak Ada Data</h5>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-start">
@@ -408,32 +416,26 @@
         }
     });
 </script>
-<script>
+{{-- <script>
     function updateStatus() {
         let date = new Date();
         let hours = date.getHours();
         let minutes = date.getMinutes();
         let tombol = document.getElementById('tambahT');
-        let pesan = document.querySelector('.pesanoff');
+        let pesan = document.querySelector('#pesanoff');
 
         let darijam = parseInt("{{ $jamTransaksi->darijam }}");
         let sampaijam = parseInt("{{ $jamTransaksi->sampaijam }}");
 
         if ((hours === darijam && minutes >= 55) || (hours === darijam - 1 && minutes >= 55)) {
-            pesan.textContent = 'Pemesanan akan ditutup 5 menit lagi.';
+            pesan.innerHTML = '<div class="alert alert-info mt-2">Pemesanan akan ditutup 5 menit lagi.</div>';
         } else if (hours >= darijam || hours < sampaijam) {
             tombol.disabled = true;
-            pesan.textContent = 'Pemesanan sudah ditutup, Akan Buka Kembali Pada Pukul 08:00 WIB';
+            pesan.innerHTML =
+                '<div class="alert alert-info mt-2">Pemesanan sudah ditutup, Akan Buka Kembali Pada Pukul 08:00 WIB</div>';
         } else {
             pesan.style.display = 'none';
         }
-        // else {
-        //     if (!tombol.hasAttribute('disabled')) {
-        //         alert('Anda tidak diizinkan untuk mengakses ini. Sistem telah mendeteksi manipulasi.');
-        //     }
-        //     tombol.disabled = false;
-        //     pesan.style.display = 'none';
-        // }
     }
 
     document.getElementById('tambahT').addEventListener('click', function() {
@@ -442,7 +444,7 @@
 
     setInterval(updateStatus, 60000);
     updateStatus();
-</script>
+</script> --}}
 
 
 <script>
@@ -465,15 +467,46 @@
         window.location = "{{ url('orderan') }}";
     });
 </script>
-<!-- Add this script at the end of your HTML body or in a separate JS file -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var searchInput = document.getElementById('searchInput');
         var searchForm = document.getElementById('searchForm');
 
         searchInput.addEventListener('input', function() {
-            // Automatically submit the form on input change
             searchForm.submit();
         });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        function updateSimpanButtonState() {
+            var dpInput = document.getElementById('dp');
+            var bayarDpSelect = document.getElementById('bayarDpSelect');
+            var submitButton = document.getElementById('submitBtn');
+            var pesan = document.getElementById('pesanMetode');
+
+            if (dpInput.value && bayarDpSelect.value === "") {
+                submitButton.disabled = true;
+                $('#pesanMetode').append(
+                    '<div class="alert alert-danger text-center" role="alert">Silakan pilih metode pembayaran dulu.</div>'
+                );
+
+
+                // Swal.fire({
+                //     icon: 'warning',
+                //     title: 'Oops...',
+                //     text: 'Silakan pilih metode pembayaran dulu.',
+                // });
+
+
+            } else {
+                submitButton.disabled = false;
+                $('#pesanMetode').empty();
+            }
+        }
+
+        // Attach the event listeners
+        $('#dp, #bayarDpSelect').on('change', updateSimpanButtonState);
+        $('#bayarDpModal').on('shown.bs.modal', updateSimpanButtonState);
     });
 </script>

@@ -14,17 +14,6 @@
 
                 </div>
                 <div class="modal-body">
-                    {{-- <div class="col">
-                        <input type="text" class="form-control" id="pemesan" readonly>
-                    </div>
-                    <div class="col mt-3">
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target="#pelangganModal">
-                            <i class="fa fa-plus"></i> Cari Pelanggan
-                        </button>
-                    </div> --}}
-
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card shadow-none row">
@@ -106,61 +95,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-md-4">
-                                            <div class="form-group mb-1">
-                                                <div class="input-group">
-                                                    <span class="input-group-prepend col-3 ml-0 mr-0 pl-0 pr-0">
-                                                        <span class="input-group-text col-12">Pajak</span>
-                                                    </span>
-                                                    <input type="text" class="form-control text-center w-15"
-                                                        id="pajaksum" value="" readonly="readonly">
-                                                    <span class="input-group-prepend">
-                                                        <span class="input-group-text">Total Order</span>
-                                                    </span>
-                                                    <input type="text" class="form-control text-right w-30"
-                                                        id="totalSum" name="totalSum" readonly="readonly"
-                                                        aria-describedby="sizing-addon1">
-                                                    <input type="hidden" class="form-control text-right w-30"
-                                                        id="sum_total_order" name="sum_total_order"
-                                                        readonly="readonly" aria-describedby="sizing-addon1">
-                                                </div>
-                                            </div>
-                                            <div class="form-group mb-1">
-                                                <div class="input-group">
-                                                    <span class="input-group-prepend col-3 ml-0 mr-0 pl-0 pr-0">
-                                                        <span class="input-group-text col-12">Total Bayar</span>
-                                                    </span>
-                                                    <input type="text"
-                                                        class="form-control text-right margin-5 w-25" id="uangmuka"
-                                                        value="" readonly="readonly">
-                                                    <span class="input-group-prepend  title_diskon">
-                                                        <span class="input-group-text border-success bg-success"
-                                                            id="title_diskon">Diskon</span>
-                                                    </span>
-                                                    <input type="text"
-                                                        class="form-control text-right margin-5 w-30 title_diskon"
-                                                        id="potongan_harga_diskon" readonly="readonly">
-                                                    <input type="hidden" class="form-control text-right margin-5"
-                                                        id="potongan_harga" value="" readonly="readonly">
-                                                </div>
-                                            </div>
-                                            <div class="form-group mb-1">
-                                                <div class="input-group">
-                                                    <span class="input-group-prepend col-3 ml-0 mr-0 pl-0 pr-0">
-                                                        <span
-                                                            class="input-group-text border-danger bg-danger  col-12">Piutang</span>
-                                                    </span>
-                                                    <input type="text" class="form-control text-right margin-5"
-                                                        id="sisaSum" value="0" readonly="readonly">
-
-                                                </div>
-                                            </div>
-                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div id="pesanMetode"></div>
                     <hr class="my-0">
                     <div class="row d-flex justify-content-end mt-2">
                         <div class="col-1">
@@ -210,7 +150,7 @@
                         <div class="modal-footer">
                             <div class="col">
                                 <label for="">Uang Muka</label>
-                                <input type="text" class="form-control uangmuka" name="uangmuka">
+                                <input type="text" class="form-control uangmuka" name="uangmuka" id="dp">
                             </div>
                             <div class="col">
                                 <label for="">Sub Total</label>
@@ -223,14 +163,37 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Simpan</button>
+                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                data-target="#bayarDpModal">Bayar</button>
                         </div>
-                    </form>
-                    <p class="text-info"><i>*Silakah simpan untuk melakukan pelunasan</i></p>
-                    <p class="text-warning"><i>*Jika ada uang muka silahkan simpan</i></p>
+                        <p class="text-info"><i>*Silakah simpan untuk melakukan pelunasan</i></p>
+                        <p class="text-warning"><i>*Jika ada uang muka silahkan klik bayar</i></p>
                 </div>
             </div>
         </div>
+
+        {{-- Modal Bayar DP --}}
+        <div class="modal fade" id="bayarDpModal" tabindex="-1" aria-labelledby="bayarDpLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bayarDpLabel">Metode Pembayaran</h5>
+                    </div>
+                    <div class="modal-body">
+                        <select name="bayarDp" class="form-control" id="bayarDpSelect">
+                            <option value="">Pilih Metode</option>
+                            @foreach ($rekening as $item)
+                                <option value="{{ $item->bank }}">{{ $item->bank }}</option>
+                            @endforeach
+                            <option value="tunai">Tunai</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+
     </div>
 
     {{-- Modal DATATransaksi --}}

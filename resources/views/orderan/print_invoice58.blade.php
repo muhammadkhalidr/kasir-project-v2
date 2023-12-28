@@ -241,12 +241,12 @@
             margin: 0 auto
         }
     </style>
-    {{-- <script type="text/javascript">
+    <script type="text/javascript">
         window.print();
         window.onfocus = function() {
             window.close();
         }
-    </script> --}}
+    </script>
 </head>
 
 <body>

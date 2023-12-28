@@ -32,11 +32,6 @@ class OrderanController extends Controller
         $dataPelunasan = PelunasanOrderan::all();
         $jamTransaksi = Setting::select('darijam', 'sampaijam')->first();
 
-        $formatTgl = $dataOrderan->get()->map(function ($dataOrderan) {
-            $dataOrderan->formatted_date = Carbon::parse($dataOrderan->created_at)->isoFormat('dddd, DD/MM/YYYY');
-            return $dataOrderan;
-        });
-
         // Apply date filter
         if ($request->has('start_date') && $request->has('end_date')) {
             $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
@@ -107,7 +102,6 @@ class OrderanController extends Controller
             'pelunasan' => $dataPelunasan,
             'dataKasir' => $dataKasir,
             'jamTransaksi' => $jamTransaksi,
-            'fortmatTgl' => $formatTgl,
             'perPageOptions' => [10, 15, 25, 100],
         ]);
     }
@@ -134,6 +128,7 @@ class OrderanController extends Controller
         return $this->index($request);
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
@@ -144,7 +139,7 @@ class OrderanController extends Controller
 
         $noTrx = DetailOrderan::latest('id')->first();
 
-        $pelanggan = Pelanggan::where('nama', $data['namapemesan'])->first();
+        // $pelanggan = Pelanggan::where('nama', $data['namapemesan'])->first();
 
         $idTransaksiBaru = 0;
         $idTransaksiBaru++;
@@ -180,7 +175,6 @@ class OrderanController extends Controller
                 'name_kasir' => $data['namakasir']
             ]);
 
-            // dd($data);
 
             // Tambahkan notrx ke dalam array processedNotrx
             $processedNotrx[] = $data['notrx'][$key];
@@ -193,12 +187,14 @@ class OrderanController extends Controller
                 $kasMasuk->id_generate = $notrx;
                 $kasMasuk->keterangan = "Pemasukan dari invoice# " . $notrx;
                 $kasMasuk->name_kasir = $user->name;
+                $kasMasuk->bank = $data['bayarDp'];
 
                 if ($data['sisa'] == 0) {
                     $kasMasuk->pemasukan = $data['subtotal'];
                 } else {
                     $kasMasuk->pemasukan = $data['uangmuka'];
                 }
+
 
                 $kasMasuk->save();
             }
@@ -228,7 +224,6 @@ class OrderanController extends Controller
 
         return redirect()->back()->with('success', 'Data Berhasil Ditambahkan!');
     }
-
 
     public function pelunasan(Request $request)
     {

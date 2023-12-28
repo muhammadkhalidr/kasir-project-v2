@@ -15,6 +15,7 @@ use App\Http\Controllers\CetakLaporanController;
 use App\Http\Controllers\CetakLaporanGajiController;
 use App\Http\Controllers\CetakLaporanPembelianController;
 use App\Http\Controllers\GajiKaryawanController;
+use App\Http\Controllers\GajiKaryawanV2Controller;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\LogTranasksiController;
@@ -64,6 +65,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('gajikaryawan', GajiKaryawanController::class);
         Route::get('/gaji-karyawan', [GajiKaryawanController::class, 'index']);
         Route::get('/tambah-gaji', [GajiKaryawanController::class, 'tambahGaji']);
+
+        // Gaji Karyawan V2
+        Route::get('/gaji-karyawanv2', [GajiKaryawanV2Controller::class, 'index']);
 
         // Untuk Orderan
         Route::resource('orderan', OrderanController::class);
@@ -147,8 +151,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/orderan-baru', [OrderanController::class, 'tambahOrderan']);
         Route::post('/orderan.pelunasan', [OrderanController::class, 'pelunasan'])->name('orderan.pelunasan');
         Route::post('/orderan/tambahPelanggan', [OrderanController::class, 'tambahPelanggan'])->name('orderan.tambahPelanggan');
-        Route::post('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
-
+        Route::get('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
 
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
