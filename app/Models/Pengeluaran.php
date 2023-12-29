@@ -9,19 +9,10 @@ class Pengeluaran extends Model
 {
     use HasFactory;
 
-    protected $pengeluarans;
-    protected $primaryKey = 'id_pengeluaran';
 
-    protected $fillable = [
-        'id_pengeluaran',
-        'id_generate',
-        'keterangan',
-        'jumlah',
-        'harga',
-        'total',
-        'created_at',
-        'updated_at',
-    ];
+    protected $guarded = ['id'];
+
+    protected $table = 'pengeluarans';
 
     public $incrementing = false;
     public $timestamps = true;
@@ -29,5 +20,20 @@ class Pengeluaran extends Model
     public function kasMasuk()
     {
         return $this->hasOne(KasMasuk::class, 'id_generate', 'total');
+    }
+
+    public function jenisp()
+    {
+        return $this->belongsTo(JenisPengeluaran::class, 'id_jenis', 'id_jenis');
+    }
+
+    public function karyawans()
+    {
+        return $this->belongsTo(Karyawan::class, 'id_karyawan',);
+    }
+
+    public function gajikaryawans()
+    {
+        return $this->hasMany(GajiKaryawanV2::class, 'id_karyawan',);
     }
 }

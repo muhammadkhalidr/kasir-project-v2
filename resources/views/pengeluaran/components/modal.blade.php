@@ -21,6 +21,25 @@
                                     <input type="text" class="form-control nomorp" name="nopengeluaran[]">
                                 </div>
                                 <div class="col">
+                                    <label for="">Jenis Pengeluaran</label>
+                                    <select class="form-control" name="jenispengeluaran[]" id="jenispengeluaran">
+                                        <option value="">Pilih Jenis</option>
+                                        @foreach ($dataJenis as $item)
+                                            <option value="{{ $item->id_jenis }}">{{ $item->nama_jenis }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col" id="karyawan">
+                                    <label for="">Karyawan</label>
+                                    <select class="form-control" name="karyawan[]" id="karyawanSelect">
+                                        @foreach ($dataKaryawan as $item)
+                                            <option value="{{ $item->id_karyawan }}">{{ $item->nama_karyawan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col">
                                     <label for="">Keterangan</label>
                                     <input type="text" class="form-control keterangan" name="keterangan[]">
                                 </div>
@@ -51,8 +70,6 @@
                         </div>
 
                         <div class="modal-footer">
-                            {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
-                            {{-- <button type="submit" class="btn btn-primary">Simpan</button> --}}
                             <p class="btn btn-danger" data-toggle="modal" data-target="#bayarPengeluaran">Bayar</p>
                         </div>
 

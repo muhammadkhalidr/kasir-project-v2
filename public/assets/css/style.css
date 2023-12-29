@@ -14758,7 +14758,10 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
       overflow-y: auto;
   }
 
-
+.input-group-text{
+  background-color: #8e0000;
+  color: white;
+}
 
     
 /*# sourceMappingURL=style.css.map */

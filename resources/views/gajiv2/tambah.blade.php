@@ -22,14 +22,14 @@
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title mb-4"> <i class="fa fa-arrow-left"
-                                onclick="window.location='{{ url('gajikaryawan') }}'" style="cursor: pointer"></i>
+                                onclick="window.location='{{ url('gajikaryawanv2') }}'" style="cursor: pointer"></i>
                             Gaji Karyawan</h2>
-                        <div class="settings">
+                        {{-- <div class="settings">
                             <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#settingHargaKerja"><i class="fa fa-cog"></i></button>
-                        </div>
+                        </div> --}}
                         <div class="form-validation">
-                            <form class="form-valide" action="{{ url('gajikaryawan') }}" method="POST">
+                            <form class="form-valide" action="{{ url('gajikaryawanv2') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="txtid">
                                 <div class="form-group row">
@@ -38,19 +38,19 @@
                                     </label>
 
                                     <div class="col-lg-6">
-                                        <select name="txtnama" id="txtnama"
-                                            class="form-control @error('txtnama')
+                                        <select name="txtidkaryawan" id="txtidkaryawan"
+                                            class="form-control @error('txtidkaryawan')
                                         is-invalid
                                         @enderror">
-                                            <option value="" selected>Pilih Karyawan</option>
+                                            <option value="" selected>Pilih Karyawanss</option>
                                             @foreach ($karyawans as $n)
-                                                <option value="{{ $n->nama_karyawan }}"
-                                                    {{ old('txtnama') == $n->nama_karyawan ? 'selected' : '' }}>
+                                                <option value="{{ $n->id_karyawan }}"
+                                                    {{ old('txtidkaryawan') == $n->nama_karyawan ? 'selected' : '' }}>
                                                     {{ $n->nama_karyawan }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('txtnama')
+                                        @error('txtidkaryawan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -59,17 +59,16 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for="txtjumlahkerja">Jumlah Kerja<span
+                                    <label class="col-lg-4 col-form-label" for="txtjumlahgaji">Jumlah Gaji<span
                                             class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-6">
                                         <input type="text"
-                                            class="form-control @error('txtjumlahkerja')
+                                            class="form-control @error('txtjumlahgaji')
                                         is-invalid
                                         @enderror"
-                                            id="txtjumlahkerja" name="txtjumlahkerja"
-                                            value="{{ old('txtjumlahkerja') }}">
-                                        @error('txtjumlahkerja')
+                                            id="txtjumlahgaji" name="txtjumlahgaji" value="{{ old('txtjumlahgaji') }}">
+                                        @error('txtjumlahgaji')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -78,7 +77,7 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for="txtpersen">Persen Gaji<span
+                                    <label class="col-lg-4 col-form-label" for="txtpersen">% Bonus<span
                                             class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-6">
@@ -96,16 +95,16 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for="txtgaji">Jumlah Gaji<span
+                                    <label class="col-lg-4 col-form-label" for="txtbonus">Jumlah Bonus<span
                                             class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-6">
                                         <input type="text"
-                                            class="form-control @error('txtgaji')
+                                            class="form-control @error('txtbonus')
                                         is-invalid
                                         @enderror"
-                                            id="txtgaji" name="txtgaji" value="{{ old('txtgaji') }}">
-                                        @error('txtgaji')
+                                            id="txtbonus" name="txtbonus" value="{{ old('txtbonus') }}">
+                                        @error('txtbonus')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -127,7 +126,7 @@
     </div>
     <!-- #/ container -->
     {{-- Modal --}}
-    <div class="modal fade" id="settingHargaKerja">
+    {{-- <div class="modal fade" id="settingHargaKerja">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -144,10 +143,30 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </div>
+
 <!--**********************************
             Content body end
         ***********************************-->
 @include('partials.footer')
+
+<script>
+    // Function to calculate bonus based on percentage and salary
+    function calculateBonus() {
+        // Get input values
+        var jumlahGaji = parseFloat(document.getElementById('txtjumlahgaji').value) || 0;
+        var persenBonus = parseFloat(document.getElementById('txtpersen').value) || 0;
+
+        // Calculate bonus
+        var bonus = Math.round((jumlahGaji * persenBonus) / 100);
+
+        // Display bonus in the 'txtbonus' input field
+        document.getElementById('txtbonus').value = bonus;
+    }
+
+    // Attach the function to the 'blur' event of 'txtjumlahgaji' and 'txtpersen'
+    document.getElementById('txtjumlahgaji').addEventListener('blur', calculateBonus);
+    document.getElementById('txtpersen').addEventListener('blur', calculateBonus);
+</script>

@@ -22,7 +22,7 @@ class StoreKaryawanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'txtid' => 'required|unique:karyawans,id_karyawan|min:7|max:7',
+            'txtid' => 'required|unique:karyawans,id_karyawan|min:7|max:9',
             'txtnama' => 'required',
             'txtalamat' => 'required',
             'txtphone' => 'required|numeric',
@@ -53,6 +53,7 @@ class StoreKaryawanRequest extends FormRequest
             'txtalamat' => 'Alamat',
             'txtemail' => 'Email',
             'txtphone' => 'No Hp',
+            'txtfoto' => 'Gambar',
         ];
     }
 }

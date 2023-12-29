@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Karyawan;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +17,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingSeeder::class);
         $this->call(RekeningSeeder::class);
         $this->call(PelangganSeeder::class);
+        $this->call(JenisPengeluaranSeeder::class);
+        $this->call(KaryawanSeeder::class);
 
         // Jika Anda juga ingin menjalankan factory atau seeder bawaan Laravel, Anda dapat mengaktifkannya di sini.
         // \App\Models\User::factory(10)->create();

@@ -40,7 +40,7 @@
                             @endif
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered zero-configuration">
+                            <table class="table table-striped table-bordered">
                                 <thead>
                                     <th>Data</th>
                                 </thead>
@@ -61,6 +61,7 @@
                                                             <th></th>
                                                             <th></th>
                                                             <th></th>
+                                                            <th></th>
                                                         </tr>
                                                     </thead>
                                                     <thead class="thead-primary">
@@ -71,6 +72,7 @@
                                                             </th>
                                                             <th class="text-center">Harga</th>
                                                             <th class="text-right">Nominal</th>
+                                                            <th class="text-right">Jenis</th>
                                                             <th class="text-right">Tanggal</th>
                                                             <th class="w-10 text-right">Aksi</th>
                                                         </tr>
@@ -89,15 +91,16 @@
                                                                     {{ number_format($pengeluaran->harga, 0, ',', '.') }}
                                                                 </td>
                                                                 <td class="text-right">Rp.
-                                                                    {{ number_format($pengeluaran->pengeluaran, 0, ',', '.') }}
+                                                                    {{ number_format($pengeluaran->total, 0, ',', '.') }}
                                                                 </td>
+                                                                <td>{{ $pengeluaran->jenisp->nama_jenis ?? 's' }}</td>
                                                                 <td class="text-right">
                                                                     {{ $pengeluaran->formatted_date }}</td>
 
                                                                 <td class="text-right">
                                                                     @if ($firstRow)
                                                                         <form method="POST"
-                                                                            action="{{ 'pengeluaran/' . $pengeluaran->id_pengeluaran }}"
+                                                                            action="{{ 'pengeluaran/' . $pengeluaran->id }}"
                                                                             style="display: inline">
                                                                             @csrf
                                                                             @method('DELETE')
@@ -108,7 +111,7 @@
                                                                             </button>
                                                                         </form>
 
-                                                                        <a href="{{ route('cetak.print_invoice', $pengeluaran->id_pengeluaran) }}"
+                                                                        <a href="{{ route('cetak.print_invoice', $pengeluaran->id) }}"
                                                                             class="btn btn-sm btn-primary mb-1"
                                                                             title="Print Invoice" target="_blank">
                                                                             <i class="fa fa-print"></i>
@@ -122,7 +125,9 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td></td>
+                                                            <td class="text-center"></td>
+                                                            <td class="text-center"></td>
+                                                            <td class="text-center"></td>
                                                             <td class="text-right">
                                                                 <b><i>Total</i></b>
                                                             </td>
@@ -131,7 +136,6 @@
                                                                 Rp.
                                                                 {{ number_format($totals[$id_pengeluaran], 0, ',', '.') }}
                                                             </td>
-                                                            <td class="text-center"></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -147,7 +151,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-
+                            {{ $datas->links() }}
                         </div>
                     </div>
                 </div>
@@ -246,5 +250,55 @@
 
             $(this).closest(".row").find(".total").val(total);
         });
+    });
+</script>
+{{-- <script>
+    // Fungsi untuk menangani perubahan pada dropdown Jenis Pengeluaran
+    function handleJenisPengeluaranChange() {
+        var jenisPengeluaran = document.getElementById("jenispengeluaran").value;
+        var karyawanInput = document.getElementById("karyawan");
+
+        // Jika Jenis Pengeluaran bukan kasbon karyawan, sembunyikan input Karyawan
+        if (jenisPengeluaran !== "Kasbon Karyawan") {
+            karyawanInput.style.display = "none"; // Sembunyikan input Karyawan
+        } else {
+            karyawanInput.style.display = "block"; // Tampilkan kembali input Karyawan
+        }
+    }
+
+    // Tambahkan event listener untuk memanggil fungsi saat dropdown Jenis Pengeluaran berubah
+    document.getElementById("jenispengeluaran").addEventListener("change", handleJenisPengeluaranChange);
+
+    // Fungsi untuk menampilkan atau menyembunyikan input Karyawan berdasarkan nilai awal
+    handleJenisPengeluaranChange();
+</script> --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initial check on page load
+        toggleKaryawanVisibility();
+
+        // Add change event listener to the "Jenis Pengeluaran" select
+        document.getElementById("jenispengeluaran").addEventListener("change", function() {
+            toggleKaryawanVisibility();
+        });
+
+        function toggleKaryawanVisibility() {
+            // Get the selected option value
+            var selectedJenis = document.getElementById("jenispengeluaran").value;
+
+            // Get the "Karyawan" select element
+            var karyawanSelect = document.getElementById("karyawanSelect");
+
+            // Check if the selected value is not equal to 101
+            if (selectedJenis !== "101") {
+                // Hide the "Karyawan" div and disable the select element
+                document.getElementById("karyawan").style.display = "none";
+                karyawanSelect.disabled = true;
+            } else {
+                // Show the "Karyawan" div and enable the select element
+                document.getElementById("karyawan").style.display = "block";
+                karyawanSelect.disabled = false;
+            }
+        }
     });
 </script>

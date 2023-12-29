@@ -67,8 +67,6 @@
                                 <input type="text" class="form-control" name="searchdata" id="searchInput"
                                     placeholder="Search..." />
                             </form>
-
-
                             <button class="btn btn-danger ml-2" id="clear">Clear</button>
                         </div>
                     </div>

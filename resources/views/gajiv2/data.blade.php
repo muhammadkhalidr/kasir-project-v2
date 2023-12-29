@@ -17,20 +17,69 @@
     <!-- row -->
 
     <div class="container-fluid">
+        <h4 class="card-title">Data Gaji Karyawan & Kas Bon</h4>
+        <div class="card">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-header pb-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend mr-2">
+                                @if (auth()->check())
+                                    @if (auth()->user()->level == 1)
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="window.location='{{ url('tambah-gajiv2') }}'">
+                                            <i class="fa fa-plus-circle"></i> Tambah Data Baru
+                                        </button>
+                                    @elseif (auth()->user()->level == 2)
+                                    @endif
+                                @endif
+                            </div>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">PERIODE</span>
+                            </div>
+                            <form method="POST" action="{{ route('gajikaryawanv2.cariKasbon') }}" id="searchFormDate">
+                                @csrf
+                                <input type="hidden" name="start_date" id="start_date" />
+                                <input type="hidden" name="end_date" id="end_date" />
+                                <input type="text" class="form-control w-10" name="daterange" />
+                            </form>
+                            <div class="input-group-prepend ml-2">
+                                <span class="input-group-text">Limit</span>
+                            </div>
+                            <form method="get" action="{{ route('gajikaryawanv2.filterJumlah') }}">
+                                @csrf
+                                <div class="input-group-prepend mr-2">
+                                    <select class="form-control" id="dataOptions" name="dataOptions"
+                                        onchange="this.form.submit()">
+                                        @foreach ($perPageOptions as $option)
+                                            <option
+                                                value="{{ $option }}"{{ $datas->perPage() == $option ? 'selected' : '' }}>
+                                                {{ $option }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                            <form method="GET" action="{{ route('gajikaryawanv2.cari') }}" id="searchForm">
+                                @csrf
+                                <input type="text" class="form-control w-full" name="searchdata" id="searchInput"
+                                    placeholder="Search..." />
+                            </form>
+                            <div class="input-group-append">
+                                <button type="submit" data-info="cari" class="btn btn-success caridata"
+                                    data-id="0"><i class="fa fa-search"></i> Cari</button>
+                                <button class="btn btn-info print_pdf_piutang" data-url="piutang" type="button"
+                                    data-toggle="tooltip" data-original-title="Cetak KasBon" data-placement="left"><i
+                                        class="fa fa-file-pdf-o"></i> Print</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Data Karyawan</h4>
-                        @if (auth()->check())
-                            @if (auth()->user()->level == 1)
-                                <button type="button" class="btn btn-primary"
-                                    onclick="window.location='{{ url('tambah-gaji') }}'">
-                                    <i class="fa fa-plus-circle"></i> Tambah Data Baru
-                                </button>
-                            @elseif (auth()->user()->level == 2)
-                            @endif
-                        @endif
                         <div class="pesan mt-2">
                             @if (session('msg'))
                                 <div class="alert alert-primary alert-dismissible fade show">
@@ -41,51 +90,54 @@
                             @endif
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered zero-configuration">
+                            <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Karywan</th>
                                         <th>Jumlah Gaji</th>
-                                        <th>Jumlah Kerja</th>
-                                        <th>Persen Gaji</th>
-                                        <th>Aksi</th>
+                                        <th>% Bonus</th>
+                                        <th>Bonus</th>
+                                        <th>Kas Bon</th>
+                                        <th>Sisa Gaji</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @isset($gajikaryawans)
-                                        @foreach ($gajikaryawans as $gaji)
+                                    @isset($datas)
+                                        @foreach ($datas as $gaji)
                                             <tr>
                                                 <th>{{ $loop->iteration }}</th>
-                                                <th>{{ $gaji->nama_karyawan }}</th>
+                                                <th>{{ $gaji->karyawans->nama_karyawan }}</th>
                                                 <th>Rp. {{ number_format($gaji->jumlah_gaji, 0, ',', '.') }}</th>
-                                                <th>{{ $gaji->jumlah_kerja }}</th>
-                                                <th>{{ $gaji->persen_gaji }} %</th>
-                                                @if (auth()->check())
-                                                    @if (auth()->user()->level == 1)
-                                                        <th>
-                                                            <form method="POST"
-                                                                action="{{ 'gajikaryawan/' . $gaji->id_gaji }}"
-                                                                style="display: inline">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" title="Hapus Data"
-                                                                    class="btn btn-sm btn-danger"
-                                                                    onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                                                    <i class="fa fa-trash"></i> Hapus
-                                                                </button>
-                                                            </form>
-                                                        </th>
-                                                    @elseif (auth()->user()->level == 2)
-                                                        <th><button class="btn btn-sm btn-warning" title="Tidak Ada Akses">
-                                                                <i class="fa fa-exclamation-triangle"></i> </button></th>
-                                                    @endif
-                                                @endif
+                                                <th>{{ $gaji->persen_bonus ?? '0' }} %</th>
+                                                <th>Rp.{{ number_format($gaji->bonus, 0, ',', '.') }}</th>
+
+                                                {{-- Display Total Kasbon --}}
+                                                @php
+                                                    $idKaryawan = $gaji->karyawans->id_karyawan;
+                                                    $totalKasbon = $totalKasBon->where('id_karyawan', $idKaryawan)->first();
+                                                @endphp
+
+                                                <th>Rp.
+                                                    {{ isset($totalKasbon) ? number_format($totalKasbon->total_nominal, 0, ',', '.') : '0' }}
+                                                </th>
+
+                                                <th>Rp. {{ number_format($gaji->sisa_gaji, 0, ',', '.') }}</th>
                                             </tr>
                                         @endforeach
                                     @endisset
+                                    @if ($datas->count() == 0)
+                                        <tr>
+                                            <td colspan="10" class="text-center">
+                                                <h5>Tidak Ada Data</h5>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
+                            <div class="d-flex justify-content-end">
+                                {{ $datas->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,3 +150,27 @@
             Content body end
         ***********************************-->
 @include('partials.footer')
+<script>
+    $(function() {
+        var startDate;
+        var endDate;
+
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            $('#start_date').val(start.format('YYYY-MM-DD'));
+            $('#end_date').val(end.format('YYYY-MM-DD'));
+            $('#searchFormDate').submit();
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchInput = document.getElementById('searchInput');
+        var searchForm = document.getElementById('searchForm');
+        var btn = document.querySelector('.caridata');
+
+        btn.addEventListener('click', function() {
+            searchForm.submit();
+        });
+    });
+</script>

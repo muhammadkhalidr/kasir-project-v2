@@ -6,6 +6,10 @@ use App\Models\Pengeluaran;
 use App\Http\Requests\StorePengeluaranRequest;
 use App\Http\Requests\UpdatePengeluaranRequest;
 use App\Models\DetailPengeluaran;
+use App\Models\GajiKaryawanV2;
+use App\Models\JenisPengeluaran;
+use App\Models\Karyawan;
+use App\Models\Kasbon;
 use App\Models\KasMasuk;
 use App\Models\Rekening;
 use App\Models\setting;
@@ -24,15 +28,15 @@ class PengeluaranController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $pengeluarans = Pengeluaran::join('kas_masuks', 'pengeluarans.total', '=', 'kas_masuks.pengeluaran')
-            ->select('pengeluarans.id_pengeluaran', 'pengeluarans.keterangan', 'pengeluarans.jumlah', 'pengeluarans.harga', 'kas_masuks.pengeluaran', 'kas_masuks.id', 'kas_masuks.created_at',)
-            ->get();
+        $perPage = 10;
+        $pengeluarans = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans'])
+            ->orderBy('id_pengeluaran', 'desc')
+            ->paginate($perPage);
 
-        // dd($pengeluarans);
         $groupedPengeluarans = $pengeluarans->sortByDesc('id_pengeluaran')->groupBy('id_pengeluaran');
 
         $totals = $groupedPengeluarans->map(function ($group) {
-            return $group->sum('pengeluaran');
+            return $group->sum('total');
         });
 
         $formattedPengeluarans = $pengeluarans->map(function ($pengeluaran) {
@@ -42,6 +46,10 @@ class PengeluaranController extends Controller
 
         $bank = Rekening::select('bank')->pluck('bank')->toArray();
 
+
+        $dataJenis = JenisPengeluaran::all();
+        $dataKaryawan = Karyawan::all();
+
         return view('pengeluaran.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pengeluaran',
             'breadcrumb' => 'Pengeluaran',
@@ -50,11 +58,11 @@ class PengeluaranController extends Controller
             'totals' => $totals,
             'formattedPengeluarans' => $formattedPengeluarans,
             'bank' => $bank,
+            'dataJenis' => $dataJenis,
+            'dataKaryawan' => $dataKaryawan,
+            'datas' => $pengeluarans
         ]);
     }
-
-
-
 
     public function tambahPengeluaran()
     {
@@ -68,7 +76,6 @@ class PengeluaranController extends Controller
             'nomorSelanjutnya' => $nomorSelanjutnya,
         ]);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -102,9 +109,8 @@ class PengeluaranController extends Controller
         }
 
         $data = $request->all();
-        // dd($data);
         foreach ($data['nopengeluaran'] as $key => $value) {
-
+            $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
             Pengeluaran::create([
                 'id_pengeluaran' => $value,
                 'id_generate' => $idBaru,
@@ -112,20 +118,26 @@ class PengeluaranController extends Controller
                 'jumlah' => $data['jumlah'][$key],
                 'harga' => $data['harga'][$key],
                 'total' => $data['total'][$key],
+                'id_jenis' => $data['jenispengeluaran'][$key],
+                'id_karyawan' => $karyawanId,
             ]);
-
-            // dd($data);
-
-            $kasMasuk = new KasMasuk;
-            $kasMasuk->id_generate = $idBaru;
-            $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ' . $data['metode']);
-            $kasMasuk->name_kasir = $user->name;
-            $kasMasuk->pengeluaran = $data['total'][$key];
-            $kasMasuk->bank = $data['metode'];
-
-            $kasMasuk->save();
         }
 
+        // Buat data kas bon
+        $kasBon = new Kasbon;
+        $kasBon->id_karyawan = $data['karyawan'][$key];
+        $kasBon->nominal = $data['total'][$key];
+        $kasBon->save();
+
+
+        // Buat data kas masuk
+        $kasMasuk = new KasMasuk;
+        $kasMasuk->id_generate = $idBaru;
+        $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ' . $data['metode']);
+        $kasMasuk->name_kasir = $user->name;
+        $kasMasuk->pengeluaran = $data['total'][$key];
+        $kasMasuk->bank = $data['metode'];
+        $kasMasuk->save();
 
         return redirect('pengeluaran')->with('msg', 'Data Berhasil Ditambahkan!');
     }
@@ -159,9 +171,9 @@ class PengeluaranController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id_generate)
+    public function destroy($id)
     {
-        $pengeluaran = Pengeluaran::findOrFail($id_generate);
+        $pengeluaran = Pengeluaran::findOrFail($id);
         $kasMasuk = KasMasuk::where('id_generate', $pengeluaran->id_generate)->get();
         $pengeluaran->delete();
 
@@ -172,9 +184,9 @@ class PengeluaranController extends Controller
         return redirect('pengeluaran')->with('msg', 'Data Berhasil Dihapus!');
     }
 
-    public function printInvoice($id_pengeluaran)
+    public function printInvoice($id)
     {
-        $cetaks = Pengeluaran::find($id_pengeluaran);
+        $cetaks = Pengeluaran::find($id);
 
         if (!$cetaks) {
             return response()->json(['error' => 'Record not found.'], 404);
@@ -182,7 +194,7 @@ class PengeluaranController extends Controller
 
         $pengeluarans = Pengeluaran::join('kas_masuks', 'pengeluarans.total', '=', 'kas_masuks.pengeluaran')
             ->select('pengeluarans.id_pengeluaran', 'pengeluarans.keterangan', 'pengeluarans.jumlah', 'pengeluarans.harga', 'kas_masuks.pengeluaran', 'kas_masuks.id', 'kas_masuks.created_at', 'kas_masuks.bank')
-            ->where('pengeluarans.id_pengeluaran', $id_pengeluaran)
+            ->where('pengeluarans.id_pengeluaran', $id)
             ->get();
 
         $groupedPengeluarans = $pengeluarans->groupBy('id_pengeluaran');

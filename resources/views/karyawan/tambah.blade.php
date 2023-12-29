@@ -71,7 +71,7 @@
                                         <textarea name="txtalamat" id="txtalamat" cols="30" rows="10"
                                             class="form-control @error('txtalamat')
                                         is-invalid
-                                        @enderror"></textarea>
+                                        @enderror">{{ old('txtalamat') }}</textarea>
                                         @error('txtalamat')
                                             <div class="invalid-feedback">
                                                 {{ $message }}

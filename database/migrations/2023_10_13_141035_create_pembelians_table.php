@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('total')->nullable();
             $table->bigInteger('uang_muka')->nullable();
             $table->bigInteger('sisa_pembayaran')->nullable();
+            $table->integer('id_jenis')->nullable();
             $table->timestamps();
         });
     }
