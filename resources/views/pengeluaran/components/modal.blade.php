@@ -18,7 +18,8 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="">No Pengeluaran</label>
-                                    <input type="text" class="form-control nomorp" name="nopengeluaran[]">
+                                    <input type="text" class="form-control nomorp" name="nopengeluaran[]"
+                                        value="{{ $nomorP }}">
                                 </div>
                                 <div class="col">
                                     <label for="">Jenis Pengeluaran</label>
@@ -89,14 +90,19 @@
                                                 <select name="metode" class="form-control">
                                                     <option value="">Pilih Metode</option>
                                                     @foreach ($bank as $via)
-                                                        <option value="{{ $via }}">Kas Bank {{ $via }}
+                                                        <option value="{{ $via->id }}">Kas Bank {{ $via->bank }}
                                                         </option>
                                                     @endforeach
                                                     <option value="tunai">Kas Penjualan</option>
                                                 </select>
-
                                             </div>
                                         </div>
+                                        {{-- <div class="form-group row">
+                                            <div class="col">
+                                                <input type="text" name="saldo" class="form-control"
+                                                    value="" id="saldo">
+                                            </div>
+                                        </div> --}}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger"

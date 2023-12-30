@@ -100,18 +100,19 @@
                                                                 <td class="text-right">
                                                                     @if ($firstRow)
                                                                         <form method="POST"
-                                                                            action="{{ 'pengeluaran/' . $pengeluaran->id }}"
-                                                                            style="display: inline">
+                                                                            action="{{ 'pengeluaran/' . $pengeluaran->id_pengeluaran }}"
+                                                                            style="display: inline"
+                                                                            id="hapusPengeluaranForm">
                                                                             @csrf
                                                                             @method('DELETE')
-                                                                            <button type="submit" title="Hapus Data"
+                                                                            <button type="button" title="Hapus Data"
                                                                                 class="btn btn-sm btn-danger hapus-btn"
-                                                                                onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                                                                onclick="hapusPengeluaran()">
                                                                                 <i class="fa fa-trash"></i> Hapus
                                                                             </button>
                                                                         </form>
 
-                                                                        <a href="{{ route('cetak.print_invoice', $pengeluaran->id) }}"
+                                                                        <a href="{{ route('cetak.print_invoice', $pengeluaran->id_pengeluaran) }}"
                                                                             class="btn btn-sm btn-primary mb-1"
                                                                             title="Print Invoice" target="_blank">
                                                                             <i class="fa fa-print"></i>
@@ -175,7 +176,10 @@
             var newForm = $(".form-transaksi:first").clone();
 
             // Bersihkan nilai input di form baru
-            newForm.find("input").val("");
+            newForm.find(".keterangan").val("");
+            newForm.find(".jumlah").val("");
+            newForm.find(".harga").val("");
+            newForm.find(".total").val("");
 
             // Sisipkan form baru setelah form terakhir
             $(".form-transaksi:last").after(newForm);
@@ -301,4 +305,22 @@
             }
         }
     });
+</script>
+<script>
+    function hapusPengeluaran() {
+        Swal.fire({
+            title: 'Yakin ingin menghapus data ini?',
+            text: 'Data yang dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('hapusPengeluaranForm').submit();
+            }
+        });
+    }
 </script>

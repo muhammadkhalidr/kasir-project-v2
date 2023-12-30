@@ -77,12 +77,11 @@
                                                         </button>
                                                         <form method="POST"
                                                             action="{{ 'karyawan/' . $row->id_karyawan }}"
-                                                            style="display: inline">
+                                                            style="display: inline" id="hapusKaryawanForm">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" title="Hapus Data"
-                                                                class="btn btn-sm btn-danger"
-                                                                onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                                            <button type="button" title="Hapus Data"
+                                                                class="btn btn-sm btn-danger" onclick="hapusKaryawan()">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -108,3 +107,21 @@
             Content body end
         ***********************************-->
 @include('partials.footer')
+<script>
+    function hapusKaryawan() {
+        Swal.fire({
+            title: 'Yakin ingin menghapus data ini?',
+            text: 'Data yang dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('hapusKaryawanForm').submit();
+            }
+        });
+    }
+</script>

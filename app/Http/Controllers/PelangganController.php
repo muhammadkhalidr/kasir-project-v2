@@ -6,25 +6,42 @@ use App\Models\Pelanggan;
 use App\Http\Requests\StorePelangganRequest;
 use App\Http\Requests\UpdatePelangganRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
 
 class PelangganController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $datas = Pelanggan::all();
-
+        $perPage = $request->input('dataOptions', 10);
+        $query = Pelanggan::query();
+    
+        // Search Data
+        $search = $request->input('searchdata');
+        if ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('alamat', 'like', '%' . $search . '%');
+            });
+        }
+    
+        $datas = $query->paginate($perPage);
+    
         return view('pelanggan.data', [
             'user' => $user,
             'title' => env('APP_NAME') . ' | ' . 'Pelanggan',
             'breadcrumb' => 'Pelanggan',
             'data' => $datas,
-
+            'perPageOptions' => [10, 15, 25, 100],
         ]);
     }
+    
+
+
 
     public function tambahPelanggan()
     {
@@ -35,6 +52,16 @@ class PelangganController extends Controller
             'title' => 'Pelanggan',
             'breadcrumb' => 'Pelanggan',
         ]);
+    }
+
+
+    public function limit(Request $request)
+    {
+        return $this->index($request);
+    }
+    public function cariData(Request $request)
+    {
+        return $this->index($request);
     }
 
     /**

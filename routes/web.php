@@ -170,6 +170,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('pelanggan', PelangganController::class);
         Route::get('/pelanggan', [PelangganController::class, 'index']);
         Route::get('tambah-pelanggan', [PelangganController::class, 'tambahPelanggan']);
+        Route::post('/pelanggan', [PelangganController::class, 'limit'])->name('pelanggan.limit');
+        // Route::post('/pelanggan', [PelangganController::class, 'cariData'])->name('pelanggan.cariData');
 
         // Untuk Pengeluaran
         Route::resource('pengeluaran', PengeluaranController::class)->middleware('can:pengeluaran.data');
@@ -179,7 +181,9 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('orderan/print_invoice/{notrx}', [OrderanController::class, 'printInvoice'])->name('orderan.print_invoice');
 Route::get('orderan/print_invoice58/{notrx}', [OrderanController::class, 'printInvoice58'])->name('orderan.print_invoice58');
-Route::get('pengeluaran/print_laporan/{id_pengeluaran}', [PengeluaranController::class, 'printInvoice'])->name('cetak.print_invoice');
+Route::get('pengeluaran/print_laporan/{id_pengeluaran}', [PengeluaranController::class, 'printInvoice'])
+    ->name('cetak.print_invoice');
+
 Route::get('pembelian/print_faktur/{id_pembelian}', [PembelianController::class, 'printFaktur'])->name('pembelian.print_faktur');
 // Route::get('/laporan/cetak-laporan', [LaporanController::class, 'cetakLaporan'])->name('laporan.cetakLaporan');
 // Route::post('/laporan/cetak-laporan', [LaporanController::class, 'cetakLaporan']);

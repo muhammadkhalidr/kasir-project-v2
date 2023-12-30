@@ -184,7 +184,7 @@
                         <select name="bayarDp" class="form-control" id="bayarDpSelect">
                             <option value="">Pilih Metode</option>
                             @foreach ($rekening as $item)
-                                <option value="{{ $item->bank }}">{{ $item->bank }}</option>
+                                <option value="{{ $item->id }}">{{ $item->bank }}</option>
                             @endforeach
                             <option value="tunai">Tunai</option>
                         </select>
@@ -390,7 +390,7 @@
                                     <label for="via{{ $bayar->notrx }}">Pilih Bank:</label>
                                     <select class="form-control" id="via{{ $bayar->notrx }}" name="via">
                                         @foreach ($rekening as $data)
-                                            <option value="{{ $data->bank }}">{{ $data->bank }}</option>
+                                            <option value="{{ $data->id }}">{{ $data->bank }}</option>
                                         @endforeach
                                     </select>
                                 </div>

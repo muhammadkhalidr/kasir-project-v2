@@ -19,4 +19,14 @@ class Rekening extends Model
         'bank',
         'no_refferensi',
     ];
+
+    public function pengeluaran()
+    {
+        return $this->hasMany(Pengeluaran::class, 'id_bank', 'id');
+    }
+
+    public function kasMasuk()
+    {
+        return $this->hasMany(KasMasuk::class, 'bank', 'id');
+    }
 }

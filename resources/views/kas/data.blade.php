@@ -35,10 +35,12 @@
                                     @if (!$loop->first && $kasKecil->no_reff == $kasKecils[$loop->index - 1]->no_reff)
                                         @continue
                                     @endif
-                                    <form action="{{ route('kas.hapusKasKecil', $kasKecil->no_reff) }}" method="POST">
+                                    <form id="deleteForm" action="{{ route('kas.hapusKasKecil', $kasKecil->no_reff) }}"
+                                        method="post">
                                         @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        @method('delete')
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            onclick="confirmDelete()">Hapus</button>
                                     </form>
                                 @endforeach
                             @endif
@@ -161,3 +163,21 @@
         </div>
     </div>
 @endsection
+<script>
+    function confirmDelete() {
+        Swal.fire({
+            title: 'Yakin ingin menghapus data ini?',
+            text: 'Data yang dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm').submit();
+            }
+        });
+    }
+</script>

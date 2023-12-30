@@ -29,7 +29,7 @@ class PengeluaranController extends Controller
     {
         $user = Auth::user();
         $perPage = 10;
-        $pengeluarans = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans'])
+        $pengeluarans = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
             ->orderBy('id_pengeluaran', 'desc')
             ->paginate($perPage);
 
@@ -44,9 +44,13 @@ class PengeluaranController extends Controller
             return $pengeluaran;
         });
 
-        $bank = Rekening::select('bank')->pluck('bank')->toArray();
+        // dd($groupedPengeluarans);
 
+        $latestExpense = Pengeluaran::orderBy('id_pengeluaran', 'desc')->first();
+        $nomorP = $latestExpense ? sprintf('%03d', intval($latestExpense->id_pengeluaran) + 1) : '001';
 
+        $bank = Rekening::all();
+        // dd($bank);
         $dataJenis = JenisPengeluaran::all();
         $dataKaryawan = Karyawan::all();
 
@@ -60,7 +64,8 @@ class PengeluaranController extends Controller
             'bank' => $bank,
             'dataJenis' => $dataJenis,
             'dataKaryawan' => $dataKaryawan,
-            'datas' => $pengeluarans
+            'datas' => $pengeluarans,
+            'nomorP' => $nomorP,
         ]);
     }
 
@@ -120,20 +125,31 @@ class PengeluaranController extends Controller
                 'total' => $data['total'][$key],
                 'id_jenis' => $data['jenispengeluaran'][$key],
                 'id_karyawan' => $karyawanId,
+                'id_bank' => $data['metode'],
             ]);
         }
 
         // Buat data kas bon
         $kasBon = new Kasbon;
-        $kasBon->id_karyawan = $data['karyawan'][$key];
-        $kasBon->nominal = $data['total'][$key];
-        $kasBon->save();
+
+        $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
+        $nominal = isset($data['total'][$key]) ? $data['total'][$key] : null;
+
+        if ($karyawanId !== null && $nominal !== null) {
+            $kasBon->id_karyawan = $karyawanId;
+            $kasBon->nominal = $nominal;
+            $kasBon->save();
+        } else {
+            // Handle the case where 'karyawan' or 'total' is not present in the data
+            // You can log an error, throw an exception, or handle it based on your needs
+        }
+
 
 
         // Buat data kas masuk
         $kasMasuk = new KasMasuk;
         $kasMasuk->id_generate = $idBaru;
-        $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ' . $data['metode']);
+        $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
         $kasMasuk->name_kasir = $user->name;
         $kasMasuk->pengeluaran = $data['total'][$key];
         $kasMasuk->bank = $data['metode'];
@@ -184,37 +200,28 @@ class PengeluaranController extends Controller
         return redirect('pengeluaran')->with('msg', 'Data Berhasil Dihapus!');
     }
 
-    public function printInvoice($id)
+    public function printInvoice($id_pengeluaran)
     {
-        $cetaks = Pengeluaran::find($id);
+        $cetaks = Pengeluaran::findOrFail($id_pengeluaran);
 
-        if (!$cetaks) {
-            return response()->json(['error' => 'Record not found.'], 404);
-        }
-
-        $pengeluarans = Pengeluaran::join('kas_masuks', 'pengeluarans.total', '=', 'kas_masuks.pengeluaran')
-            ->select('pengeluarans.id_pengeluaran', 'pengeluarans.keterangan', 'pengeluarans.jumlah', 'pengeluarans.harga', 'kas_masuks.pengeluaran', 'kas_masuks.id', 'kas_masuks.created_at', 'kas_masuks.bank')
-            ->where('pengeluarans.id_pengeluaran', $id)
+        // Adjusted query to fetch specific records for the given $id_pengeluaran
+        $pengeluarans = Pengeluaran::where('id_pengeluaran', $id_pengeluaran)
+            ->with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
+            ->orderBy('id_pengeluaran', 'desc')
             ->get();
 
-        $groupedPengeluarans = $pengeluarans->groupBy('id_pengeluaran');
+        $groupedPengeluarans = $pengeluarans->sortByDesc('id_pengeluaran')->groupBy('id_pengeluaran');
 
         $totals = $groupedPengeluarans->map(function ($group) {
-            return $group->sum('pengeluaran');
+            return $group->sum('total');
         });
 
-        $pdf = PDF::loadView('pengeluaran.cetak', [
+        // dd($groupedPengeluarans);
+
+        return view('pengeluaran.cetak', [
             'cetaks' => $cetaks,
             'groupedPengeluarans' => $groupedPengeluarans,
             'totals' => $totals,
         ]);
-
-        // return view('pengeluaran.cetak', [
-        //     'cetaks' => $cetaks,
-        //     'groupedPengeluarans' => $groupedPengeluarans,
-        //     'totals' => $totals,
-        // ]);
-
-        return $pdf->download($cetaks->id_pengeluaran . ' laporanPengeluaran.pdf');
     }
 }

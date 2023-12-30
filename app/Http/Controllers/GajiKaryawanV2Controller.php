@@ -93,7 +93,7 @@ class GajiKaryawanV2Controller extends Controller
         $gajikaryawansV2 = GajiKaryawanv2::with('kasbons', 'karyawans')->get();
         $karyawans = Karyawan::all();
 
-        return view('gajiV2.tambah', [
+        return view('gajiv2.tambah', [
             'title' => 'Tambah Gaji Karyawan',
             'breadcrumb' => 'Gaji Karyawan',
             'user' => $user,

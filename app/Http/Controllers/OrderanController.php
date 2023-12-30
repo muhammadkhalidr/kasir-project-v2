@@ -240,7 +240,7 @@ class OrderanController extends Controller
         $pelunasan = PelunasanOrderan::create([
             'notrx' => $request->input('notrx'),
             'total_bayar' => $jumlahBayar,
-            'bank' => $caraBayar,
+            'bank' => $caraBayar === 'tunai' ? 'tunai' : $via,
             'via' => $via,
             'id_bayar' => auth()->user()->id,
         ]);
@@ -265,18 +265,30 @@ class OrderanController extends Controller
                 'status' => $totalBayar == $jumlahBayar ? 'Lunas' : 'Belum Lunas',
             ]);
 
-        $pemasukan = KasMasuk::where('id_generate', $request->input('notrx'))
-            ->select('pemasukan')
-            ->first();
-
-        KasMasuk::where('id_generate', $request->input('notrx'))
-            ->update([
-                'pemasukan' => $pemasukan->pemasukan + $jumlahBayar,
-                'bank' => $bank
+        // Cek apakah pembayaran menggunakan tunai
+        if ($caraBayar === 'tunai') {
+            // Update data di tabel kas_masuk untuk DP (jika menggunakan tunai)
+            KasMasuk::create([
+                'id_generate' => $request->input('notrx'),
+                'keterangan' => 'Pelunasan - No #' . $request->input('notrx'),
+                'pemasukan' => $jumlahBayar,
+                'name_kasir' => auth()->user()->name,
+                'bank' => $caraBayar,
             ]);
+        } else {
+            // Update data di tabel kas_masuk untuk pelunasan
+            KasMasuk::create([
+                'id_generate' => $request->input('notrx'),
+                'keterangan' => 'Pelunasan - No #' . $request->input('notrx'),
+                'pemasukan' => $jumlahBayar,
+                'name_kasir' => auth()->user()->name,
+                'bank' => $bank,
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Pelunasan berhasil.');
     }
+
 
     /**
      * Display the specified resource.

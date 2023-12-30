@@ -150,15 +150,15 @@
                                                     <i class="fa fa-money"></i><a href="javascript:void(0)"></a>
                                                 </button>
                                                 <form method="POST" action="{{ 'orderan/' . $item->notrx }}"
-                                                    style="display: inline">
+                                                    style="display: inline" id="hapusOrderanForm">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" title="Hapus Data"
-                                                        class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                                    <button type="button" title="Hapus Data"
+                                                        class="btn btn-sm btn-danger" onclick="hapusOrderan()">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
+
                                                 <div class="btn-group" role="group">
                                                     <button type="button"
                                                         class="btn btn-sm mb-1 btn-primary flat dropdown-toggle"
@@ -507,4 +507,22 @@
         $('#dp, #bayarDpSelect').on('change', updateSimpanButtonState);
         $('#bayarDpModal').on('shown.bs.modal', updateSimpanButtonState);
     });
+</script>
+<script>
+    function hapusOrderan() {
+        Swal.fire({
+            title: 'Yakin ingin menghapus data ini?',
+            text: 'Data yang dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('hapusOrderanForm').submit();
+            }
+        });
+    }
 </script>

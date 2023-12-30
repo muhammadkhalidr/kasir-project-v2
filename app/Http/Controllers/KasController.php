@@ -15,28 +15,33 @@ class KasController extends Controller
     {
         $user = Auth::user();
         $kasKecils = KasMasuk::where('bank', 'kaskecil')->get();
-        $rekenings = Rekening::pluck('bank')->toArray();
         $pemasukanTunai = KasMasuk::where('bank', 'tunai')->sum('pemasukan') - KasMasuk::where('bank', 'tunai')->sum('pengeluaran');
 
+        $rekenings = Rekening::with('kasMasuk')->get();
         $pemasukanBank = 0;
-        foreach ($rekenings as $bank) {
-            $pemasukanBank += KasMasuk::where('bank', $bank)->sum('pemasukan') - KasMasuk::where('bank', $bank)->sum('pengeluaran');
+
+        foreach ($rekenings as $rekening) {
+            $pemasukanBank += KasMasuk::where('bank', $rekening->id)
+                ->sum('pemasukan') - KasMasuk::where('bank', $rekening->id)
+                ->sum('pengeluaran');
         }
 
+
         // Retrieve distinct bank names
-        $dataBank = Rekening::pluck('bank')->unique()->toArray();
+        $dataBank = Rekening::pluck('id')->unique()->toArray();
 
         // Initialize an array to store bank details
         $bankDetails = [];
 
         // Loop through each bank and calculate the sum of pemasukan
-        foreach ($dataBank as $bank) {
-            $saldo = KasMasuk::where('bank', $bank)->sum('pemasukan') - KasMasuk::where('bank', $bank)->sum('pengeluaran');
+        foreach ($dataBank as $bankId) {
+            $saldo = KasMasuk::where('bank', $bankId)->sum('pemasukan') - KasMasuk::where('bank', $bankId)->sum('pengeluaran');
             $bankDetails[] = [
-                'bank' => $bank,
+                'bank' => Rekening::find($bankId)->bank, // Mengambil nama bank dari tabel Rekening
                 'saldo' => $saldo,
             ];
         }
+
 
         $kasKecil = KasMasuk::where('bank', 'kaskecil')->sum('pemasukan') - KasMasuk::where('bank', 'kaskecil')->sum('pengeluaran');
 

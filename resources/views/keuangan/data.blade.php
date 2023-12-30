@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="col">
+        {{-- <div class="col">
             <div class="card card-widget">
                 <div class="card-body gradient-4">
                     <div class="media">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="col-12">
             <div class="card card-widget">

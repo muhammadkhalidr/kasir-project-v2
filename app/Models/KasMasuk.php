@@ -23,4 +23,9 @@ class KasMasuk extends Model
         'name_kasir',
         'bank'
     ];
+
+    public function rekening()
+    {
+        return $this->belongsTo(Rekening::class, 'bank', 'id');
+    }
 }

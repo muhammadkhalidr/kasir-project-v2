@@ -11,6 +11,7 @@ class Pengeluaran extends Model
 
 
     protected $guarded = ['id'];
+    protected $primaryKey = 'id_pengeluaran';
 
     protected $table = 'pengeluarans';
 
@@ -20,6 +21,11 @@ class Pengeluaran extends Model
     public function kasMasuk()
     {
         return $this->hasOne(KasMasuk::class, 'id_generate', 'total');
+    }
+
+    public function rekening()
+    {
+        return $this->belongsTo(Rekening::class, 'id', 'id');
     }
 
     public function jenisp()

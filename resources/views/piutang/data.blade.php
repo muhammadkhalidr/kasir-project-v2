@@ -96,7 +96,7 @@
                                     <label for="via{{ $bayar->notrx }}">Pilih Bank:</label>
                                     <select class="form-control" id="via{{ $bayar->notrx }}" name="via">
                                         @foreach ($rekening as $data)
-                                            <option value="{{ $data->bank }}">{{ $data->bank }}</option>
+                                            <option value="{{ $data->id }}">{{ $data->bank }}</option>
                                         @endforeach
                                     </select>
                                 </div>
