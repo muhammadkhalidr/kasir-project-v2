@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('kasbons', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_karyawan');
-            $table->string('nominal');
+            $table->bigInteger('nominal');
+            $table->string('id_pengeluaran')->nullable();
             $table->timestamps();
         });
     }

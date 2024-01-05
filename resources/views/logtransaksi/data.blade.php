@@ -40,11 +40,11 @@
                                             <td>{{ $d->name_kasir }}</td>
                                             <td>
                                                 @if ($d->pemasukan)
-                                                    <span class="text-success text-bold">Rp.
-                                                        {{ number_format($d->pemasukan, 0, ',', '.') }}</span>
+                                                    <span class="text-success text-bold">
+                                                        {{ formatRupiah($d->pemasukan, true) }}</span>
                                                 @else
-                                                    <span class="text-danger text-bold">Rp.
-                                                        {{ number_format($d->pengeluaran, 0, ',', '.') }}</span>
+                                                    <span class="text-danger text-bold">
+                                                        {{ formatRupiah($d->pengeluaran, true) }}</span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -52,14 +52,14 @@
                                 @endforeach
                                 <tr>
                                     <td colspan="5"><span class="text-success text-bold">Total Pemasukan</span></td>
-                                    <td><span class="text-success text-bold">Rp.
-                                            {{ number_format($pemasukan, 0, ',', '.') }}</span>
+                                    <td><span class="text-success text-bold">
+                                            {{ formatRupiah($pemasukan, true) }}</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5"><span class="text-danger text-bold">Total Pengeluaran</span></td>
-                                    <td><span class="text-danger text-bold">Rp.
-                                            {{ number_format($pengeluaran, 0, ',', '.') }}</span>
+                                    <td><span class="text-danger text-bold">
+                                            {{ formatRupiah($pengeluaran, true) }}</span>
                                     </td>
                                 </tr>
                             </tbody>

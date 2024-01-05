@@ -103,13 +103,17 @@
                 <tr>
                     <td>{{ $cetak->keterangan }}</td>
                     <td class="text-left">{{ $cetak->jumlah }}</td>
-                    <td class="text-center">Rp. {{ number_format($cetak->harga, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp. {{ number_format($cetak->total, 0, ',', '.') }}</td>
+                    <td class="text-center">{{ formatRupiah($cetak->harga, true) }}</td>
+                    <td class="text-right">{{ formatRupiah($cetak->total, true) }}</td>
                     <td>
                         @php
                             $id_bank = $cetak->id_bank;
                             $bank = \App\Models\Rekening::where('id', $id_bank)->value('bank');
-                            echo $bank;
+                            if ($bank) {
+                                echo $bank;
+                            } else {
+                                echo 'Kas Penjualan';
+                            }
                         @endphp
                     </td>
 
@@ -123,7 +127,7 @@
                 </td>
                 <td class="text-right">
                     <b><i>{{-- Add a meaningful value here --}}</i></b>
-                    Rp. {{ number_format($totals[$id_pengeluaran], 0, ',', '.') }}
+                    {{ formatRupiah($totals[$id_pengeluaran], true) }}
                 </td>
                 <td></td>
             </tr>

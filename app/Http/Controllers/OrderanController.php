@@ -91,7 +91,7 @@ class OrderanController extends Controller
         return view('orderan.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Orderan',
             'breadcrumb' => 'Data Orderan',
-            'user' => $user,
+            'name_user' => $user->name,
             'dataOrderan' => $dataOrderan,
             'dataPelanggan' => $dataPelanggan,
             'kode_pelanggan' => $kode_pelanggan,
@@ -118,7 +118,7 @@ class OrderanController extends Controller
         return view('orderan.tambah', [
             'title' => 'Tambah Orderan',
             'breadcrumb' => 'Orderan',
-            'user' => $user,
+            'name_user' => $user->name,
         ]);
     }
 
@@ -158,6 +158,9 @@ class OrderanController extends Controller
         foreach ($data['idpelanggan'] as $key => $value) {
             $status = ($data['sisa'] == 0) ? 'Lunas' : 'Belum Lunas';
 
+            // Tentukan nilai uangmuka
+            $uangMuka = !empty($data['uangmuka']) ? str_replace('.', '', $data['uangmuka']) : 0;
+
             // Buat dan simpan objek DetailOrderan
             DetailOrderan::create([
                 'id_transaksi' => $idTransaksiBaru2,
@@ -166,15 +169,14 @@ class OrderanController extends Controller
                 'namabarang' => $data['namabarang'][$key],
                 'keterangan' => $data['keterangan'][$key],
                 'jumlah' => $data['jumlah'][$key],
-                'harga' => $data['harga'][$key],
-                'total' => $data['total'][$key],
-                'uangmuka' => $data['uangmuka'],
-                'subtotal' => $data['subtotal'],
-                'sisa' => $data['sisa'],
+                'harga' => str_replace('.', '', $data['harga'][$key]),
+                'total' => str_replace('.', '', $data['total'][$key]),
+                'uangmuka' => $uangMuka,
+                'subtotal' => str_replace('.', '', $data['subtotal']),
+                'sisa' => str_replace('.', '', $data['sisa']),
                 'status' => $status,
                 'name_kasir' => $data['namakasir']
             ]);
-
 
             // Tambahkan notrx ke dalam array processedNotrx
             $processedNotrx[] = $data['notrx'][$key];
@@ -189,12 +191,13 @@ class OrderanController extends Controller
                 $kasMasuk->name_kasir = $user->name;
                 $kasMasuk->bank = $data['bayarDp'];
 
+                // Tentukan nilai pemasukan berdasarkan kondisi
                 if ($data['sisa'] == 0) {
-                    $kasMasuk->pemasukan = $data['subtotal'];
+                    $kasMasuk->pemasukan = str_replace('.', '', $data['subtotal']);
                 } else {
-                    $kasMasuk->pemasukan = $data['uangmuka'];
+                    $uangMuka = !empty($data['uangmuka']) ? str_replace('.', '', $data['uangmuka']) : 0;
+                    $kasMasuk->pemasukan = $uangMuka;
                 }
-
 
                 $kasMasuk->save();
             }
@@ -229,18 +232,18 @@ class OrderanController extends Controller
     {
         // Ambil data dari form
         $via = $request->input('via');
-        $jumlahBayar = $request->input('jumlahBayar');
-        $totalBayar = $request->input('totalBayar');
+        $jumlahBayar = str_replace('.', '', $request->input('jumlahBayar'));
+        $totalBayar = str_replace('.', '', $request->input('totalBayar'));
         $caraBayar = $request->input('caraBayar');
         $buktiTransfer = $request->file('buktiTransfer');
 
-        $bank = $caraBayar === 'tunai' ? 'tunai' : $via;
+        $bank = $caraBayar === '888' ? '888' : $via;
 
         // Simpan data pelunasan ke dalam tabel pelunasan_orderans
         $pelunasan = PelunasanOrderan::create([
             'notrx' => $request->input('notrx'),
             'total_bayar' => $jumlahBayar,
-            'bank' => $caraBayar === 'tunai' ? 'tunai' : $via,
+            'bank' => $caraBayar === '888' ? '888' : $via,
             'via' => $via,
             'id_bayar' => auth()->user()->id,
         ]);
@@ -256,12 +259,10 @@ class OrderanController extends Controller
             $pelunasan->save();
         }
 
-        // dd($pelunasan);
-
         // Update data di tabel detail_orderans
         DetailOrderan::where('notrx', $request->input('notrx'))
             ->update([
-                'sisa' => max(0, $totalBayar - $jumlahBayar),
+                'sisa' => max(0, floatval($totalBayar) - floatval($jumlahBayar)),
                 'status' => $totalBayar == $jumlahBayar ? 'Lunas' : 'Belum Lunas',
             ]);
 

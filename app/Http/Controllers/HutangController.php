@@ -25,7 +25,7 @@ class HutangController extends Controller
             'title' => env('APP_NAME') . ' | ' . 'Hutang',
             'breadcrumb' => 'Hutang',
             'hutangs' => $data,
-            'user' => $user,
+            'name_user' => $user->name,
         ]);
     }
 

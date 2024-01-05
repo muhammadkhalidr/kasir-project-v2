@@ -15,7 +15,7 @@ class KasController extends Controller
     {
         $user = Auth::user();
         $kasKecils = KasMasuk::where('bank', 'kaskecil')->get();
-        $pemasukanTunai = KasMasuk::where('bank', 'tunai')->sum('pemasukan') - KasMasuk::where('bank', 'tunai')->sum('pengeluaran');
+        $pemasukanTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
 
         $rekenings = Rekening::with('kasMasuk')->get();
         $pemasukanBank = 0;
@@ -47,7 +47,7 @@ class KasController extends Controller
 
         return view('kas.data', [
             'title' => env('APP_NAME') . ' | ' . 'Kas',
-            'user' => $user,
+            'name_user' => $user->name,
             'tunai' => $pemasukanTunai,
             'bank' => $pemasukanBank,
             'bankDetails' => $bankDetails,

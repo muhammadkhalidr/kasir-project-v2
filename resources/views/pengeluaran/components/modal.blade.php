@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="col">
                                     <label for="">Harga</label>
-                                    <input type="text" class="form-control harga" name="harga[]">
+                                    <input type="text" class="form-control harga" id="harga" name="harga[]">
                                 </div>
                                 <div class="col">
                                     <label for="">Total</label>
@@ -66,7 +66,8 @@
                         <div class="modal-footer">
                             <div class="col">
                                 <label for="">Sub Total</label>
-                                <input type="text" class="form-control subtotal" name="subtotal" readonly>
+                                <input type="text" class="form-control subtotal" id="subtotal" name="subtotal"
+                                    readonly>
                             </div>
                         </div>
 
@@ -74,8 +75,8 @@
                             <p class="btn btn-danger" data-toggle="modal" data-target="#bayarPengeluaran">Bayar</p>
                         </div>
 
-                        <div class="modal fade" id="bayarPengeluaran" tabindex="-1"
-                            aria-labelledby="bayarPengeluaranLabel" aria-hidden="true">
+                        <div class="modal fade" id="bayarPengeluaran" data-backdrop="static" data-keyboard="false"
+                            tabindex="-1" aria-labelledby="bayarPengeluaranLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -90,10 +91,11 @@
                                                 <select name="metode" class="form-control">
                                                     <option value="">Pilih Metode</option>
                                                     @foreach ($bank as $via)
-                                                        <option value="{{ $via->id }}">Kas Bank {{ $via->bank }}
+                                                        <option value="{{ $via->id }}">Kas Bank
+                                                            {{ $via->bank }}
                                                         </option>
                                                     @endforeach
-                                                    <option value="tunai">Kas Penjualan</option>
+                                                    <option value="888">Kas Penjualan</option>
                                                 </select>
                                             </div>
                                         </div>

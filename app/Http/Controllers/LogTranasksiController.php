@@ -20,7 +20,7 @@ class LogTranasksiController extends Controller
 
         return view('logtransaksi.data', data: [
             'title' => env('APP_NAME') . ' | ' . 'Log Transaksi',
-            'user' => $user,
+            'name_user' => $user->name,
             'log' => $Log,
             'pemasukan' => $pemasukan,
             'pengeluaran' => $pengeluaran,

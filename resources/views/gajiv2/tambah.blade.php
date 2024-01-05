@@ -42,7 +42,7 @@
                                             class="form-control @error('txtidkaryawan')
                                         is-invalid
                                         @enderror">
-                                            <option value="" selected>Pilih Karyawanss</option>
+                                            <option value="" selected>Pilih Karyawan</option>
                                             @foreach ($karyawans as $n)
                                                 <option value="{{ $n->id_karyawan }}"
                                                     {{ old('txtidkaryawan') == $n->nama_karyawan ? 'selected' : '' }}>
@@ -64,7 +64,7 @@
                                     </label>
                                     <div class="col-lg-6">
                                         <input type="text"
-                                            class="form-control @error('txtjumlahgaji')
+                                            class="form-control rupiah @error('txtjumlahgaji')
                                         is-invalid
                                         @enderror"
                                             id="txtjumlahgaji" name="txtjumlahgaji" value="{{ old('txtjumlahgaji') }}">
@@ -153,20 +153,26 @@
 @include('partials.footer')
 
 <script>
-    // Function to calculate bonus based on percentage and salary
     function calculateBonus() {
         // Get input values
-        var jumlahGaji = parseFloat(document.getElementById('txtjumlahgaji').value) || 0;
+        var jumlahGaji = parseFloat(document.getElementById('txtjumlahgaji').value.replace(/\./g, '').replace(/,/g,
+            '.')) || 0;
         var persenBonus = parseFloat(document.getElementById('txtpersen').value) || 0;
 
         // Calculate bonus
         var bonus = Math.round((jumlahGaji * persenBonus) / 100);
 
         // Display bonus in the 'txtbonus' input field
-        document.getElementById('txtbonus').value = bonus;
+        document.getElementById('txtbonus').value = bonus.toLocaleString(); // Menampilkan bonus dengan format rupiah
     }
 
     // Attach the function to the 'blur' event of 'txtjumlahgaji' and 'txtpersen'
     document.getElementById('txtjumlahgaji').addEventListener('blur', calculateBonus);
     document.getElementById('txtpersen').addEventListener('blur', calculateBonus);
+
+    $(document).ready(function() {
+        $('.rupiah').mask("#.##0", {
+            reverse: true
+        });
+    });
 </script>

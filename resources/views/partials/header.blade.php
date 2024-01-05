@@ -19,6 +19,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"> --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('/') }}/assets/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <link href="{{ asset('/') }}assets/plugins/tables/css/datatable/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="{{ asset('/') }}assets/plugins/toastr/css/toastr.min.css" rel="stylesheet">
@@ -93,8 +95,7 @@
                                 <div class="dropdown-content-body">
                                     <ul>
                                         <li>
-                                            <span>{{ $user->name }}</span>
-                                            {{-- <span>{{ $user->name }}</span> --}}
+                                            <span>{{ $name_user }}</span>
                                         </li>
                                         <li>
                                             <a href="{{ url('profile') }}"><i class="icon-user"></i>

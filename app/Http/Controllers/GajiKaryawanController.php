@@ -23,7 +23,7 @@ class GajiKaryawanController extends Controller
         return view('gaji.data', [
             'title' => env('APP_NAME') . ' | ' . 'Gaji Karyawan',
             'breadcrumb' => 'Gaji Karyawan',
-            'user' => $user,
+            'name_user' => $user->name,
             'gajikaryawans' => $gajikaryawans,
             'karyawans' => $karyawans,
         ]);
@@ -38,7 +38,7 @@ class GajiKaryawanController extends Controller
         return view('gaji.tambah', [
             'title' => 'Tambah Gaji Karyawan',
             'breadcrumb' => 'Gaji Karyawan',
-            'user' => $user,
+            'name_user' => $user->name,
             'gajikaryawans' => $gajikaryawans,
             'karyawans' => $karyawans,
         ]);

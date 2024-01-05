@@ -87,11 +87,11 @@
                                                                 </td>
                                                                 <td>{{ $pengeluaran->keterangan }}</td>
                                                                 <td class="text-left">{{ $pengeluaran->jumlah }}</td>
-                                                                <td class="text-center">Rp.
-                                                                    {{ number_format($pengeluaran->harga, 0, ',', '.') }}
+                                                                <td class="text-center">
+                                                                    {{ formatRupiah($pengeluaran->harga, true) }}
                                                                 </td>
-                                                                <td class="text-right">Rp.
-                                                                    {{ number_format($pengeluaran->total, 0, ',', '.') }}
+                                                                <td class="text-right">
+                                                                    {{ formatRupiah($pengeluaran->total, true) }}
                                                                 </td>
                                                                 <td>{{ $pengeluaran->jenisp->nama_jenis ?? 's' }}</td>
                                                                 <td class="text-right">
@@ -134,8 +134,8 @@
                                                             </td>
                                                             <td class="text-right">
                                                                 <b><i></i></b>
-                                                                Rp.
-                                                                {{ number_format($totals[$id_pengeluaran], 0, ',', '.') }}
+                                                                
+                                                                {{ formatRupiah($totals[$id_pengeluaran], true) }}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -146,13 +146,32 @@
                                     <tr>
                                         <td colspan="3" class="text-left"><strong>Total Pengeluaran</strong></td>
                                         <td class="text-right">
-                                            <strong>Rp.{{ number_format($totals->sum(), 0, ',', '.') }}</strong>
+                                            <strong>{{ formatRupiah($totals->sum(), true) }}</strong>
                                         </td>
                                         <td></td>
                                     </tr>
                                 </tbody>
                             </table>
-                            {{ $datas->links() }}
+                            {{-- <div class="d-flex justify-content-start">
+                                <p class="mr-3">Menampilkan {{ $datas->firstItem() }} hingga
+                                    {{ $datas->lastItem() }}
+                                    dari
+                                    {{ $datas->total() }} data</p>
+                            </div> --}}
+
+
+                            <div class="d-flex justify-content-start">
+                                @php
+                                    $hitungNoTrx = $datas->unique('id_pengeluaran')->count();
+                                @endphp
+
+                                <p class="mr-3">Menampilkan {{ $hitungNoTrx }} hingga {{ $hitungNoTrx }} dari
+                                    {{ $hitungNoTrx }} data</p>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                {{ $datas->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -200,59 +219,36 @@
             // Menghitung total untuk setiap form
             $(".form-transaksi").each(function() {
                 var jumlah = parseFloat($(this).find(".jumlah").val()) || 0;
-                var harga = parseFloat($(this).find(".harga").val()) || 0;
+                var harga = parseFloat($(this).find(".harga").val().replace(/\./g, '').replace(
+                    ',', '.')) || 0;
 
                 var total = jumlah * harga;
 
-                $(this).find(".total").val(total);
+                // Format total sesuai dengan harga
+                $(this).find(".total").val(formatRupiah(total.toString()));
             });
 
             // Menghitung subtotal dari semua total
             var subtotal = 0;
             $(".form-transaksi").each(function() {
-                subtotal += parseFloat($(this).find(".total").val()) || 0;
+                subtotal += parseFloat($(this).find(".total").val().replace(/\./g, '').replace(
+                    ',', '.')) || 0;
             });
 
-            // Mengambil nilai uang muka
-            var uangMuka = parseFloat($(".uangmuka").val()) || 0;
-
-            // Mengurangkan uang muka dari total, bukan dari subtotal
-            var totalSetelahUangMuka = subtotal - uangMuka;
-
             // Mengupdate nilai input subtotal
-            $(".subtotal").val(subtotal);
-
-            var sisaPembayaran = parseFloat($(".sisa").val()) || 0;
-            $(".sisa").val(totalSetelahUangMuka);
+            $(".subtotal").val(formatRupiah(subtotal.toString()));
         });
-
-        // Menambahkan event listener untuk input uangmuka
-        $(document).on("input", ".uangmuka", function() {
-            // Menghitung kembali subtotal saat input uangmuka diubah
-            var subtotal = 0;
-            $(".form-transaksi").each(function() {
-                subtotal += parseFloat($(this).find(".total").val()) || 0;
-            });
-
-            // Mengambil nilai uang muka
-            var uangMuka = parseFloat($(".uangmuka").val()) || 0;
-
-            // Mengurangkan uang muka dari total
-            var totalSetelahUangMuka = uangMuka;
-
-            // Mengupdate nilai input subtotal
-            $(".subtotal").val(subtotal);
-        });
-
 
         // Menangani perubahan nilai saat formulir baru ditambahkan
         $(document).on("input", ".form-transaksi:last .jumlah, .form-transaksi:last .harga", function() {
             var jumlah = parseFloat($(this).closest(".row").find(".jumlah").val()) || 0;
-            var harga = parseFloat($(this).closest(".row").find(".harga").val()) || 0;
+            var harga = parseFloat($(this).closest(".row").find(".harga").val().replace(/\./g, '')
+                .replace(',', '.')) || 0;
 
             var total = jumlah * harga;
 
-            $(this).closest(".row").find(".total").val(total);
+            // Format total sesuai dengan harga
+            $(this).closest(".row").find(".total").val(formatRupiah(total.toString()));
         });
     });
 </script>
@@ -322,5 +318,28 @@
                 document.getElementById('hapusPengeluaranForm').submit();
             }
         });
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $(document).on('keyup', '.harga', function() {
+            $(this).val(formatRupiah($(this).val()));
+        });
+    });
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix === undefined ? rupiah : (rupiah ? +rupiah : '');
     }
 </script>

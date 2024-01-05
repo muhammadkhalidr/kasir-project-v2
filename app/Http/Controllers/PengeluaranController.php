@@ -51,13 +51,13 @@ class PengeluaranController extends Controller
 
         $bank = Rekening::all();
         // dd($bank);
-        $dataJenis = JenisPengeluaran::all();
+        $dataJenis = JenisPengeluaran::where('aktif', 1)->get();
         $dataKaryawan = Karyawan::all();
 
         return view('pengeluaran.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pengeluaran',
             'breadcrumb' => 'Pengeluaran',
-            'user' => $user,
+            'name_user' => $user->name,
             'groupedPengeluarans' => $groupedPengeluarans,
             'totals' => $totals,
             'formattedPengeluarans' => $formattedPengeluarans,
@@ -77,7 +77,7 @@ class PengeluaranController extends Controller
         return view('pengeluaran.tambah', [
             'title' => 'Pengeluaran',
             'breadcrumb' => 'Pengeluaran',
-            'user' => $user,
+            'name_user' => $user->name,
             'nomorSelanjutnya' => $nomorSelanjutnya,
         ]);
     }
@@ -121,27 +121,24 @@ class PengeluaranController extends Controller
                 'id_generate' => $idBaru,
                 'keterangan' => $data['keterangan'][$key],
                 'jumlah' => $data['jumlah'][$key],
-                'harga' => $data['harga'][$key],
-                'total' => $data['total'][$key],
+                'harga' => str_replace('.', '', $data['harga'][$key]),
+                'total' => str_replace('.', '', $data['total'][$key]),
                 'id_jenis' => $data['jenispengeluaran'][$key],
                 'id_karyawan' => $karyawanId,
                 'id_bank' => $data['metode'],
             ]);
-        }
 
-        // Buat data kas bon
-        $kasBon = new Kasbon;
+            // Buat data kas bon
+            $kasBon = new Kasbon;
 
-        $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
-        $nominal = isset($data['total'][$key]) ? $data['total'][$key] : null;
-
-        if ($karyawanId !== null && $nominal !== null) {
-            $kasBon->id_karyawan = $karyawanId;
-            $kasBon->nominal = $nominal;
-            $kasBon->save();
-        } else {
-            // Handle the case where 'karyawan' or 'total' is not present in the data
-            // You can log an error, throw an exception, or handle it based on your needs
+            $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
+            $nominal = str_replace('.', '', $data['total'][$key]) ? str_replace('.', '', $data['total'][$key]) : 0;
+            if ($karyawanId !== null && $nominal !== null) {
+                $kasBon->id_karyawan = $karyawanId;
+                $kasBon->nominal = $nominal;
+                $kasBon->id_pengeluaran = $value;
+                $kasBon->save();
+            }
         }
 
 
@@ -151,7 +148,7 @@ class PengeluaranController extends Controller
         $kasMasuk->id_generate = $idBaru;
         $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
         $kasMasuk->name_kasir = $user->name;
-        $kasMasuk->pengeluaran = $data['total'][$key];
+        $kasMasuk->pengeluaran = str_replace('.', '', $data['total'][$key]);
         $kasMasuk->bank = $data['metode'];
         $kasMasuk->save();
 
@@ -191,10 +188,14 @@ class PengeluaranController extends Controller
     {
         $pengeluaran = Pengeluaran::findOrFail($id);
         $kasMasuk = KasMasuk::where('id_generate', $pengeluaran->id_generate)->get();
+        $kasBon = Kasbon::where('id_pengeluaran', $pengeluaran->id_pengeluaran)->get();
         $pengeluaran->delete();
 
         foreach ($kasMasuk as $kas) {
             $kas->delete();
+        }
+        foreach ($kasBon as $bon) {
+            $bon->delete();
         }
 
         return redirect('pengeluaran')->with('msg', 'Data Berhasil Dihapus!');
@@ -204,7 +205,6 @@ class PengeluaranController extends Controller
     {
         $cetaks = Pengeluaran::findOrFail($id_pengeluaran);
 
-        // Adjusted query to fetch specific records for the given $id_pengeluaran
         $pengeluarans = Pengeluaran::where('id_pengeluaran', $id_pengeluaran)
             ->with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
             ->orderBy('id_pengeluaran', 'desc')
@@ -218,10 +218,19 @@ class PengeluaranController extends Controller
 
         // dd($groupedPengeluarans);
 
-        return view('pengeluaran.cetak', [
+        // return view('pengeluaran.cetak', [
+        //     'cetaks' => $cetaks,
+        //     'groupedPengeluarans' => $groupedPengeluarans,
+        //     'totals' => $totals,
+        // ]);
+
+
+        $pdf = PDF::loadView('pengeluaran.cetak', [
             'cetaks' => $cetaks,
             'groupedPengeluarans' => $groupedPengeluarans,
             'totals' => $totals,
         ]);
+
+        return $pdf->download($cetaks->id_pengeluaran . ' laporanPengeluaran.pdf');
     }
 }

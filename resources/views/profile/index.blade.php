@@ -98,8 +98,8 @@
                                         class="rounded-circle mt-4" width="100">
                                 </div>
                             @endforeach
-                            <label>Pilih Foto Baru</label>
-                            <input type="file" class="form-control" name="foto">
+                            <label>Pilih Foto Baru</label> <br>
+                            <input type="file"  name="foto">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

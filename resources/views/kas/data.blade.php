@@ -26,8 +26,8 @@
                 <div class="card-body">
                     <div class="text-center">
                         <span class="display-5"><i class="icon-wallet gradient-1-text"></i></span>
-                        <h2 class="mt-3">Rp.
-                            {{ number_format($kasKecil, 0, ',', '.') }}</h2>
+                        <h2 class="mt-3">
+                            {{ formatRupiah($kasKecil, true) }}</h2>
                         <p>Kas Kecil</p>
                         @if (auth()->check())
                             @if (auth()->user()->level == 2)
@@ -55,8 +55,8 @@
                 <div class="card-body">
                     <div class="text-center">
                         <span class="display-5"><i class="icon-wallet gradient-2-text"></i></span>
-                        <h2 class="mt-3">Rp.
-                            {{ number_format($tunai, 0, ',', '.') }}</h2>
+                        <h2 class="mt-3">
+                            {{ formatRupiah($tunai, true) }}</h2>
                         <p>Kas Penjualan</p>
                     </div>
                 </div>
@@ -68,8 +68,8 @@
                 <div class="card-body">
                     <div class="text-center">
                         <span class="display-5"><i class="icon-credit-card gradient-3-text"></i></span>
-                        <h2 class="mt-3" data-toggle="modal" data-target="#detailBankSaldoModal">Rp.
-                            {{ number_format($bank, 0, ',', '.') }}</h2>
+                        <h2 class="mt-3" data-toggle="modal" data-target="#detailBankSaldoModal">
+                            {{ formatRupiah($bank, true) }}</h2>
                         <p>Kas Bank</p>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $detail['bank'] }}</td>
-                                        <td>Rp. {{ number_format($detail['saldo'], 0, ',', '.') }}</td>
+                                        <td>Rp. {{ formatRupiah($detail['saldo'], true) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -135,7 +135,7 @@
                 <div class="modal-body">
                     <form action="{{ route('kas.tambahKas') }}" method="POST">
                         @csrf
-                        <input type="hidden" value="{{ $user->name }}" name="kasir">
+                        <input type="hidden" value="{{ $name_user }}" name="kasir">
                         <input type="hidden" name="idgenerate">
                         <input type="hidden" name="noreff" value="111">
                         <div class="form-group">

@@ -5,15 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\JenisPengeluaran;
 use App\Http\Requests\StoreJenisPengeluaranRequest;
 use App\Http\Requests\UpdateJenisPengeluaranRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JenisPengeluaranController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = Auth::user();
+        $perPage = $request->input('dataOptions', 10);
+
+        $jenispengeluarans = JenisPengeluaran::paginate($perPage);
+        return view('jenispengeluaran.data', [
+            'title' => env('APP_NAME') . ' | ' . 'Data Jenis Pengeluaran',
+            'breadcrumb' => 'Jenis Pengeluaran',
+            'name_user' => $user->name,
+            'datas' => $jenispengeluarans,
+            'perPageOptions' => [10, 15, 25, 100],
+
+        ]);
+    }
+
+    public function limitJumlah(Request $request)
+    {
+        return $this->index($request);
     }
 
     /**
@@ -29,7 +47,14 @@ class JenisPengeluaranController extends Controller
      */
     public function store(StoreJenisPengeluaranRequest $request)
     {
-        //
+        $jenis = new JenisPengeluaran;
+
+        $jenis->id_jenis = $request->id_jenis;
+        $jenis->nama_jenis = $request->jenis;
+        $jenis->aktif = $request->status;
+        $jenis->save();
+
+        return redirect('/jenis-pengeluaran')->with('success', 'Data Berhasil di Tambahkan');
     }
 
     /**
@@ -51,16 +76,27 @@ class JenisPengeluaranController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateJenisPengeluaranRequest $request, JenisPengeluaran $jenisPengeluaran)
+    public function update(UpdateJenisPengeluaranRequest $request, $id)
     {
-        //
+        $data = JenisPengeluaran::findOrFail($id);
+
+        $data->id_jenis = $request->id_jenis;
+        $data->nama_jenis = $request->jenis;
+        $data->aktif = $request->status;
+        $data->save();
+
+        return redirect('jenis-pengeluaran')->with('success', 'Data Berhasil Di-update!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JenisPengeluaran $jenisPengeluaran)
+    public function destroy($id)
     {
-        //
+        $data = JenisPengeluaran::findOrFail($id);
+
+        // dd($data);
+        $data->delete();
+        return redirect('/jenis-pengeluaran')->with('success', 'Data Berhasil di Hapus');
     }
 }

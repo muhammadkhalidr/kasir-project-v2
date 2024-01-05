@@ -20,7 +20,7 @@ class PiutangController extends Controller
         return view('piutang.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Piutang',
             'breadcrumb' => 'Piutang',
-            'user' => $user,
+            'name_user' => $user->name,
             'data' => $data,
             'rekening' => $rekening,
             'ket' => $keterangan,

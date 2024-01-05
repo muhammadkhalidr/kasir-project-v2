@@ -91,7 +91,7 @@
                                                             class="input-group-text border-primary bg-primary col-12 text-white">Kasir</span>
                                                     </span>
                                                     <input type="text" class="form-control" id="namamarketing"
-                                                        value="{{ $user->name }}"@readonly(true)>
+                                                        value="{{ $name_user }}"@readonly(true)>
                                                 </div>
                                             </div>
                                         </div>
@@ -113,7 +113,7 @@
                         <div id="formContainer" class="form-transaksi">
                             <input type="hidden" class="form-control notrx" name="notrx[]"
                                 value="{{ $notrx }}">
-                            <input type="hidden" value="{{ $user->name }}" name="namakasir">
+                            <input type="hidden" value="{{ $name_user }}" name="namakasir">
                             <div class="row">
                                 <input type="hidden" class="form-control namapemesan" name="namapemesan[]"
                                     id="pemesan2">
@@ -134,11 +134,13 @@
                                 </div>
                                 <div class="col">
                                     <label for="">Harga Barang</label>
-                                    <input type="text" class="form-control harga" name="harga[]" required>
+                                    <input type="text" class="form-control harga" id="harga" name="harga[]"
+                                        required>
                                 </div>
                                 <div class="col">
                                     <label for="">Total</label>
-                                    <input type="text" class="form-control total" name="total[]" readonly>
+                                    <input type="text" class="form-control total" id="total" name="total[]"
+                                        readonly>
                                 </div>
                                 <div class="col">
                                     <button type="button" class="btn btn-danger hapusform"><i
@@ -154,11 +156,13 @@
                             </div>
                             <div class="col">
                                 <label for="">Sub Total</label>
-                                <input type="text" class="form-control subtotal" name="subtotal" readonly>
+                                <input type="text" class="form-control subtotal" id="subtotal" name="subtotal"
+                                    readonly>
                             </div>
                             <div class="col">
                                 <label for="">Sisa Pembayaran</label>
-                                <input type="text" class="form-control sisa" name="sisa" readonly>
+                                <input type="text" class="form-control sisa" id="sisa" name="sisa"
+                                    readonly>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -186,7 +190,7 @@
                             @foreach ($rekening as $item)
                                 <option value="{{ $item->id }}">{{ $item->bank }}</option>
                             @endforeach
-                            <option value="tunai">Tunai</option>
+                            <option value="888">Tunai</option>
                         </select>
                     </div>
                 </div>
@@ -380,7 +384,7 @@
                                 <label for="caraBayar{{ $bayar->notrx }}">Pilih Cara Bayar:</label>
                                 <select class="form-control caraBayar" data-notrx="{{ $bayar->notrx }}"
                                     name="caraBayar">
-                                    <option value="tunai">Tunai</option>
+                                    <option value="888">Tunai</option>
                                     <option value="transfer">Transfer Bank</option>
                                 </select>
                             </div>
@@ -398,15 +402,15 @@
 
                             <div class="form-group">
                                 <label for="jumlahBayar{{ $bayar->notrx }}">Jumlah Bayar:</label>
-                                <input type="number" class="form-control jumlahBayar"
+                                <input type="text" class="form-control jumlahBayar"
                                     id="jumlahBayar{{ $bayar->notrx }}" name="jumlahBayar" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="totalBayar{{ $bayar->notrx }}">Total yang Harus Dibayar:</label>
-                                <input type="number" class="form-control totalBayar"
+                                <input type="text" class="form-control totalBayar"
                                     id="totalBayar{{ $bayar->notrx }}" name="totalBayar"
-                                    value="{{ $bayar->sisa }}" readonly>
+                                    value="{{ formatRupiah($bayar->sisa) }}" readonly>
                             </div>
 
                             <div class="buktiTransferOptions" id="buktiTransferOptions{{ $bayar->notrx }}"
@@ -419,7 +423,7 @@
                             </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Bayar</button>
                     </div>
                     </form>

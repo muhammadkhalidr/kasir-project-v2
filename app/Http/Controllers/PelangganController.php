@@ -19,7 +19,7 @@ class PelangganController extends Controller
         $user = Auth::user();
         $perPage = $request->input('dataOptions', 10);
         $query = Pelanggan::query();
-    
+
         // Search Data
         $search = $request->input('searchdata');
         if ($search) {
@@ -28,18 +28,18 @@ class PelangganController extends Controller
                     ->orWhere('alamat', 'like', '%' . $search . '%');
             });
         }
-    
+
         $datas = $query->paginate($perPage);
-    
+
         return view('pelanggan.data', [
-            'user' => $user,
+            'name_user' => $user->name,
             'title' => env('APP_NAME') . ' | ' . 'Pelanggan',
             'breadcrumb' => 'Pelanggan',
             'data' => $datas,
             'perPageOptions' => [10, 15, 25, 100],
         ]);
     }
-    
+
 
 
 

@@ -20,7 +20,7 @@ class RekeningController extends Controller
         return view('rekening.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Rekening',
             'breadcrumb' => 'Data Rekening',
-            'user' => $user,
+            'name_user' => $user->name,
             'data' => $data
         ]);
     }

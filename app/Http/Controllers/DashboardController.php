@@ -40,7 +40,7 @@ class DashboardController extends Controller
             // 'totalPendapatan' => $totalUangMuka + $totalJumlahTotalLunas,
             'totalPengeluaran' => $kasKeluar,
             'title' => 'Dashboard | Home',
-            'user' => $user,
+            'name_user' => $user->name,
             'totalPendapatanG' => $kasMasuks->total_pendapatan ?? 0,
             'totalPengeluaranG' => $kasMasuks->total_pengeluaran ?? 0,
             'filterDate' => $filterDate,

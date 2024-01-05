@@ -24,7 +24,7 @@ class PembelianController extends Controller
         return view('pembelian.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pembelian',
             'breadcrumb' => 'Pembelian',
-            'user' => $user,
+            'name_user' => $user->name,
             'pembelians' => $datas,
         ]);
     }
@@ -35,7 +35,7 @@ class PembelianController extends Controller
         return view('pembelian.tambah', [
             'title' => 'Pembelian',
             'breadcrumb' => 'Pembelian',
-            'user' => $user,
+            'name_user' => $user->name,
         ]);
     }
 
@@ -98,7 +98,7 @@ class PembelianController extends Controller
         return view('pembelian.edit', [
             'title' => 'Edit Pembelian',
             'breadcrumb' => 'Pembelian',
-            'user' => $user,
+            'name_user' => $user->name,
         ])->with([
             'txtid' => $id_pembelian,
             'txtbahan' => $pembelian->bahan,

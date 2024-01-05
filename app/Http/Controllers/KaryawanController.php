@@ -21,7 +21,7 @@ class KaryawanController extends Controller
         return view('karyawan.main', [
             'title' => env('APP_NAME') . ' | ' . 'Data Karyawan',
             'breadcrumb' => 'Data Karyawan',
-            'user' => $user,
+            'name_user' => $user->name,
             'karyawans' => $karyawans,
         ]);
     }
@@ -32,7 +32,7 @@ class KaryawanController extends Controller
         return view('karyawan.tambah', [
             'title' => 'Tambah Karyawan',
             'breadcrumb' => 'Karyawan',
-            'user' => $user,
+            'name_user' => $user->name,
         ]);
     }
 
@@ -73,7 +73,7 @@ class KaryawanController extends Controller
 
         return view('karyawan.edit', [
             'title' => 'Edit Karyawan',
-            'user' => $user,
+            'name_user' => $user->name,
         ])->with([
             'txtid' => $id_karyawan,
             'txtnama' => $karyawan->nama_karyawan,

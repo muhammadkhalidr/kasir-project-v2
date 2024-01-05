@@ -130,9 +130,9 @@
                                             <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('l, d F Y') }}
                                             </td>
                                             <td>{{ $item->name_kasir }}</td>
-                                            <td>{{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                                            <td>{{ number_format($item->uangmuka, 0, ',', '.') }}</td>
-                                            <td>{{ number_format($item->sisa, 0, ',', '.') }}</td>
+                                            <td>{{ formatRupiah($item->subtotal) }}</td>
+                                            <td>{{ formatRupiah($item->uangmuka) }}</td>
+                                            <td>{{ formatRupiah($item->sisa) }}</td>
                                             <td><span
                                                     class="label label-{{ $item->status == 'Lunas' ? 'success' : 'warning' }}">{{ $item->status }}</span>
                                             </td>
@@ -147,39 +147,49 @@
                                                 <button class="btn btn-sm btn-success" title="Pelunasan"
                                                     {{ $disable }} data-toggle="modal"
                                                     data-target="#pelunasanModal{{ $item->notrx }}">
-                                                    <i class="fa fa-money"></i><a href="javascript:void(0)"></a>
+                                                    <i class="fa fa-money"></i> BAYAR
                                                 </button>
-                                                <form method="POST" action="{{ 'orderan/' . $item->notrx }}"
-                                                    style="display: inline" id="hapusOrderanForm">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" title="Hapus Data"
-                                                        class="btn btn-sm btn-danger" onclick="hapusOrderan()">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
-
-                                                <div class="btn-group" role="group">
+                                                <div class="btn-group mt-1" role="group">
                                                     <button type="button"
                                                         class="btn btn-sm mb-1 btn-primary flat dropdown-toggle"
                                                         data-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">Aksi</button>
+                                                        aria-expanded="false">
+                                                        Aksi
+                                                    </button>
                                                     <div class="dropdown-menu">
                                                         <p class="ml-2">NO. #{{ $item->notrx }}</p>
+
                                                         <a href="{{ route('orderan.print_invoice58', $item->notrx) }}"
                                                             class="dropdown-item" target="_blank">
                                                             <span class="badge badge-info flat">
                                                                 <i class="fa fa-print"></i> PRINT STRUK
                                                             </span>
                                                         </a>
+
                                                         <a href="{{ route('orderan.print_invoice', $item->notrx) }}"
-                                                            class="dropdown-item"target="_blank">
+                                                            class="dropdown-item" target="_blank">
                                                             <span class="badge badge-warning flat">
                                                                 <i class="fa fa-file-pdf-o"></i> PRINT PDF
                                                             </span>
                                                         </a>
+
+                                                        <form method="POST"
+                                                            action="{{ route('orderan.destroy', $item->notrx) }}"
+                                                            style="display: inline" id="hapusOrderanForm">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <button type="button" title="Hapus Data"
+                                                                class="dropdown-item" onclick="hapusOrderan()">
+                                                                <span class="badge badge-danger flat">
+                                                                    <i class="fa fa-trash"></i> HAPUS DATA
+                                                                </span>
+                                                            </button>
+                                                        </form>
+
                                                     </div>
                                                 </div>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -259,30 +269,35 @@
             // Menghitung total untuk setiap form
             $(".form-transaksi").each(function() {
                 var jumlah = parseFloat($(this).find(".jumlah").val()) || 0;
-                var harga = parseFloat($(this).find(".harga").val()) || 0;
+                var harga = parseFloat($(this).find(".harga").val().replace(/\./g, '').replace(
+                    ',', '.')) || 0;
 
                 var total = jumlah * harga;
 
-                $(this).find(".total").val(total);
+                // Format total sesuai dengan harga
+                $(this).find(".total").val(formatRupiah(total.toString()));
             });
 
             // Menghitung subtotal dari semua total
             var subtotal = 0;
             $(".form-transaksi").each(function() {
-                subtotal += parseFloat($(this).find(".total").val()) || 0;
+                subtotal += parseFloat($(this).find(".total").val().replace(/\./g, '').replace(
+                    ',', '.')) || 0;
             });
 
             // Mengambil nilai uang muka
-            var uangMuka = parseFloat($(".uangmuka").val()) || 0;
+            var uangMuka = parseFloat($(".uangmuka").val().replace(/\./g, '').replace(',', '.')) || 0;
 
             // Mengurangkan uang muka dari total, bukan dari subtotal
             var totalSetelahUangMuka = subtotal - uangMuka;
 
             // Mengupdate nilai input subtotal
-            $(".subtotal").val(subtotal);
+            $(".subtotal").val(formatRupiah(subtotal.toString()));
 
-            var sisaPembayaran = parseFloat($(".sisa").val()) || 0;
-            $(".sisa").val(totalSetelahUangMuka);
+            var sisaPembayaran = parseFloat($(".sisa").val().replace(/\./g, '').replace(',', '.')) || 0;
+
+            // Format sisa pembayaran sesuai dengan harga
+            $(".sisa").val(formatRupiah(totalSetelahUangMuka.toString()));
         });
 
         // Menambahkan event listener untuk input uangmuka
@@ -290,28 +305,30 @@
             // Menghitung kembali subtotal saat input uangmuka diubah
             var subtotal = 0;
             $(".form-transaksi").each(function() {
-                subtotal += parseFloat($(this).find(".total").val()) || 0;
+                subtotal += parseFloat($(this).find(".total").val().replace(/\./g, '').replace(
+                    ',', '.')) || 0;
             });
 
             // Mengambil nilai uang muka
-            var uangMuka = parseFloat($(".uangmuka").val()) || 0;
+            var uangMuka = parseFloat($(".uangmuka").val().replace(/\./g, '').replace(',', '.')) || 0;
 
             // Mengurangkan uang muka dari total
             var totalSetelahUangMuka = uangMuka;
 
             // Mengupdate nilai input subtotal
-            $(".subtotal").val(subtotal);
+            $(".subtotal").val(formatRupiah(subtotal.toString()));
         });
-
 
         // Menangani perubahan nilai saat formulir baru ditambahkan
         $(document).on("input", ".form-transaksi:last .jumlah, .form-transaksi:last .harga", function() {
             var jumlah = parseFloat($(this).closest(".row").find(".jumlah").val()) || 0;
-            var harga = parseFloat($(this).closest(".row").find(".harga").val()) || 0;
+            var harga = parseFloat($(this).closest(".row").find(".harga").val().replace(/\./g, '')
+                .replace(',', '.')) || 0;
 
             var total = jumlah * harga;
 
-            $(this).closest(".row").find(".total").val(total);
+            // Format total sesuai dengan harga
+            $(this).closest(".row").find(".total").val(formatRupiah(total.toString()));
         });
     });
 </script>
@@ -525,4 +542,37 @@
             }
         });
     }
+</script>
+<script>
+    $(document).ready(function() {
+        $(document).on('keyup', '.harga', function() {
+            $(this).val(formatRupiah($(this).val()));
+        });
+
+        $('#dp').on('keyup', function() {
+            $(this).val(formatRupiah($(this).val()));
+        });
+    });
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix === undefined ? rupiah : (rupiah ? +rupiah : '');
+    }
+
+    $(document).ready(function() {
+        $('.jumlahBayar').mask('#.##0', {
+            reverse: true
+        });
+    });
 </script>

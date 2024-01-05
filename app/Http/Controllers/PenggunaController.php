@@ -31,7 +31,7 @@ class PenggunaController extends Controller
         return view('pengguna.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Admin',
             'breadcrumb' => 'Pengguna',
-            'user' => $user,
+            'name_user' => $user->name,
             'penggunas' => $datas,
         ]);
     }
@@ -42,7 +42,7 @@ class PenggunaController extends Controller
         return view('pengguna.tambah', [
             'title' => 'Tambah Pengguna',
             'breadcrumb' => 'Pengguna',
-            'user' => $user,
+            'name_user' => $user->name,
         ]);
     }
 

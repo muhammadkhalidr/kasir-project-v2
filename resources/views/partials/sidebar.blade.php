@@ -66,6 +66,8 @@
                         <ul aria-expanded="false">
                             <li><a href="{{ url('setting') }}">Aplikasi</a></li>
                             <li><a href="{{ url('rekening') }}">Rekening</a></li>
+                            <li><a href="{{ url('jenis-pengeluaran') }}">Jenis Pengeluaran</a></li>
+                            <li><a href="{{ url('menu') }}">Menu Admin</a></li>
                         </ul>
                     </li>
                     <li class="nav-label">Laporan</li>

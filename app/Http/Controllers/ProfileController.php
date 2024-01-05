@@ -22,7 +22,7 @@ class ProfileController extends Controller
         return view('profile.index', [
             'title' => env('APP_NAME') . ' | ' .  'Profile',
             'breadcrumb' => 'Profile',
-            'user' => $user,
+            'name_user' => $user->name,
             'data' => $data,
         ]);
     }

@@ -47,7 +47,7 @@
                                             <td align="center"><button class="btn btn-sm btn-success text-white"
                                                     data-toggle="modal" data-target="#detailsModal{{ $item->notrx }}"><i
                                                         class="fa fa-search"></i></button></td>
-                                            <td>Rp. {{ number_format($item->sisa, 0, ',', '.') }}</td>
+                                            <td>{{ formatRupiah($item->sisa, true) }}</td>
                                             <td> <button class="btn btn-sm btn-info" title="Pelunasan" data-toggle="modal"
                                                     data-target="#pelunasanModal{{ $item->notrx }}">
                                                     <a href="javascript:void(0)" class="text-white">Bayar</a>

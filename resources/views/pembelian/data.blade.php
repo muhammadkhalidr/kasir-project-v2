@@ -74,25 +74,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($pembelians as $row)
+                                    @foreach ($pembelians as $data)
                                         <tr>
                                             <th><span class="label label-info">{{ $loop->iteration }}</span></th>
-                                            <th>{{ $row->id_pembelian }}</th>
-                                            <th>{{ $row->bahan }}</th>
-                                            <th>{{ $row->jenis }}</th>
-                                            <th>{{ $row->jumlah }}</th>
-                                            <th>{{ $row->satuan }}</th>
-                                            <th>Rp. {{ number_format($row->total, 0, ',', '.') }}</th>
-                                            <th>Rp. {{ number_format($row->uang_muka, 0, ',', '.') }}</th>
-                                            <th>Rp. {{ number_format($row->sisa_pembayaran, 0, ',', '.') }}</th>
-                                            <th>{{ $row->created_at }}</th>
+                                            <th>{{ $data->id_pembelian }}</th>
+                                            <th>{{ $data->bahan }}</th>
+                                            <th>{{ $data->jenis }}</th>
+                                            <th>{{ $data->jumlah }}</th>
+                                            <th>{{ $data->satuan }}</th>
+                                            <th>{{ formatRupiah($data->total, true) }}</th>
+                                            <th>{{ formatRupiah($data->uang_muka, true) }}</th>
+                                            <th>{{ formatRupiah($data->sisa_pembayaran, true) }}</th>
+                                            <th>{{ $data->created_at }}</th>
                                             <th>
                                                 <button
-                                                    onclick="window.location='{{ url('pembelian/' . $row->id_pembelian) }}'"
+                                                    onclick="window.location='{{ url('pembelian/' . $data->id_pembelian) }}'"
                                                     class="btn btn-sm btn-info" title="Edit Data">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
-                                                <form method="POST" action="{{ 'pembelian/' . $row->id_pembelian }}"
+                                                <form method="POST" action="{{ 'pembelian/' . $data->id_pembelian }}"
                                                     style="display: inline">
                                                     @csrf
                                                     @method('DELETE')
@@ -102,7 +102,7 @@
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
-                                                <a href="{{ route('pembelian.print_faktur', $row->id_pembelian) }}"
+                                                <a href="{{ route('pembelian.print_faktur', $data->id_pembelian) }}"
                                                     class="btn btn-sm btn-primary mb-1" title="Print Faktur"
                                                     target="_blank">
                                                     <i class="fa fa-print"></i>

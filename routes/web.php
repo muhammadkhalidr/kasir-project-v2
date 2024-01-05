@@ -82,6 +82,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/orderan.pelunasan', [OrderanController::class, 'pelunasan'])->name('orderan.pelunasan');
         Route::post('/orderan/tambahPelanggan', [OrderanController::class, 'tambahPelanggan'])->name('orderan.tambahPelanggan');
         Route::post('/orderan.cari', [OrderanController::class, 'cariData'])->name('orderan.cari');
+        Route::post('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
+
 
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
@@ -136,6 +138,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/kas', [KasController::class, 'index']);
         Route::post('/kas', [KasController::class, 'tambahKas'])->name('kas.tambahKas');
         Route::delete('/kas/{no_reff}', [KasController::class, 'hapusKasKecil'])->name('kas.hapusKasKecil');
+
+        // JenisPengeluran
+        Route::resource('jenis-pengeluaran', JenisPengeluaranController::class);
+        Route::put('jenis-pengeluaran/{id}', [JenisPengeluaranController::class, 'update'])->name('jenis-pengeluaran.update');
+        Route::post('jenis-pengeluaran', [JenisPengeluaranController::class, 'limitJumlah'])->name('jenis-pengeluaran.limit');
     });
 
     // Akses Untuk Owner
@@ -157,7 +164,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/orderan-baru', [OrderanController::class, 'tambahOrderan']);
         Route::post('/orderan.pelunasan', [OrderanController::class, 'pelunasan'])->name('orderan.pelunasan');
         Route::post('/orderan/tambahPelanggan', [OrderanController::class, 'tambahPelanggan'])->name('orderan.tambahPelanggan');
-        Route::get('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
 
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);

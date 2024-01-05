@@ -20,8 +20,6 @@ class GajiKaryawanV2Controller extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
-        // Inisialisasi query builder tanpa paginasi
         $query = GajiKaryawanV2::with(['karyawans', 'jenisp', 'pengeluarans', 'kasbons']);
 
         if ($request->has('start_date') && $request->has('end_date')) {
@@ -51,19 +49,14 @@ class GajiKaryawanV2Controller extends Controller
             ->groupBy('id_karyawan')
             ->get();
 
-        // Calculate sisa gaji by subtracting total kasbon from jumlah_gaji
         foreach ($dataGaji as $gaji) {
             $idKaryawan = $gaji->karyawans->id_karyawan;
-
-            // Find the corresponding total kasbon for the employee
             $totalKasbon = $dataKasBon->where('id_karyawan', $idKaryawan)->first();
-
-            // Calculate sisa gaji and add it to the GajiKaryawanV2 object
             $gaji->sisa_gaji = $gaji->jumlah_gaji - ($totalKasbon ? $totalKasbon->total_nominal : 0);
         }
 
         return view('gajiv2.data', [
-            'user' => $user,
+            'name_user' => $user->name,
             'title' => 'Gaji V2',
             'breadcrumb' => 'Gaji V2',
             'datas' => $dataGaji,
@@ -96,7 +89,7 @@ class GajiKaryawanV2Controller extends Controller
         return view('gajiv2.tambah', [
             'title' => 'Tambah Gaji Karyawan',
             'breadcrumb' => 'Gaji Karyawan',
-            'user' => $user,
+            'name_user' => $user->name,
             'gajikaryawans' => $gajikaryawansV2,
             'karyawans' => $karyawans,
         ]);
@@ -118,9 +111,9 @@ class GajiKaryawanV2Controller extends Controller
         $v2 = new GajiKaryawanV2;
 
         $v2->id_karyawan = $request->txtidkaryawan;
-        $v2->jumlah_gaji = $request->txtjumlahgaji;
+        $v2->jumlah_gaji = str_replace('.', '', $request->txtjumlahgaji);
         $v2->persen_bonus = $request->txtpersen;
-        $v2->bonus = $request->txtbonus;
+        $v2->bonus = str_replace('.', '', $request->txtbonus);
         $v2->save();
         return redirect('/gaji-karyawanv2')->with('success', 'Gaji Berhasil');
     }

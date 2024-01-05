@@ -58,7 +58,7 @@
                                             <tr>
                                                 <th>{{ $loop->iteration }}</th>
                                                 <th>{{ $gaji->nama_karyawan }}</th>
-                                                <th>Rp. {{ number_format($gaji->jumlah_gaji, 0, ',', '.') }}</th>
+                                                <th>Rp. {{ formatRupiah($gaji->jumlah_gaji, true) }}</th>
                                                 <th>{{ $gaji->jumlah_kerja }}</th>
                                                 <th>{{ $gaji->persen_gaji }} %</th>
                                                 @if (auth()->check())

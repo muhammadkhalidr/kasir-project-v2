@@ -47,7 +47,7 @@ class LaporanController extends Controller
             'orderans' => $orderans,
             'gajikaryawans' => $gajiKaryawans,
             'request' => $request,
-            'user' => $user,
+            'name_user' => $user->name,
 
         ]);
     }

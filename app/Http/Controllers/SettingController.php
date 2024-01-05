@@ -21,7 +21,7 @@ class SettingController extends Controller
 
         return view('settings.index', [
             'title' => env('APP_NAME') . ' | ' . 'Settings',
-            'user' => $user,
+            'name_user' => $user->name,
             'data' => $datas,
         ]);
     }
