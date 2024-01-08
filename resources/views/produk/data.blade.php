@@ -74,12 +74,22 @@
                                     <div class="card text-center">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $produk->judul }}</h5>
+                                            <img src="https://static.vecteezy.com/system/resources/previews/001/199/360/original/barcode-png.png" alt="" width="200">
                                             <p class="card-text">{{ $produk->barcode }}</a>
                                             <p class="card-text">{{ $produk->kategories->kategori }} | {{ $produk->bahans->bahan }}</a>
                                         </div>
-                                        <div class="card-footer text-muted" style="display: inline">
-                                            <button class="btn btn-sm btn-primary">Edit</button>
-                                            <button class="btn btn-sm btn-danger">Hapus</button>
+                                        <div class="card-footer text-muted">
+                                            <form action="{{ url('bahan' . $produk->id) }}" style="display: inline">
+                                                <button class="btn btn-sm btn-primary" type="button" data-toggle="modal" data-target="#editProduk{{ $produk->id }}">Edit</button>
+                                            </form>
+
+                                            <form id="hapusProduk{{$produk->id}}" action="{{ url('produk/' . $produk->id) }}" method="POST" style="display: inline">
+                                                @method('DELETE')
+                                                @csrf
+                                                <button type="button" title="Hapus Data" class="btn btn-sm btn-danger" onclick="hapusProduk({{$produk->id}})">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -95,11 +105,27 @@
                         </div>
                     </div> --}}
 
-                    <div class="d-flex justify-content-end">
-                        {{ $datas->links() }}
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-header pb-2">
+                            <div>
+                                <p class="mr-3">Menampilkan {{ $datas->firstItem() }} hingga {{ $datas->lastItem() }} dari
+                                    {{ $datas->total() }} data</p>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                {{ $datas->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -136,7 +162,18 @@
                             </div>
                             <div class="col">
                                 <label for="jumlah">Jumlah Bawaan</label>
-                                <input type="number" class="form-control" name="jumlah" id="jumlah">
+                                <input type="text" class="form-control" name="jumlah" id="jumlah">
+                            </div>
+                          </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="hargabeli">Harga Beli</label>
+                                <input type="text" class="form-control" name="hargabeli" id="hargabeli">
+                            </div>
+                            <div class="col">
+                                <label for="hargajual">Harga Jual</label>
+                                <input type="text" class="form-control hargajual" name="hargajual" id="hargajual">
                             </div>
                           </div>
 
@@ -158,7 +195,7 @@
                                 </select>
                             </div>
                           </div>
-
+                          <input type="hidden" name="public" value="1">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -171,43 +208,74 @@
 
     {{-- Modal Edit Data --}}
     @foreach ($datas as $item)
-        <div class="modal fade" id="editJenisBahan{{ $item->id }}" tabindex="-1" aria-labelledby="editJenisBahan"
+        <div class="modal fade" id="editProduk{{ $item->id }}" tabindex="-1" aria-labelledby="editProduk"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editJenisBahan">Edit Jenis Bahan</h5>
+                        <h5 class="modal-title" id="editProduk">Edit Produk</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ url('bahan', ['id' => $item->id]) }}" method="POST">
+                        <form action="{{ url('produk', ['id' => $item->id]) }}" method="POST">
                             @method('PUT')
                             @csrf
                             <div class="form-group">
-                                <label for="bahan">Bahan</label>
-                                <input type="text" class="form-control" id="bahan" name="bahan"
-                                    value="{{ $item->bahan }}">
+                                <label for="produk">Nama Produk</label>
+                                <input type="text" class="form-control" id="produk" name="produk" value="{{ $item->judul }}">
                             </div>
-                            <div class="form-group">
-                                <label for="kategori">Kategori</label>
-                                <select name="kategori" id="kategori" class="form-control">
-                                    <option value="{{ $item->kategories->id }}">{{ $item->kategories->kategori }}</option>
-
-                                    @foreach ($kategori as $kat)
-                                        <option value="{{ $kat->id }}">{{ $kat->kategori }}</option>
-                                    @endforeach
-                                </select>
+                    
+                            <div class="input-group mb-3">
+                                <input type="number" class="form-control" id="barcode" name="barcode" value="{{ $item->barcode }}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-dark" type="button" onclick="generateRandomBarcode()">Generate</button>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select name="status" id="status" class="form-control">
-                                    <option value="{{ $item->status }}">{{ ($item->status == 'Y' ? 'Aktif' : 'Tidak Aktif' ) }}</option>
-                                    <option value="Y">Aktif</option>
-                                    <option value="N">Tidak Aktif</option>
-                                </select>
-                            </div>
+    
+                            <div class="row">
+                                <div class="col">
+                                    <label for="ukuran">Ukuran Bawaan</label>
+                                    <input type="text" class="form-control" name="ukuran" id="ukuran" value="{{ $item->ukuran }}">
+                                </div>
+                                <div class="col">
+                                    <label for="jumlah">Jumlah Bawaan</label>
+                                    <input type="text" class="form-control" name="jumlah" id="jumlah" value="{{ $item->jumlah }}">
+                                </div>
+                              </div>
+    
+                            <div class="row">
+                                <div class="col">
+                                    <label for="hargabeli">Harga Beli</label>
+                                    <input type="text" class="form-control" name="hargabeli" id="hargabeli" value="{{ $item->harga_beli }}">
+                                </div>
+                                <div class="col">
+                                    <label for="hargajual">Harga Jual</label>
+                                    <input type="text" class="form-control hargajual" name="hargajual" id="hargajual" value="{{ $item->harga_jual }}">
+                                </div>
+                              </div>
+    
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <label for="kategori">Kategori</label>
+                                    <select name="kategori" id="kategori" class="form-control">
+                                        <option value="{{ $item->id_kategori }}" selected>{{ $item->kategories->kategori }}</option>
+                                        @foreach ($kategori as $kat)
+                                            <option value="{{ $kat->id }}">{{ $kat->kategori }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="bahan">Bahan</label>
+                                    <select name="bahan" id="bahan" class="form-control">
+                                        <option value="{{ $item->id_bahan }}" selected>{{ $item->bahans->bahan }}</option>
+                                        @foreach ($bahan as $bahans)
+                                            <option value="{{ $bahans->id }}">{{ $bahans->bahan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                              </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -221,7 +289,7 @@
 @endsection
 @section('js')
     <script>
-    function hapusBahan(id) {
+    function hapusProduk(id) {
         Swal.fire({
             title: 'Konfirmasi Hapus',
             text: "Anda yakin ingin menghapus data ini?",
@@ -233,7 +301,7 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('hapusBahan' + id).submit();
+                document.getElementById('hapusProduk' + id).submit();
             }
         });
     }
@@ -263,5 +331,31 @@
 
             return nextMultipleOfTen - sum;
         }
+
+        $(document).ready(function() {
+        $(document).on('keyup', '.hargajual', function() {
+            $(this).val(formatRupiah($(this).val()));
+        });
+
+        $('#hargabeli').on('keyup', function() {
+            $(this).val(formatRupiah($(this).val()));
+        });
+    });
+
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix === undefined ? rupiah : (rupiah ? +rupiah : '');
+    }
     </script>
 @endsection

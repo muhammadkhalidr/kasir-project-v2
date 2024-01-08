@@ -9,6 +9,8 @@ use App\Models\JenisBahan;
 use App\Models\KategoriBahan;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\returnSelf;
+
 class ProdukController extends Controller
 {
     /**
@@ -49,9 +51,18 @@ class ProdukController extends Controller
 
         $data->judul = $request->produk;
         $data->barcode = $request->barcode;
-        $data->barcode = $request->barcode;
+        $data->jumlah = $request->jumlah;
         $data->id_kategori = $request->kategori;
         $data->id_bahan = $request->bahan;
+        $data->ukuran = $request->ukuran;
+        $data->public = $request->public;
+        $data->harga_jual = str_replace('.', '', $request->hargajual);
+        $data->harga_beli = str_replace('.', '', $request->hargabeli);
+
+        // dd($data);
+
+        $data->save();
+        return redirect()->back()->with('success', 'Produk Berhasil di Tambahkan!');
     }
 
     /**
@@ -81,8 +92,11 @@ class ProdukController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Produk $produk)
+    public function destroy($id)
     {
-        //
+        $data = Produk::findOrFail($id);
+        $data->delete();
+
+        return redirect()->back()->with('success', 'data berhasil di hapus');
     }
 }

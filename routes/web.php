@@ -86,7 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/orderan/tambahPelanggan', [OrderanController::class, 'tambahPelanggan'])->name('orderan.tambahPelanggan');
         Route::post('/orderan.cari', [OrderanController::class, 'cariData'])->name('orderan.cari');
         Route::post('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
-
+        Route::post('/orderan/search-product', [OrderanController::class, 'searchProduct'])->name('search-product');
 
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);

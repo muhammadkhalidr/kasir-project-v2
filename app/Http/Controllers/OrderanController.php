@@ -8,6 +8,7 @@ use App\Models\DetailOrderan;
 use App\Models\KasMasuk;
 use App\Models\Pelanggan;
 use App\Models\PelunasanOrderan;
+use App\Models\Produk;
 use App\Models\Rekening;
 use App\Models\setting;
 use Carbon\Carbon;

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('id_transaksi')->nullable();
             $table->string('notrx')->nullable();
             $table->string('namabarang', 50)->nullable();
+            $table->string('ukuran');
+            $table->string('satuan')->nullable();
             $table->integer('jumlah')->nullable();
             $table->bigInteger('harga')->nullable();
             $table->bigInteger('total')->nullable();
@@ -23,8 +25,10 @@ return new class extends Migration
             $table->unsignedBigInteger('subtotal')->nullable();
             $table->integer('sisa')->nullable();
             $table->string('status', 50)->nullable();
-            $table->timestamps();
             $table->foreignId('id_pelanggan')->nullable();
+            $table->integer('id_bahan');
+            $table->integer('id_produk');
+            $table->timestamps();
         });
     }
 

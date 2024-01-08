@@ -119,13 +119,21 @@
                                     id="pemesan2">
                                 <input type="hidden" class="form-control idpemesan" name="idpelanggan[]">
                                 <div class="col">
-                                    <label for="">Nama Barang</label>
-                                    <input type="text" class="form-control namabarang" name="namabarang[]"
-                                        required>
+                                    <form action="{{ route('search-product') }}" method="POST">
+                                        @csrf
+                                        <label for="cariProduk">Produk</label>
+                                        <input type="text" class="form-control produk" placeholder="Cari Produk" name="query" id="cariProduk" required>
+                                        <div id="listProduk"></div>
+                                    </form>
                                 </div>
                                 <div class="col">
                                     <label for="">Keterangan</label>
                                     <input type="text" class="form-control keterangan" name="keterangan[]"
+                                        required>
+                                </div>
+                                <div class="col">
+                                    <label for="">Ukuran</label>
+                                    <input type="text" class="form-control ukuran" name="ukuran[]"
                                         required>
                                 </div>
                                 <div class="col">
