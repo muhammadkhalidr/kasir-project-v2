@@ -44,58 +44,47 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-body pb-0 d-flex justify-content-between">
+                <div class="card-body pb-0 p-4 d-flex justify-content-between">
                     <div>
-                        <h4 class="mb-1">Grafik Pendapatan & Pengeluaran</h4>
-                    </div>
-                    <div>
-                        <form action="{{ route('dashboard.index') }}" method="get">
-                            <input type="date" name="date" class="form-control">
-                            <button type="submit" class="btn btn-primary mt-2">Filter</button>
-                        </form>
+                        <h4 class="mb-1">Grafik Pendapatan</h4>
                     </div>
                 </div>
-                <div class="chart-wrapper">
-                    <canvas id="chart_keuangan"></canvas>
+                <div class="chart-wrapper p-4">
+                    <canvas id="chartLine"></canvas>
                 </div>
             </div>
         </div>
     </div>
 @endsection
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Mendapatkan data dari PHP
-        const totalPendapatan = {{ $totalPendapatanG }};
-        const totalPengeluaran = {{ $totalPengeluaranG }};
+        var totalPendapatan = @json($pendapatanData);
+        var totalPengeluaran = @json($pengeluaranData);
 
-        // Menggambar grafik
-        var ctx = document.getElementById('chart_keuangan').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
+        var ctx = document.getElementById('chartLine').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
             data: {
-                labels: ['Total Pendapatan', 'Total Pengeluaran'],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
-                    label: 'Rp. ',
-                    data: [totalPendapatan, totalPengeluaran],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 99, 132, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
+                    label: 'Pendapatan',
+                    data: totalPendapatan,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                }, {
+                    label: 'Pengeluaran',
+                    data: totalPengeluaran,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 }]
             },
             options: {
+                responsive: true,
                 scales: {
                     y: {
                         beginAtZero: true
                     }
-                },
-                responsive: true,
+                }
             }
         });
     </script>

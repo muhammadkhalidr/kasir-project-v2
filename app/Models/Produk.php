@@ -20,4 +20,9 @@ class Produk extends Model
     {
         return $this->belongsTo(JenisBahan::class, 'id_bahan');
     }
+
+    public function orderans()
+    {
+        return $this->hasMany(DetailOrderan::class, 'id_produk');
+    }
 }

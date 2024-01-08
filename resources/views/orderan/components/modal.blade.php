@@ -41,13 +41,25 @@
                                                                     class="fa fa-user-plus fa-1x"></i>[F4]</button>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                                 <div class="card-body py-0">
                                                     Alamat : <span id="alamat"></span>
                                                     <hr class="p-1 m-0">
                                                     Telp: <span id="nohp"></span>
                                                     <hr class="p-1 m-0">
+                                                    <form id="formCariProduk" method="GET"
+                                                        action="{{ url('orderan') }}">
+                                                        @csrf
+                                                        <div class="input-group input-group-sm mb-0">
+                                                            <input type="text" name="cari_produk" id="cari_produk"
+                                                                class="form-control" placeholder="Cari produk">
+                                                            <div class="input-group-append">
+                                                                <button class="btn btn-outline-secondary" type="button"
+                                                                    id="button-simpan">Tambah</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    <div id="product-list"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -118,13 +130,12 @@
                                 <input type="hidden" class="form-control namapemesan" name="namapemesan[]"
                                     id="pemesan2">
                                 <input type="hidden" class="form-control idpemesan" name="idpelanggan[]">
+                                <input type="hidden" class="form-control id_produk" id="idnya"
+                                    name="idproduk[]">
                                 <div class="col">
-                                    <form action="{{ route('search-product') }}" method="POST">
-                                        @csrf
-                                        <label for="cariProduk">Produk</label>
-                                        <input type="text" class="form-control produk" placeholder="Cari Produk" name="query" id="cariProduk" required>
-                                        <div id="listProduk"></div>
-                                    </form>
+                                    <label for="">Produk</label>
+                                    <input type="text" class="form-control produk" id="produk" name="produk[]"
+                                        required>
                                 </div>
                                 <div class="col">
                                     <label for="">Keterangan</label>
@@ -133,8 +144,7 @@
                                 </div>
                                 <div class="col">
                                     <label for="">Ukuran</label>
-                                    <input type="text" class="form-control ukuran" name="ukuran[]"
-                                        required>
+                                    <input type="text" class="form-control ukuran" name="ukuran[]" required>
                                 </div>
                                 <div class="col">
                                     <label for="">Jumlah Barang</label>
@@ -318,9 +328,19 @@
                                     </div>
                                 </div> --}}
                                 <div class="col">
-                                    <label for="">Nama Barang</label>
+                                    <label for="">Produk</label>
                                     <input type="text" class="form-control namabarang"
                                         value="{{ $detail->namabarang }}" readonly>
+                                </div>
+                                <div class="col">
+                                    <label for="">Keterangan</label>
+                                    <input type="text" class="form-control keterangan"
+                                        value="{{ $detail->keterangan }}" readonly>
+                                </div>
+                                <div class="col">
+                                    <label for="">ukuran</label>
+                                    <input type="text" class="form-control ukuran" value="{{ $detail->ukuran }}"
+                                        readonly>
                                 </div>
                                 <div class="col">
                                     <label for="">Jumlah Barang</label>
@@ -329,13 +349,13 @@
                                 </div>
                                 <div class="col">
                                     <label for="">Harga Barang</label>
-                                    <input type="text" class="form-control harga" value="{{ $detail->harga }}"
-                                        readonly>
+                                    <input type="text" class="form-control harga"
+                                        value="{{ formatRupiah($detail->harga, true) }}" readonly>
                                 </div>
                                 <div class="col">
                                     <label for="">Total</label>
-                                    <input type="text" class="form-control total" value="{{ $detail->total }}"
-                                        readonly>
+                                    <input type="text" class="form-control total"
+                                        value="{{ formatRupiah($detail->total, true) }}" readonly>
                                 </div>
                             </div>
                         @endforeach
@@ -344,17 +364,17 @@
                             <div class="col">
                                 <label for="">Uang Muka</label>
                                 <input type="text" class="form-control dp"
-                                    value="{{ $details->first()->uangmuka }}" readonly>
+                                    value="{{ formatRupiah($details->first()->uangmuka, true) }}" readonly>
                             </div>
                             <div class="col">
                                 <label for="">Sub Total</label>
                                 <input type="text" class="form-control subtotal"
-                                    value="{{ $details->first()->subtotal }}" readonly>
+                                    value="{{ formatRupiah($details->first()->subtotal, true) }}" readonly>
                             </div>
                             <div class="col">
                                 <label for="">Sisa</label>
                                 <input type="text" class="form-control sisa"
-                                    value="{{ $details->first()->sisa }}" readonly>
+                                    value="{{ formatRupiah($details->first()->sisa, true) }}" readonly>
                             </div>
                         </div>
                     </div>

@@ -44,7 +44,18 @@
                             <li><a href="{{ url('hutang') }}">Hutang</a></li>
                             <li><a href="{{ url('pendapatan') }}">Rincian Pendapatan</a></li>
                             <li><a href="{{ url('piutang') }}">Rincian Piutang</a></li>
+                            <li><a href="{{ url('omset') }}">Omset Penjualan</a></li>
                             <li><a href="{{ url('aktifitas') }}">Log Transaksi</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-label">Keuangan</li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-wallet menu-icon"></i><span class="nav-text">Data Keuangan</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('keuangan') }}">Log Keuangan</a></li>
+                            <li><a href="{{ url('kas') }}">Data Kas</a></li>
                         </ul>
                     </li>
                     <li class="nav-label">Karyawan</li>
@@ -56,16 +67,6 @@
                             <li><a href="{{ url('karyawan') }}">Data Karyawan</a></li>
                             <li><a href="{{ url('gaji-karyawan') }}">Gaji Karyawan</a></li>
                             <li><a href="{{ url('gaji-karyawanv2') }}">Gaji Karyawan V2</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-label">Keuangan</li>
-                    <li class="mega-menu mega-menu-sm">
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-wallet menu-icon"></i><span class="nav-text">Data Keuangan</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('keuangan') }}">Log Keuangan</a></li>
-                            <li><a href="{{ url('kas') }}">Data Kas</a></li>
                         </ul>
                     </li>
 

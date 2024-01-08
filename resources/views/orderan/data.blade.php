@@ -217,6 +217,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -375,13 +376,14 @@
     });
 </script>
 <script type="text/javascript">
+    // Pencarian Pelanggan
     $('#cariPelanggan').on('keyup', function() {
-        var query = $(this).val();
+        var queryPelanggan = $(this).val();
         $.ajax({
             url: "{{ url('orderan') }}",
             type: "GET",
             data: {
-                'query': query
+                'query': queryPelanggan
             },
             success: function(data) {
                 $('#listPelanggan').html(data);
@@ -389,31 +391,47 @@
         });
     });
 
-    $('body').on('click', 'li', function() {
-        var id = $(this).data('id');
-        var name = $(this).text();
+    // Menangani Klik pada Pelanggan
+    $('body').on('click', '#listPelanggan li', function() {
+        var idPelanggan = $(this).data('id');
+        var namaPelanggan = $(this).text();
 
-        // Check if there's already a value in pemesan2
-        var currentName = $('#pemesan2').val();
-        var currentNamee = $('#pemesan').val();
+        // Set nilai untuk input pelanggan
+        $('#pemesan2').val(namaPelanggan);
+        $('#pemesan').val(namaPelanggan);
 
-        if (currentName) {
-            // If pemesan2 already has a value, replace the ID for the corresponding 'namapemesan'
-            $('.namapemesan').each(function(index, element) {
-                if ($(element).val() === currentName) {
-                    $(element).next('.idpemesan').val(id);
+        // Set nilai ID pelanggan pada input terkait
+        $('.namapemesan').each(function(index, element) {
+            if ($(element).val() === namaPelanggan) {
+                $(element).next('.idpemesan').val(idPelanggan);
+            }
+        });
+    });
+
+    // Pencarian Produk
+    $(document).ready(function() {
+        $('#cari_produk').on('input', function() {
+            var queryProduk = $(this).val();
+            $.ajax({
+                url: "{{ route('ajax.search.product') }}",
+                type: "GET",
+                data: {
+                    'query': queryProduk
+                },
+                success: function(data) {
+                    $('#product-list').html(data);
                 }
             });
-        } else {
-            // If pemesan2 is empty, append the ID as before
-            $('.idpemesan').val(function(index, currentValue) {
-                return currentValue + (currentValue ? ',' : '') + id;
-            });
-        }
+        });
 
-        // Set the value of the input with class 'namapemesan'
-        $('#pemesan2').val(name);
-        $('#pemesan').val(name);
+        // Menangani Klik pada Produk
+        $(document).on('click', '#product-list .list-group-item', function() {
+            var product_name = $(this).text();
+            var product_id = $(this).data('id');
+            $('#produk').val(product_name);
+            $('#idnya').val(product_id);
+            $('#product-list').html('');
+        });
     });
 </script>
 

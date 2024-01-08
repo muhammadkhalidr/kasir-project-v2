@@ -100,6 +100,7 @@
                                         <th>Bonus</th>
                                         <th>Kas Bon</th>
                                         <th>Sisa Gaji</th>
+                                        <th>Tanggal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -108,9 +109,9 @@
                                             <tr>
                                                 <th>{{ $loop->iteration }}</th>
                                                 <th>{{ $gaji->karyawans->nama_karyawan }}</th>
-                                                <th>Rp. {{ formatRupiah($gaji->jumlah_gaji, true) }}</th>
+                                                <th>{{ formatRupiah($gaji->jumlah_gaji, true) }}</th>
                                                 <th>{{ $gaji->persen_bonus ?? '0' }} %</th>
-                                                <th>Rp.{{ formatRupiah($gaji->bonus, true) }}</th>
+                                                <th>{{ formatRupiah($gaji->bonus, true) }}</th>
 
                                                 {{-- Display Total Kasbon --}}
                                                 @php
@@ -123,6 +124,7 @@
                                                 </th>
 
                                                 <th>Rp. {{ number_format($gaji->sisa_gaji, 0, ',', '.') }}</th>
+                                                <th>{{ $gaji->created_at }}</th>
                                             </tr>
                                         @endforeach
                                     @endisset

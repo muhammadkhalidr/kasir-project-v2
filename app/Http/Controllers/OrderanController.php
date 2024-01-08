@@ -14,6 +14,8 @@ use App\Models\setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderanController extends Controller
 {
@@ -23,7 +25,7 @@ class OrderanController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $dataOrderan = DetailOrderan::with('pelanggans');
+        $dataOrderan = DetailOrderan::with(['pelanggans', 'produks']);
         $kode_pelanggan = "";
         $dataPelanggan = Pelanggan::select('kode_pelanggan', 'nama')->get();
         $pelanggans = Pelanggan::all();
@@ -107,6 +109,21 @@ class OrderanController extends Controller
         ]);
     }
 
+    public function searchProduct(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = $request->get('query');
+            $products = Produk::where('judul', 'LIKE', '%' . $query . '%')->limit(10)->get();
+            $id_products = Produk::where('id', 'LIKE', '%' . $query . '%')->limit(10)->get();
+
+            return view('partials.product_list', [
+                'products' => $products,
+                'id_products' => $id_products
+            ])->render();
+        }
+    }
+
+
 
     public function cariData(Request $request)
     {
@@ -123,7 +140,6 @@ class OrderanController extends Controller
         ]);
     }
 
-
     public function filterJumlah(Request $request)
     {
         return $this->index($request);
@@ -137,6 +153,7 @@ class OrderanController extends Controller
     {
         $user = Auth::user();
         $data = $request->all();
+
 
         $noTrx = DetailOrderan::latest('id')->first();
 
@@ -167,9 +184,11 @@ class OrderanController extends Controller
                 'id_transaksi' => $idTransaksiBaru2,
                 'notrx' => $data['notrx'][$key],
                 'id_pelanggan' => $value,
-                'namabarang' => $data['namabarang'][$key],
+                'namabarang' => $data['produk'][$key],
+                'id_produk' => $data['idproduk'][$key],
                 'keterangan' => $data['keterangan'][$key],
                 'jumlah' => $data['jumlah'][$key],
+                'ukuran' => $data['ukuran'][$key],
                 'harga' => str_replace('.', '', $data['harga'][$key]),
                 'total' => str_replace('.', '', $data['total'][$key]),
                 'uangmuka' => $uangMuka,
@@ -207,12 +226,22 @@ class OrderanController extends Controller
         return redirect('orderan')->with('msg', 'Data Berhasil Ditambahkan!');
     }
 
-    // public function search(Request $request)
-    // {
+    public function omset()
+    {
 
+        $user = Auth::user();
 
-    //     return view('search-results', ['results' => $results]);
-    // }
+        $subtotalPerProduk = DetailOrderan::join('produks', 'detail_orderans.id_produk', '=', 'produks.id')
+            ->groupBy('detail_orderans.id_produk', 'produks.judul')
+            ->select('detail_orderans.id_produk', 'produks.judul', DB::raw('SUM(subtotal) as subtotal'))
+            ->get();
+
+        return view('omset.data', [
+            'title' => 'Omset Penjualan',
+            'name_user' => $user->name,
+            'omset' => $subtotalPerProduk
+        ]);
+    }
 
     public function tambahPelanggan(Request $request)
     {

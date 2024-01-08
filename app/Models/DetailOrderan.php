@@ -17,4 +17,9 @@ class DetailOrderan extends Model
     {
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
     }
+
+    public function produks()
+    {
+        return $this->belongsTo(Produk::class, 'id_produk');
+    }
 }

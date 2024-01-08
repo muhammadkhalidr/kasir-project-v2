@@ -27,6 +27,7 @@ use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\SettingController;
+use App\Models\DetailOrderan;
 use App\Models\Orderan;
 use App\Models\Pelanggan;
 
@@ -86,7 +87,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/orderan/tambahPelanggan', [OrderanController::class, 'tambahPelanggan'])->name('orderan.tambahPelanggan');
         Route::post('/orderan.cari', [OrderanController::class, 'cariData'])->name('orderan.cari');
         Route::post('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
-        Route::post('/orderan/search-product', [OrderanController::class, 'searchProduct'])->name('search-product');
+        Route::get('/ajax/search/product', [OrderanController::class, 'searchProduct'])->name('ajax.search.product');
 
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
@@ -159,6 +160,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Produkk
         Route::resource('produk', ProdukController::class);
+
+        // Omset 
+        Route::get('/omset', [OrderanController::class, 'omset'])->name('omset');
     });
 
     // Akses Untuk Owner
