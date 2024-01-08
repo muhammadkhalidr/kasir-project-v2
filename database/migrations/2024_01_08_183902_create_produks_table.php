@@ -17,11 +17,12 @@ return new class extends Migration
             $table->string('id_bahan');
             $table->string('barcode')->nullable();
             $table->string('judul');
-            $table->integer('harga_beli');
-            $table->integer('harga_jual');
-            $table->integer('harga_grosir');
+            $table->bigInteger('harga_beli');
+            $table->bigInteger('harga_jual');
+            $table->bigInteger('harga_grosir')->nullable();
             $table->string('ukuran');
-            $table->string('public');
+            $table->integer('public')->nullable();
+            $table->bigInteger('jumlah');
             $table->enum('status', ['Y', 'N']);
             $table->timestamps();
         });

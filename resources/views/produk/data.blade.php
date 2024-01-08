@@ -108,7 +108,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="tambahDataProdukLabel">Tambah Jenis</h5>
+                    <h5 class="modal-title" id="tambahDataProdukLabel">Tambah Profuk</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -123,45 +123,42 @@
                         </div>
                 
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="barcode" name="barcode">
+                            <input type="number" class="form-control" id="barcode" name="barcode">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-dark" type="button" onclick="generateRandomBarcode()">Generate</button>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="jenis">Kategori</label>
-                            <select name="kategori" id="kategori" class="form-control">
-                                @foreach ($kategori as $item)
-                                    <option value="{{ $item->id }}">{{ $item->kategori }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="ukuran">Ukuran Bawaan</label>
+                                <input type="text" class="form-control" name="ukuran" id="ukuran">
+                            </div>
+                            <div class="col">
+                                <label for="jumlah">Jumlah Bawaan</label>
+                                <input type="number" class="form-control" name="jumlah" id="jumlah">
+                            </div>
+                          </div>
 
-                        <div class="form-group">
-                            <label for="jenis">Kategori</label>
-                            <select name="kategori" id="kategori" class="form-control">
-                                @foreach ($kategori as $item)
-                                    <option value="{{ $item->id }}">{{ $item->kategori }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    
-                        <div class="form-group">
-                            <label for="publikasi">Publikasi</label>
-                            <select name="publikasi" id="publikasi" class="form-control">
-                                <option value="1">Ya</option>
-                                <option value="0">Tidak</option>
-                            </select>
-                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <label for="kategori">Kategori</label>
+                                <select name="kategori" id="kategori" class="form-control">
+                                    @foreach ($kategori as $item)
+                                        <option value="{{ $item->id }}">{{ $item->kategori }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="bahan">Bahan</label>
+                                <select name="bahan" id="bahan" class="form-control">
+                                    @foreach ($bahan as $item)
+                                        <option value="{{ $item->id }}">{{ $item->bahan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                          </div>
 
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select name="status" id="status" class="form-control">
-                                <option value="Y">Aktif</option>
-                                <option value="N">Tidak Aktif</option>
-                            </select>
-                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan</button>
