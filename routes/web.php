@@ -17,11 +17,14 @@ use App\Http\Controllers\CetakLaporanPembelianController;
 use App\Http\Controllers\GajiKaryawanController;
 use App\Http\Controllers\GajiKaryawanV2Controller;
 use App\Http\Controllers\HutangController;
+use App\Http\Controllers\JenisBahanController;
 use App\Http\Controllers\JenisPengeluaranController;
 use App\Http\Controllers\KasController;
+use App\Http\Controllers\KategoriBahanController;
 use App\Http\Controllers\LogTranasksiController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PiutangController;
+use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\SettingController;
 use App\Models\Orderan;
@@ -143,6 +146,19 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('jenis-pengeluaran', JenisPengeluaranController::class);
         Route::put('jenis-pengeluaran/{id}', [JenisPengeluaranController::class, 'update'])->name('jenis-pengeluaran.update');
         Route::post('jenis-pengeluaran', [JenisPengeluaranController::class, 'limitJumlah'])->name('jenis-pengeluaran.limit');
+
+        // Jenis Bahan
+        Route::resource('bahan', JenisBahanController::class);
+
+
+        // Kategori
+        Route::resource('kategori', KategoriBahanController::class);
+        Route::get('/kategori', [KategoriBahanController::class, 'index']);
+        Route::post('kategori/limit', [KategoriBahanController::class, 'limit'])->name('kategori.limit');
+        Route::get('kategori/cari', [KategoriBahanController::class, 'cariData'])->name('kategori.caridata');
+
+        // Produkk
+        Route::resource('produk', ProdukController::class);
     });
 
     // Akses Untuk Owner

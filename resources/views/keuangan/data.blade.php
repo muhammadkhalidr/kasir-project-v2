@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="card">
+    <div class="filter mb-3">
         <div class="row">
             <div class="col d-flex justify-content-end">
                 <div class="card-header pb-2">
