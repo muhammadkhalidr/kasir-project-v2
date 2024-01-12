@@ -21,4 +21,14 @@ class Kasbon extends Model
     {
         return $this->belongsTo(GajiKaryawanV2::class, 'id_karyawan');
     }
+
+    public function pengeluarans()
+    {
+        return $this->hasMany(Pengeluaran::class, 'id');
+    }
+
+    public function jenis()
+    {
+        return $this->belongsTo(JenisPengeluaran::class, 'id_jenis');
+    }
 }

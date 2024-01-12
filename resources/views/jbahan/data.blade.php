@@ -74,7 +74,6 @@
                                     <th>Bahan</th>
                                     <th>Kategori</th>
                                     <th>Status</th>
-                                    <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -87,7 +86,6 @@
                                         <td>{{ $index + $datas->firstItem() }}</td>
                                         <td>{{ $item->bahan }}</td>
                                         <td>{{ $item->kategories->kategori }}</td>
-                                        <td>{{ $item->id }}</td>
                                         <td>
                                             @if ($item->status == 'Y')
                                                 <span class="badge badge-success">Aktif</span>
@@ -100,10 +98,13 @@
                                                 data-target="#editJenisBahan{{ $item->id }}">
                                                 <i class="fa fa-edit"></i>
                                             </button>
-                                            <form id="hapusBahan{{$item->id}}" action="{{ url('bahan/' . $item->id) }}" method="POST" style="display: inline">
+                                            <form id="hapusBahan{{ $item->id }}"
+                                                action="{{ url('bahan/' . $item->id) }}" method="POST"
+                                                style="display: inline">
                                                 @method('DELETE')
                                                 @csrf
-                                                <button type="button" title="Hapus Data" class="btn btn-sm btn-danger" onclick="hapusBahan({{$item->id}})">
+                                                <button type="button" title="Hapus Data" class="btn btn-sm btn-danger"
+                                                    onclick="hapusBahan({{ $item->id }})">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
@@ -146,7 +147,7 @@
                             <label for="jenis">Kategori</label>
                             <select name="kategori" id="kategori" class="form-control">
                                 @foreach ($kategori as $item)
-                                <option value="{{ $item->id }}">{{ $item->kategori }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->kategori }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -192,7 +193,8 @@
                             <div class="form-group">
                                 <label for="kategori">Kategori</label>
                                 <select name="kategori" id="kategori" class="form-control">
-                                    <option value="{{ $item->kategories->id }}">{{ $item->kategories->kategori }}</option>
+                                    <option value="{{ $item->kategories->id }}">{{ $item->kategories->kategori }}
+                                    </option>
 
                                     @foreach ($kategori as $kat)
                                         <option value="{{ $kat->id }}">{{ $kat->kategori }}</option>
@@ -202,7 +204,8 @@
                             <div class="form-group">
                                 <label for="status">Status</label>
                                 <select name="status" id="status" class="form-control">
-                                    <option value="{{ $item->status }}">{{ ($item->status == 'Y' ? 'Aktif' : 'Tidak Aktif' ) }}</option>
+                                    <option value="{{ $item->status }}">
+                                        {{ $item->status == 'Y' ? 'Aktif' : 'Tidak Aktif' }}</option>
                                     <option value="Y">Aktif</option>
                                     <option value="N">Tidak Aktif</option>
                                 </select>
@@ -220,21 +223,21 @@
 @endsection
 @section('js')
     <script>
-    function hapusBahan(id) {
-        Swal.fire({
-            title: 'Konfirmasi Hapus',
-            text: "Anda yakin ingin menghapus data ini?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('hapusBahan' + id).submit();
-            }
-        });
-    }
+        function hapusBahan(id) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Anda yakin ingin menghapus data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('hapusBahan' + id).submit();
+                }
+            });
+        }
     </script>
 @endsection

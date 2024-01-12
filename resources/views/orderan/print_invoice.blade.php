@@ -202,7 +202,8 @@
                                 <thead>
                                     <tr>
                                         <th width="10%">PRODUK</th>
-                                        <th class="text-center" width="40%">KETERANGAN</th>
+                                        <th class="text-center" width="30%">KETERANGAN</th>
+                                        <th class="text-center" width="15%">BAHAN</th>
                                         <th class="text-center" width="10%">QTY</th>
                                         <th class="text-center" width="10%">HARGA</th>
                                         <th class="text-right" width="20%">TOTAL</th>
@@ -215,6 +216,7 @@
                                                 <span class="text-inverse">{{ $orderan->namabarang }}</span>
                                             </td>
                                             <td class="text-center">{{ $orderan->keterangan }}</td>
+                                            <td class="text-center">{{ $orderan->bahans->bahan }}</td>
                                             <td class="text-center">{{ $orderan->jumlah }}</td>
                                             <td class="text-center">Rp.
                                                 {{ number_format($orderan->harga, 0, ',', '.') }}</td>
@@ -262,9 +264,7 @@
                         @endphp
                     @endif --}}
                             STATUS : {{ $orderanGroup->first()->status }} <br>
-                            PEMBAYARAN : {{ $bank = $via->first()->bank ?? '' }} -
-                            {{ $via->first()->via ?? 'TUNAI' }}
-                            {{-- {{ "Via: $bank" }} --}}
+                            PEMBAYARAN : {{ $via->first()->bank == '1' ? 'BANK' : 'TUNAI' }}
                         </h6>
                     </div>
                     <!-- end invoice-note -->

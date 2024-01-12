@@ -9,40 +9,40 @@
         <div class="col-lg-4 col-sm-6">
             <div class="card gradient-4">
                 <div class="card-body">
-                    <h3 class="card-title text-white">Pengeluaran</h3>
+                    <h3 class="card-title text-white">Orderan Total</h3>
                     <div class="d-inline-block">
-                        <h2 class="text-white">{{ formatRupiah($totalPengeluaran, true) }}</h2>
+                        <h2 class="text-white">{{ $totalOrderan }} </h2>
                     </div>
-                    <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
+                    <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="card gradient-2">
                 <div class="card-body">
-                    <h3 class="card-title text-white">Pendapatan</h3>
+                    <h3 class="card-title text-white">Orderan Hari Ini</h3>
                     <div class="d-inline-block">
-                        <h2 class="text-white">{{ formatRupiah($totalPendapatan, true) }}</h2>
+                        <h2 class="text-white">{{ $orderanHariIni }}</h2>
                     </div>
-                    <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
+                    <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 col-sm-6">
             <div class="card gradient-1">
                 <div class="card-body">
-                    <h3 class="card-title text-white">Orderan</h3>
+                    <h3 class="card-title text-white">Konsumen</h3>
                     <div class="d-inline-block">
-                        <h2 class="text-white">{{ $totalOrderan }} Orderan </h2>
+                        <h2 class="text-white">{{ $konsumen }}</h2>
                     </div>
-                    <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
+                    <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-8">
             <div class="card">
                 <div class="card-body pb-0 p-4 d-flex justify-content-between">
                     <div>
@@ -51,6 +51,43 @@
                 </div>
                 <div class="chart-wrapper p-4">
                     <canvas id="chartLine"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body pb-0 p-4 d-flex justify-content-between">
+                    <div>
+                        <h4 class="mb-2">Transaksi</h4>
+                        <div class="btn btn-sm btn-danger float-right mb-2"><a href="orderan" class="text-white">Semua
+                                &#10095;</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table thead-primary">
+                                <tr>
+                                    <th>Invoice</th>
+                                    <th>Konsumen</th>
+                                    <th>Status</th>
+                                    <th>Kasir</th>
+                                </tr>
+                                <tbody>
+                                    @foreach ($orderan as $item)
+                                        @if (!$loop->first && $item->notrx == $orderan[$loop->index - 1]->notrx)
+                                            @continue
+                                        @endif
+                                        <tr>
+                                            <td><span class="badge badge-info">{{ $item->notrx }}</span></td>
+                                            <td style="font-size:12px">{{ $item->pelanggans->nama }}</td>
+                                            <td><span
+                                                    class="badge badge-{{ $item->status == 'Lunas' ? 'success' : 'danger' }}">{{ $item->status }}</span>
+                                            </td>
+                                            <td style="font-size:12px">{{ $item->name_kasir }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

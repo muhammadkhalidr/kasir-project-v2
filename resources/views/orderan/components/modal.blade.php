@@ -26,6 +26,7 @@
                                                         <label for="" class="form-label">Nama Pemesan</label>
                                                         <input type="text" class="form-control" id="pemesan"
                                                             autocomplete="off" readonly>
+                                                        {{-- <h4 id="pemesan"></h4> --}}
                                                     </h5>
                                                     <div class="d-flex ">
                                                         <div class="btn-group" role="group">
@@ -53,13 +54,9 @@
                                                         <div class="input-group input-group-sm mb-0">
                                                             <input type="text" name="cari_produk" id="cari_produk"
                                                                 class="form-control" placeholder="Cari produk">
-                                                            <div class="input-group-append">
-                                                                <button class="btn btn-outline-secondary" type="button"
-                                                                    id="button-simpan">Tambah</button>
-                                                            </div>
                                                         </div>
+                                                        <div id="product-list"></div>
                                                     </form>
-                                                    <div id="product-list"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -132,6 +129,7 @@
                                 <input type="hidden" class="form-control idpemesan" name="idpelanggan[]">
                                 <input type="hidden" class="form-control id_produk" id="idnya"
                                     name="idproduk[]">
+                                <input type="hidden" class="form-control id_bahan" id="id_bahan" name="idbahan[]">
                                 <div class="col">
                                     <label for="">Produk</label>
                                     <input type="text" class="form-control produk" id="produk" name="produk[]"
@@ -338,9 +336,14 @@
                                         value="{{ $detail->keterangan }}" readonly>
                                 </div>
                                 <div class="col">
-                                    <label for="">ukuran</label>
+                                    <label for="">Ukuran</label>
                                     <input type="text" class="form-control ukuran" value="{{ $detail->ukuran }}"
                                         readonly>
+                                </div>
+                                <div class="col">
+                                    <label for="">Bahan</label>
+                                    <input type="text" class="form-control bahan"
+                                        value="{{ $detail->bahans->bahan }}" readonly>
                                 </div>
                                 <div class="col">
                                     <label for="">Jumlah Barang</label>

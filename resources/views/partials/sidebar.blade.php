@@ -23,13 +23,6 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ url('produk') }}">Produk</a></li>
-                        </ul>
-                    </li>
-                    <li class="mega-menu mega-menu-sm">
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-folder-alt menu-icon"></i><span class="nav-text">Bahan</span>
-                        </a>
-                        <ul aria-expanded="false">
                             <li><a href="{{ url('bahan') }}">Jenis Bahan</a></li>
                             <li><a href="{{ url('kategori') }}">Kategori</a></li>
                         </ul>
@@ -65,8 +58,9 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ url('karyawan') }}">Data Karyawan</a></li>
-                            <li><a href="{{ url('gaji-karyawan') }}">Gaji Karyawan</a></li>
-                            <li><a href="{{ url('gaji-karyawanv2') }}">Gaji Karyawan V2</a></li>
+                            {{-- <li><a href="{{ url('gaji-karyawan') }}">Gaji Karyawan</a></li> --}}
+                            <li><a href="{{ url('gaji-karyawanv2') }}">Gaji Karyawan</a></li>
+                            <li><a href="{{ url('kasbon') }}">Kasbon Karyawan</a></li>
                         </ul>
                     </li>
 

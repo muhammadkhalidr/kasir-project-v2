@@ -21,4 +21,9 @@ class JenisPengeluaran extends Model
     {
         return $this->hasMany(Karyawan::class, 'id_jenis',);
     }
+
+    // public function kasbons()
+    // {
+    //     return $this->hasMany(Kasbon::class, 'id_jenis');
+    // }
 }

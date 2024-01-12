@@ -29,4 +29,9 @@ class Rekening extends Model
     {
         return $this->hasMany(KasMasuk::class, 'bank', 'id');
     }
+
+    public function pelunasans()
+    {
+        return $this->hasMany(PelunasanOrderan::class, 'id');
+    }
 }

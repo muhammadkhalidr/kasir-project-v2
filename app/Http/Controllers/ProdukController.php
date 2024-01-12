@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProdukRequest;
 use App\Http\Requests\UpdateProdukRequest;
 use App\Models\JenisBahan;
 use App\Models\KategoriBahan;
+use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\returnSelf;
@@ -19,7 +20,7 @@ class ProdukController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $data = Produk::with(['kategories', 'bahans'])->paginate(10);
+        $data = Produk::with(['kategories', 'bahans'])->paginate(12);
         $kategori = KategoriBahan::where('status', 'Y')->get();
         $bahan = JenisBahan::all();
 
@@ -84,9 +85,25 @@ class ProdukController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProdukRequest $request, Produk $produk)
+    public function update(UpdateProdukRequest $request, $id)
     {
-        //
+
+        $data = Produk::findOrFail($id);
+
+        $data->judul = $request->produk;
+        $data->barcode = $request->barcode;
+        $data->jumlah = $request->jumlah;
+        $data->id_kategori = $request->kategori;
+        $data->id_bahan = $request->bahan;
+        $data->ukuran = $request->ukuran;
+        $data->public = $request->public;
+        $data->harga_jual = str_replace('.', '', $request->hargajual);
+        $data->harga_beli = str_replace('.', '', $request->hargabeli);
+
+        // dd($data);
+
+        $data->save();
+        return redirect()->back()->with('success', 'Produk Berhasil di Update!');
     }
 
     /**

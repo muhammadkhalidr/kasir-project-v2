@@ -6,7 +6,9 @@ use App\Models\DetailOrderan;
 use App\Models\Orderan;
 use App\Models\Pengeluaran;
 use App\Models\KasMasuk;
+use App\Models\Pelanggan;
 use App\Models\Pembelian;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -17,6 +19,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $orderan = DetailOrderan::orderBy('created_at', 'desc')->paginate(8);
 
         $pendapatanBulanan = KasMasuk::where('bank', '!=', 'kaskecil')
             ->select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(pemasukan) as total'))
@@ -36,23 +39,20 @@ class DashboardController extends Controller
             $pengeluaranData[] = $pengeluaranBulanan->get($i)->total ?? 0;
         }
 
-        $datas = DetailOrderan::all();
-        $pengeluaran = Pengeluaran::all();
-        $pembelian = Pembelian::all();
+        $totalOrderan = DetailOrderan::all();
+        $orderanHariIni = DetailOrderan::whereDate('created_at', Carbon::today())->count();
 
-        $pendapatan = KasMasuk::where('bank', '!=', 'kaskecil')
-            ->sum('pemasukan');
-
-        $kasKeluar = $pengeluaran->sum('total') + $pembelian->sum('total');
+        $konsumen = Pelanggan::all()->count();
 
         return view('layout.home', [
-            'totalOrderan' => $datas->count(),
-            'totalPengeluaran' => $kasKeluar,
             'title' => 'Dashboard | Home',
+            'totalOrderan' => $totalOrderan->count(),
             'name_user' => $user->name,
-            'totalPendapatan' => $pendapatan,
             'pendapatanData' => $pendapatanData,
+            'orderanHariIni' => $orderanHariIni,
             'pengeluaranData' => $pengeluaranData,
+            'konsumen' => $konsumen,
+            'orderan' => $orderan,
         ]);
     }
 }

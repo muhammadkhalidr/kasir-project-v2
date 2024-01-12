@@ -22,4 +22,9 @@ class DetailOrderan extends Model
     {
         return $this->belongsTo(Produk::class, 'id_produk');
     }
+
+    public function bahans()
+    {
+        return $this->belongsTo(JenisBahan::class, 'id_bahan');
+    }
 }

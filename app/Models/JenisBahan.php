@@ -23,4 +23,9 @@ class JenisBahan extends Model
     {
         return $this->belongsTo(Produk::class, 'id');
     }
+
+    public function orderans()
+    {
+        return $this->hasMany(Produk::class, 'id_bahan');
+    }
 }

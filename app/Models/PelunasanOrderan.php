@@ -21,4 +21,9 @@ class PelunasanOrderan extends Model
         'bukti_transfer',
         'id_bayar'
     ];
+
+    public function rekenings()
+    {
+        return $this->belongsTo(Rekening::class, 'bank');
+    }
 }

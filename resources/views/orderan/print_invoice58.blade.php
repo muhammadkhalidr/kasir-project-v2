@@ -301,7 +301,7 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="2" class=" border-top-0">
-                                                    Uk.: | Bhn.:
+                                                    Uk.: {{ $orderan->ukuran }} | Bhn.: {{ $orderan->bahans->bahan }}
                                                 </td>
                                             </tr>
                                             <tr>

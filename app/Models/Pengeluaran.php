@@ -42,4 +42,9 @@ class Pengeluaran extends Model
     {
         return $this->hasMany(GajiKaryawanV2::class, 'id_karyawan',);
     }
+
+    public function kasbons()
+    {
+        return $this->hasMany(Kasbon::class, 'id');
+    }
 }

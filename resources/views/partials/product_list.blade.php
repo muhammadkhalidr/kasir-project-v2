@@ -14,4 +14,11 @@
             <li class="list-group-item">ID Produk tidak ditemukan</li>
         @endforelse
     </ul>
+    <ul class="list-group" id="id-bahans-list" style="display: none;">
+        @forelse($id_bahan as $idBahan)
+            <li class="list-group-item" style="cursor:pointer;" data-id="{{ $idBahan->id }}"></li>
+        @empty
+            <li class="list-group-item">ID Bahan tidak ditemukan</li>
+        @endforelse
+    </ul>
 </div>

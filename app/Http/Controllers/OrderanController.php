@@ -6,6 +6,7 @@ use App\Models\Orderan;
 use App\Http\Requests\UpdateOrderanRequest;
 use App\Models\DetailOrderan;
 use App\Models\KasMasuk;
+use App\Models\OmsetPenjualan;
 use App\Models\Pelanggan;
 use App\Models\PelunasanOrderan;
 use App\Models\Produk;
@@ -25,7 +26,9 @@ class OrderanController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $dataOrderan = DetailOrderan::with(['pelanggans', 'produks']);
+        $dataOrderan = DetailOrderan::with(['pelanggans', 'produks', 'bahans']);
+
+        // dd($dataOrderan);
         $kode_pelanggan = "";
         $dataPelanggan = Pelanggan::select('kode_pelanggan', 'nama')->get();
         $pelanggans = Pelanggan::all();
@@ -113,15 +116,23 @@ class OrderanController extends Controller
     {
         if ($request->ajax()) {
             $query = $request->get('query');
-            $products = Produk::where('judul', 'LIKE', '%' . $query . '%')->limit(10)->get();
-            $id_products = Produk::where('id', 'LIKE', '%' . $query . '%')->limit(10)->get();
+
+            $products = Produk::with('bahans')->where('judul', 'LIKE', '%' . $query . '%')->limit(10)->get();
+            $id_products = Produk::with('bahans')->where('id', 'LIKE', '%' . $query . '%')->limit(10)->get();
+            $id_bahan = Produk::with('bahans')->where('id_bahan', 'LIKE', '%' . $query . '%')->limit(10)->get();
+            $bahans = Produk::with('bahans')->whereHas('bahans', function ($q) use ($query) {
+                $q->where('bahan', 'LIKE', '%' . $query . '%');
+            })->limit(10)->get();
 
             return view('partials.product_list', [
                 'products' => $products,
-                'id_products' => $id_products
+                'id_products' => $id_products,
+                'id_bahan' => $id_bahan,
+                'bahans' => $bahans
             ])->render();
         }
     }
+
 
 
 
@@ -186,6 +197,7 @@ class OrderanController extends Controller
                 'id_pelanggan' => $value,
                 'namabarang' => $data['produk'][$key],
                 'id_produk' => $data['idproduk'][$key],
+                'id_bahan' => $data['idbahan'][$key],
                 'keterangan' => $data['keterangan'][$key],
                 'jumlah' => $data['jumlah'][$key],
                 'ukuran' => $data['ukuran'][$key],
@@ -196,6 +208,14 @@ class OrderanController extends Controller
                 'sisa' => str_replace('.', '', $data['sisa']),
                 'status' => $status,
                 'name_kasir' => $data['namakasir']
+            ]);
+
+            OmsetPenjualan::create([
+                'notrx' => $data['notrx'][$key],
+                'id_produk' => $data['idproduk'][$key],
+                'produk' => $data['produk'][$key],
+                'jumlah' => $data['jumlah'][$key],
+                'total' => str_replace('.', '', $data['total'][$key]),
             ]);
 
             // Tambahkan notrx ke dalam array processedNotrx
@@ -223,23 +243,43 @@ class OrderanController extends Controller
             }
         }
 
+        // $omset = new OmsetPenjualan;
+        // $omset->id_produk = $data['idproduk'][0];
+        // $omset->jumlah = $data['jumlah'][0];
+        // $omset->produk = $data['produk'][0];
+        // $omset->total = str_replace('.', '', $data['total'][$key]);
+        // $omset->save();
+
         return redirect('orderan')->with('msg', 'Data Berhasil Ditambahkan!');
     }
 
-    public function omset()
+    public function omset(Request $request)
     {
 
         $user = Auth::user();
 
-        $subtotalPerProduk = DetailOrderan::join('produks', 'detail_orderans.id_produk', '=', 'produks.id')
-            ->groupBy('detail_orderans.id_produk', 'produks.judul')
-            ->select('detail_orderans.id_produk', 'produks.judul', DB::raw('SUM(subtotal) as subtotal'))
-            ->get();
+        // $subtotalPerProduk = DetailOrderan::join('produks', 'detail_orderans.id_produk', '=', 'produks.id')
+        //     ->groupBy('detail_orderans.id_produk', 'produks.judul')
+        //     ->select('detail_orderans.id_produk', 'produks.judul', DB::raw('SUM(subtotal) as subtotal'))
+        //     ->get();
+
+        $dataOmset = OmsetPenjualan::groupBy('id_produk', 'produk')
+            ->select('id_produk', 'produk', DB::raw('SUM(total) as total'), DB::raw('SUM(jumlah) as jumlah'))
+            ->paginate(10);
+
+
+        // Apply date filter
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
+            $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
+
+            $dataOmset->whereBetween('created_at', [$start_date, $end_date]);
+        }
 
         return view('omset.data', [
             'title' => 'Omset Penjualan',
             'name_user' => $user->name,
-            'omset' => $subtotalPerProduk
+            'omset' => $dataOmset
         ]);
     }
 
@@ -395,6 +435,9 @@ class OrderanController extends Controller
         $pelunasan = PelunasanOrderan::where('notrx', $notrx);
         $pelunasan->delete();
 
+        $omset = OmsetPenjualan::where('notrx', $notrx);
+        $omset->delete();
+
         return redirect('orderan')->with('msg', 'Data Berhasil Di-hapus!');
     }
 
@@ -404,7 +447,9 @@ class OrderanController extends Controller
         $orderans = DetailOrderan::where('notrx', $notrx)->select('*', 'created_at')->get()->groupBy('notrx');
         $data = DetailOrderan::all();
         $setting = setting::all();
-        $via = PelunasanOrderan::select('bank', 'via')->where('notrx', $notrx)->get();
+        $via = PelunasanOrderan::with('rekenings')->where('notrx', $notrx)->get();
+
+
         $logo = setting::all();
         $rekening = Rekening::all();
 
@@ -422,7 +467,7 @@ class OrderanController extends Controller
             'logo' => $logo,
             'rekening' => $rekening,
             'user' => $user,
-            'formatTgl' => $formatTgl
+            'formatTgl' => $formatTgl,
         ]);
 
         // dd($logo);

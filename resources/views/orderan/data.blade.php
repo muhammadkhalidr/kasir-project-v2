@@ -243,13 +243,17 @@
             // Duplikat form-transaksi
             var newForm = $(".form-transaksi:first").clone();
 
+            // Mengubah atribut id_produk untuk menghindari konflik
+            var formIndex = $(".form-transaksi").length + 1;
+            newForm.find(".id_produk").attr("id", "idnya" + formIndex);
+            newForm.find(".produk").attr("id", "produk" + formIndex);
+
             // Bersihkan nilai input di form baru kecuali nama pelanggan
-            newForm.find(".namabarang").val("");
+            newForm.find(".produk").val("");
+            newForm.find(".id_produk").val("");
             newForm.find(".jumlah").val("");
             newForm.find(".harga").val("");
             newForm.find(".total").val("");
-            // newForm.find("input").val("");
-
 
             // Sisipkan form baru setelah form terakhir
             $(".form-transaksi:last").after(newForm);
@@ -259,12 +263,8 @@
                 // Hapus form saat tombol hapus diklik
                 $(this).closest(".form-transaksi").remove();
             });
-
-            $(document).on("click", ".hapusform", function() {
-                // Hapus form saat tombol hapus diklik
-                $(this).closest(".form-transaksi").remove();
-            });
         });
+
 
         $(document).on("input", ".jumlah, .harga, .uangmuka, .sisa", function() {
             // Menghitung total untuk setiap form
@@ -427,9 +427,18 @@
         // Menangani Klik pada Produk
         $(document).on('click', '#product-list .list-group-item', function() {
             var product_name = $(this).text();
+            var bahan_name = $(this).text();
             var product_id = $(this).data('id');
-            $('#produk').val(product_name);
-            $('#idnya').val(product_id);
+            var bahan_id = $(this).data('id');
+
+            // Update product input values in the last duplicated form
+            var lastForm = $(".form-transaksi:last");
+            lastForm.find('.produk').val(product_name);
+            lastForm.find('.id_produk').val(product_id);
+            lastForm.find('.id_bahan').val(bahan_id);
+            lastForm.find('.bahan').val(bahan_name);
+
+            // Clear the product list
             $('#product-list').html('');
         });
     });

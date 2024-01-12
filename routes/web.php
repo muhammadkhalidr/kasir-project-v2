@@ -19,6 +19,7 @@ use App\Http\Controllers\GajiKaryawanV2Controller;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\JenisBahanController;
 use App\Http\Controllers\JenisPengeluaranController;
+use App\Http\Controllers\KasbonController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\KategoriBahanController;
 use App\Http\Controllers\LogTranasksiController;
@@ -160,9 +161,14 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Produkk
         Route::resource('produk', ProdukController::class);
+        Route::get('/produk', [ProdukController::class, 'index']);
 
         // Omset 
         Route::get('/omset', [OrderanController::class, 'omset'])->name('omset');
+        Route::post('omset/cari', [OrderanController::class, 'omset'])->name('omset.cari');
+
+        Route::resource('kasbon', KasbonController::class)->except(['show']);
+        Route::get('kasbon/print', [KasbonController::class, 'printKasBon'])->name('kasbon.print');
     });
 
     // Akses Untuk Owner

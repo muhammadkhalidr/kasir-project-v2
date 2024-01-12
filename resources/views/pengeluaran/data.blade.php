@@ -93,7 +93,8 @@
                                                                 <td class="text-right">
                                                                     {{ formatRupiah($pengeluaran->total, true) }}
                                                                 </td>
-                                                                <td>{{ $pengeluaran->jenisp->nama_jenis ?? 's' }}</td>
+                                                                <td>{{ $pengeluaran->jenisp->nama_jenis ?? 'Kosong' }}
+                                                                </td>
                                                                 <td class="text-right">
                                                                     {{ $pengeluaran->formatted_date }}</td>
 
@@ -134,7 +135,7 @@
                                                             </td>
                                                             <td class="text-right">
                                                                 <b><i></i></b>
-                                                                
+
                                                                 {{ formatRupiah($totals[$id_pengeluaran], true) }}
                                                             </td>
                                                         </tr>

@@ -17,23 +17,12 @@
     <!-- row -->
 
     <div class="container-fluid">
-        <h4 class="card-title">Data Gaji Karyawan & Kas Bon</h4>
+        <h4 class="card-title">Kas Bon</h4>
         <div class="card">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card-header pb-2">
                         <div class="input-group">
-                            <div class="input-group-prepend mr-2">
-                                @if (auth()->check())
-                                    @if (auth()->user()->level == 1)
-                                        <button type="button" class="btn btn-primary"
-                                            onclick="window.location='{{ url('tambah-gajiv2') }}'">
-                                            <i class="fa fa-plus-circle"></i> Tambah Data Baru
-                                        </button>
-                                    @elseif (auth()->user()->level == 2)
-                                    @endif
-                                @endif
-                            </div>
                             <div class="input-group-prepend">
                                 <span class="input-group-text">PERIODE</span>
                             </div>
@@ -46,7 +35,7 @@
                             <div class="input-group-prepend ml-2">
                                 <span class="input-group-text">Limit</span>
                             </div>
-                            <form method="get" action="{{ route('gajikaryawanv2.filterJumlah') }}">
+                            {{-- <form method="get" action="{{ route('gajikaryawanv2.filterJumlah') }}">
                                 @csrf
                                 <div class="input-group-prepend mr-2">
                                     <select class="form-control" id="dataOptions" name="dataOptions"
@@ -58,7 +47,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </form>
+                            </form> --}}
                             <form method="GET" action="{{ route('gajikaryawanv2.cari') }}" id="searchForm">
                                 @csrf
                                 <input type="text" class="form-control w-full" name="searchdata" id="searchInput"
@@ -67,9 +56,12 @@
                             <div class="input-group-append">
                                 <button type="submit" data-info="cari" class="btn btn-success caridata"
                                     data-id="0"><i class="fa fa-search"></i> Cari</button>
-                                <button class="btn btn-info print_pdf_piutang" data-url="piutang" type="button"
-                                    data-toggle="tooltip" data-original-title="Cetak KasBon" data-placement="left"><i
-                                        class="fa fa-file-pdf-o"></i> Print</button>
+
+                                <button class="btn btn-info" type="button" data-placement="left">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                    <a href="{{ route('kasbon.print') }}" class="text-white" target="_blank">Print</a>
+                                </button>
+
                             </div>
                         </div>
                     </div>
@@ -95,37 +87,19 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Karywan</th>
-                                        <th>Jumlah Gaji</th>
-                                        <th>% Bonus</th>
-                                        <th>Bonus</th>
-                                        <th>Kas Bon</th>
-                                        <th>Sisa Gaji</th>
+                                        <th>Nominal</th>
+                                        <th>Tanggal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @isset($datas)
-                                        @foreach ($datas as $gaji)
-                                            <tr>
-                                                <th>{{ $loop->iteration }}</th>
-                                                <th>{{ $gaji->karyawans->nama_karyawan }}</th>
-                                                <th>{{ formatRupiah($gaji->jumlah_gaji, true) }}</th>
-                                                <th>{{ $gaji->persen_bonus ?? '0' }} %</th>
-                                                <th>{{ formatRupiah($gaji->bonus, true) }}</th>
-
-                                                {{-- Display Total Kasbon --}}
-                                                @php
-                                                    $idKaryawan = $gaji->karyawans->id_karyawan;
-                                                    $totalKasbon = $totalKasBon->where('id_karyawan', $idKaryawan)->first();
-                                                @endphp
-
-                                                <th>Rp.
-                                                    {{ isset($totalKasbon) ? number_format($totalKasbon->total_nominal, 0, ',', '.') : '0' }}
-                                                </th>
-
-                                                <th>Rp. {{ number_format($gaji->sisa_gaji, 0, ',', '.') }}</th>
-                                            </tr>
-                                        @endforeach
-                                    @endisset
+                                    @foreach ($datas as $kasbon)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $kasbon->karyawans->nama_karyawan }}</td>
+                                            <td>{{ formatRupiah($kasbon->nominal, true) }}</td>
+                                            <td>{{ $kasbon->created_at }}</td>
+                                        </tr>
+                                    @endforeach
                                     @if ($datas->count() == 0)
                                         <tr>
                                             <td colspan="10" class="text-center">
