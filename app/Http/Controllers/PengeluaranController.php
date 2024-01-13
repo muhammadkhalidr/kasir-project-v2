@@ -11,6 +11,7 @@ use App\Models\JenisPengeluaran;
 use App\Models\Karyawan;
 use App\Models\Kasbon;
 use App\Models\KasMasuk;
+use App\Models\Pengguna;
 use App\Models\Rekening;
 use App\Models\setting;
 use Carbon\Carbon;
@@ -54,6 +55,11 @@ class PengeluaranController extends Controller
         $dataJenis = JenisPengeluaran::where('aktif', 1)->get();
         $dataKaryawan = Karyawan::all();
 
+        // $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
+        // $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
+
+        // dd($saldoBank, $saldoTunai);
+
         return view('pengeluaran.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pengeluaran',
             'breadcrumb' => 'Pengeluaran',
@@ -69,6 +75,33 @@ class PengeluaranController extends Controller
         ]);
     }
 
+    public function printPengeluaran()
+    {
+        $user = Auth::user();
+        $datas = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])->get();
+        $total = Pengeluaran::select('total')->sum('total');
+
+        // dd($datas);
+
+        $pdf = PDF::loadView('pengeluaran.print', [
+            'title' => 'Cetak Pengeluaran',
+            'datas' => $datas,
+            'name_user' => $user->name,
+            'breadcrumb' => 'Pengeluaran',
+            'total' => $total
+        ]);
+
+        return $pdf->download('Rekap_Pengeluaran.pdf');
+
+        // return view('pengeluaran.print', [
+        //     'title' => 'Cetak Pengeluaran',
+        //     'datas' => $datas,
+        //     'name_user' => $user->name,
+        //     'breadcrumb' => 'Pengeluaran',
+        //     'total' => $total
+        // ]);
+    }
+
     public function tambahPengeluaran()
     {
         $user = Auth::user();
@@ -81,6 +114,9 @@ class PengeluaranController extends Controller
             'nomorSelanjutnya' => $nomorSelanjutnya,
         ]);
     }
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -116,6 +152,20 @@ class PengeluaranController extends Controller
         $data = $request->all();
         foreach ($data['nopengeluaran'] as $key => $value) {
             $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
+
+            // Cek saldo kas masuk
+            // $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan');
+            // $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan');
+
+            $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
+            $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
+
+            if ($saldoBank && $saldoBank < str_replace('.', '', $data['total'][$key])) {
+                return redirect('pengeluaran')->with('error', 'Saldo Kas Bank Tidak Cukup!');
+            } else if ($saldoTunai && $saldoTunai < str_replace('.', '', $data['total'][$key])) {
+                return redirect('pengeluaran')->with('error', 'Saldo Kas Tunai Tidak Cukup!');
+            }
+
             Pengeluaran::create([
                 'id_pengeluaran' => $value,
                 'id_generate' => $idBaru,

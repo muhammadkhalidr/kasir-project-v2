@@ -31,6 +31,7 @@ use App\Http\Controllers\SettingController;
 use App\Models\DetailOrderan;
 use App\Models\Orderan;
 use App\Models\Pelanggan;
+use App\Models\Pengeluaran;
 
 /*
 |--------------------------------------------------------------------------
@@ -206,8 +207,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Route::post('/pelanggan', [PelangganController::class, 'cariData'])->name('pelanggan.cariData');
 
         // Untuk Pengeluaran
-        Route::resource('pengeluaran', PengeluaranController::class)->middleware('can:pengeluaran.data');
-        Route::get('/pengeluaranbaru', [PengeluaranController::class, 'tambahPengeluaran']);
+        Route::resource('pengeluaran', PengeluaranController::class)->except(['show']);
+        Route::get('cetakpengeluaran', [PengeluaranController::class, 'printPengeluaran'])->name('pengeluaran.print');
     });
 });
 

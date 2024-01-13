@@ -106,7 +106,7 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $detail['bank'] }}</td>
-                                        <td>Rp. {{ formatRupiah($detail['saldo'], true) }}</td>
+                                        <td>{{ formatRupiah($detail['saldo'], true) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

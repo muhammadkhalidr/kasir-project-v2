@@ -17,19 +17,82 @@
     <!-- row -->
 
     <div class="container-fluid">
+
+
+        <div class="card">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-header pb-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend mr-2">
+                                @if (auth()->check())
+                                    @if (auth()->user()->level == 1)
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target=".bd-transaksi-modal-lg"> <i class="fa fa-plus"></i> Pengeluaran
+                                            Baru</button>
+                                    @elseif (auth()->user()->level == 2)
+                                    @endif
+                                @endif
+                            </div>
+                            <form id="datepickerForm" method="GET" action="{{ url('gaji-karyawanv2') }}">
+                                @csrf
+                                <div class="input-group ml-auto">
+                                    <div class="input-group-prepend mr-2">
+                                        <label for="datepicker" class="input-group-text">Periode</label>
+                                        <input type="text" class="form-control" id="datepicker" name="filterTgl"
+                                            value="{{ $selectedMonth ?? \Carbon\Carbon::now()->toDateString() }}"
+                                            autocomplete="off" autofocus>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary"><i
+                                                class="fa fa-filter"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="input-group-prepend ml-2">
+                                <span class="input-group-text">Limit</span>
+                            </div>
+                            <form method="get" action="{{ route('gajikaryawanv2.filterJumlah') }}">
+                                @csrf
+                                <div class="input-group-prepend mr-2">
+                                    <select class="form-control" id="dataOptions" name="dataOptions"
+                                        onchange="this.form.submit()">
+                                        {{-- @foreach ($perPageOptions as $option)
+                                            <option
+                                                value="{{ $option }}"{{ $datas->perPage() == $option ? 'selected' : '' }}>
+                                                {{ $option }}</option>
+                                        @endforeach --}}
+                                    </select>
+                                </div>
+                            </form>
+                            <form method="GET" action="{{ route('gajikaryawanv2.cari') }}" id="searchForm">
+                                @csrf
+                                <input type="text" class="form-control w-full" name="searchdata" id="searchInput"
+                                    placeholder="Search..." />
+                            </form>
+                            <div class="input-group-append">
+                                <button type="submit" data-info="cari" class="btn btn-success caridata"
+                                    data-id="0"><i class="fa fa-search"></i> Cari</button>
+                            </div>
+                            <button class="btn btn-info" type="button" data-placement="left">
+                                <i class="fa fa-file-pdf-o"></i>
+                                <a href="{{ route('pengeluaran.print') }}" class="text-white" target="_blank">Print</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Data Pengeluaran</h4>
                         {{-- <button type="button" class="btn btn-primary"
                             onclick="window.location='{{ url('pengeluaranbaru') }}'">
                             <i class="fa fa-plus-circle"></i> Tambah Data Baru
                         </button> --}}
-
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target=".bd-transaksi-modal-lg"> <i class="fa fa-plus"></i> Pengeluaran
-                            Baru</button>
                         <div class="pesan mt-2">
                             @if (session('msg'))
                                 <div class="alert alert-primary alert-dismissible fade show">
@@ -344,3 +407,8 @@
         return prefix === undefined ? rupiah : (rupiah ? +rupiah : '');
     }
 </script>
+@if (Session::has('error'))
+    <script>
+        swal.fire('warning!', '{{ Session::get('error') }}', 'warning');
+    </script>
+@endif
