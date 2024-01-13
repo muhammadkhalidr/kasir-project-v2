@@ -34,14 +34,20 @@
                                     @endif
                                 @endif
                             </div>
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">PERIODE</span>
-                            </div>
-                            <form method="POST" action="{{ route('gajikaryawanv2.cariKasbon') }}" id="searchFormDate">
+                            <form id="datepickerForm" method="GET" action="{{ url('gaji-karyawanv2') }}">
                                 @csrf
-                                <input type="hidden" name="start_date" id="start_date" />
-                                <input type="hidden" name="end_date" id="end_date" />
-                                <input type="text" class="form-control w-10" name="daterange" />
+                                <div class="input-group ml-auto">
+                                    <div class="input-group-prepend mr-2">
+                                        <label for="datepicker" class="input-group-text">Periode</label>
+                                        <input type="text" class="form-control" id="datepicker" name="filterTgl"
+                                            value="{{ $selectedMonth ?? \Carbon\Carbon::now()->toDateString() }}"
+                                            autocomplete="off" autofocus>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary"><i
+                                                class="fa fa-filter"></i></button>
+                                    </div>
+                                </div>
                             </form>
                             <div class="input-group-prepend ml-2">
                                 <span class="input-group-text">Limit</span>
@@ -67,9 +73,6 @@
                             <div class="input-group-append">
                                 <button type="submit" data-info="cari" class="btn btn-success caridata"
                                     data-id="0"><i class="fa fa-search"></i> Cari</button>
-                                <button class="btn btn-info print_pdf_piutang" data-url="piutang" type="button"
-                                    data-toggle="tooltip" data-original-title="Cetak KasBon" data-placement="left"><i
-                                        class="fa fa-file-pdf-o"></i> Print</button>
                             </div>
                         </div>
                     </div>
@@ -89,6 +92,7 @@
                                 </div>
                             @endif
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered">
                                 <thead>
@@ -118,11 +122,11 @@
                                                     $totalKasbon = $totalKasBon->where('id_karyawan', $idKaryawan)->first();
                                                 @endphp
 
-                                                <th>Rp.
-                                                    {{ isset($totalKasbon) ? number_format($totalKasbon->total_nominal, 0, ',', '.') : '0' }}
+                                                <th>
+                                                    {{ isset($totalKasbon) ? formatRupiah($totalKasbon->total_nominal, true) : '0' }}
                                                 </th>
 
-                                                <th>Rp. {{ number_format($gaji->sisa_gaji, 0, ',', '.') }}</th>
+                                                <th>{{ formatRupiah($gaji->sisa_gaji, true) }}</th>
                                             </tr>
                                         @endforeach
                                     @endisset
@@ -171,6 +175,19 @@
 
         btn.addEventListener('click', function() {
             searchForm.submit();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#datepicker').datepicker({
+            format: 'yyyy-mm',
+            startView: "months",
+            minViewMode: "months",
+        });
+
+        $('#datepicker').on('changeDate', function() {
+            $('#submitBtn').click();
         });
     });
 </script>

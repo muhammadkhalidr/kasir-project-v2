@@ -3,7 +3,7 @@
         ***********************************-->
 <div class="footer">
     <div class="copyright">
-        {!! env('FOOTER_NAME', "<a href='https://khalidr.my.id'>Developed by. Khalid R</a>") !!}
+        {!! env('FOOTER_NAME') !!}
     </div>
 </div>
 <!--**********************************

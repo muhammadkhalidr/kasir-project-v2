@@ -22,11 +22,11 @@ class GajiKaryawanV2Controller extends Controller
         $user = Auth::user();
         $query = GajiKaryawanV2::with(['karyawans', 'jenisp', 'pengeluarans', 'kasbons']);
 
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
-            $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
+        $selectedMonthYear = $request->input('filterTgl', Carbon::now()->format('Y-m'));
 
-            $query->whereBetween('created_at', [$start_date, $end_date]);
+        if ($selectedMonthYear) {
+            $query->whereYear('created_at', Carbon::parse($selectedMonthYear)->year)
+                ->whereMonth('created_at', Carbon::parse($selectedMonthYear)->month);
         }
 
         $search = $request->input('searchdata');
@@ -47,6 +47,8 @@ class GajiKaryawanV2Controller extends Controller
         $dataKasBon = Kasbon::select('id_karyawan', DB::raw('SUM(nominal) as total_nominal'))
             ->with(['karyawans', 'gajikaryawanv2'])
             ->groupBy('id_karyawan')
+            ->whereYear('created_at', Carbon::parse($selectedMonthYear)->year)
+            ->whereMonth('created_at', Carbon::parse($selectedMonthYear)->month)
             ->get();
 
         foreach ($dataGaji as $gaji) {
@@ -62,7 +64,15 @@ class GajiKaryawanV2Controller extends Controller
             'datas' => $dataGaji,
             'totalKasBon' => $dataKasBon,
             'perPageOptions' => [10, 15, 25, 100],
+            'selectedMonthYear' => $selectedMonthYear,
         ]);
+
+        // if ($request->has('start_date') && $request->has('end_date')) {
+        //     $start_date = Carbon::parse($request->input('start_date'))->startOfDay();
+        //     $end_date = Carbon::parse($request->input('end_date'))->endOfDay();
+
+        //     $query->whereBetween('created_at', [$start_date, $end_date]);
+        // }
     }
 
     public function cariData(Request $request)
