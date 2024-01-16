@@ -26,28 +26,21 @@
                         <div class="input-group">
                             <div class="input-group-prepend mr-2">
                                 @if (auth()->check())
-                                    @if (auth()->user()->level == 1)
+                                    @if (auth()->user()->level == 1 < 3)
                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                             data-target=".bd-transaksi-modal-lg"> <i class="fa fa-plus"></i> Pengeluaran
                                             Baru</button>
-                                    @elseif (auth()->user()->level == 2)
                                     @endif
                                 @endif
                             </div>
-                            <form id="datepickerForm" method="GET" action="{{ url('gaji-karyawanv2') }}">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            </div>
+                            <form method="GET" action="{{ route('pengeluaran.cari') }}" id="searchFormDate">
                                 @csrf
-                                <div class="input-group ml-auto">
-                                    <div class="input-group-prepend mr-2">
-                                        <label for="datepicker" class="input-group-text">Periode</label>
-                                        <input type="text" class="form-control" id="datepicker" name="filterTgl"
-                                            value="{{ $selectedMonth ?? \Carbon\Carbon::now()->toDateString() }}"
-                                            autocomplete="off" autofocus>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary"><i
-                                                class="fa fa-filter"></i></button>
-                                    </div>
-                                </div>
+                                <input type="hidden" name="start_date" id="start_date" />
+                                <input type="hidden" name="end_date" id="end_date" />
+                                <input type="text" class="form-control w-10" name="daterange" />
                             </form>
                             <div class="input-group-prepend ml-2">
                                 <span class="input-group-text">Limit</span>
@@ -105,7 +98,6 @@
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered">
                                 <thead>
-                                    <th>Data</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($groupedPengeluarans as $id_pengeluaran => $groupedPengeluaran)
@@ -114,7 +106,7 @@
                                                 <table class="table table-striped">
                                                     <thead class="thead-success">
                                                         <tr>
-                                                            <th>No Faktur</th>
+                                                            <th>No Pengeluaran</th>
                                                             <th>
                                                                 <button class="btn btn-dark btn-sm">#
                                                                     {{ $groupedPengeluaran[0]->id_pengeluaran }}</button>
@@ -124,12 +116,10 @@
                                                             <th></th>
                                                             <th></th>
                                                             <th></th>
-                                                            <th></th>
                                                         </tr>
                                                     </thead>
                                                     <thead class="thead-primary">
                                                         <tr>
-                                                            <th style="width:4%!important" class="text-right">#No.</th>
                                                             <th>Keterangan</th>
                                                             <th class="text-left" style="width:10%!important">Jumlah
                                                             </th>
@@ -145,9 +135,6 @@
                                                         @php $firstRow = true; @endphp
                                                         @foreach ($groupedPengeluaran as $pengeluaran)
                                                             <tr>
-                                                                <td class="text-center"><span
-                                                                        class="label label-info">{{ $loop->iteration }}</span>
-                                                                </td>
                                                                 <td>{{ $pengeluaran->keterangan }}</td>
                                                                 <td class="text-left">{{ $pengeluaran->jumlah }}</td>
                                                                 <td class="text-center">
@@ -190,7 +177,6 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td class="text-center"></td>
                                                             <td class="text-center"></td>
                                                             <td class="text-center"></td>
                                                             <td class="text-right">
@@ -407,8 +393,19 @@
         return prefix === undefined ? rupiah : (rupiah ? +rupiah : '');
     }
 </script>
+<script>
+    $(document).ready(function() {
+        $('input[name="daterange"]').daterangepicker();
+
+        $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+            $('#start_date').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+            $('#end_date').val(picker.endDate.format('YYYY-MM-DD HH:mm:ss'));
+            $('#searchFormDate').submit();
+        });
+    });
+</script>
 @if (Session::has('error'))
     <script>
-        swal.fire('warning!', '{{ Session::get('error') }}', 'warning');
+        swal.fire('Warning!', '{{ Session::get('error') }}', 'warning');
     </script>
 @endif

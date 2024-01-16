@@ -173,7 +173,36 @@
     // print_r($bdetail);
     ?>
     <div class="invoice-box">
-        <h2 style="text-align: center; text-transform: uppercase">Data Pengeluaran</h2>
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="4" rowspan="5"> <img
+                        src="{{ public_path('/assets/images/settings/' . $info->first()->login_logo) }}"
+                        alt="{{ $info->first()->perusahaan }}" style="width: 80%; max-width: 150px;">
+                </td>
+                <td colspan="2" class="tgl">LAPORAN PENGELUARAN</td>
+            </tr>
+            {{-- <tr class="">
+                <td colspan="2">Periode,{{ $start_date }} - {{ $end_date }}</td>
+            </tr> --}}
+            <tr class="">
+                <td colspan="2"></td>
+            </tr>
+            <tr class="kepada">
+                <td class="tkepada">Pencatat</td>
+                <td class="bawah">{{ $name_user }}</td>
+            </tr>
+            <tr class="">
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td colspan="4"><i style="margin-top:2px" class="fa fa-whatsapp"></i>&nbsp;<span
+                        class="sosmed">{{ $info->phone }}</span> <i style="margin-top:2px"
+                        class="fa fa-envelope-square"></i>&nbsp;<span class="sosmed">{{ $info->email }}</span> <i
+                        style="margin-top:2px" class="fa fa-facebook-square"></i>&nbsp;<i style="margin-top:2px"
+                        class="fa fa-instagram"></i>&nbsp;<span class="sosmed">{{ $info->instagram }}</span></td>
+                <td colspan="2"></td>
+            </tr>
+        </table>
         <table style="width:100%;margin-top:5px" cellpadding="0" cellspacing="0">
             <tr class="heading">
                 <td style="width:10%!important">Keterangan</td>

@@ -14,7 +14,7 @@ class PiutangController extends Controller
     {
 
         $user = Auth::user();
-        $data = DetailOrderan::all();
+        $data = DetailOrderan::paginate(10);
         $rekening = Rekening::all();
         $keterangan = DetailOrderan::select('keterangan', 'notrx')->get();
         return view('piutang.data', [

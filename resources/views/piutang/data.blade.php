@@ -21,7 +21,7 @@
                         </form>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered zero-configuration">
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -57,6 +57,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        {{ $data->links() }}
                     </div>
                 </div>
             </div>
@@ -104,14 +107,14 @@
 
                             <div class="form-group">
                                 <label for="jumlahBayar{{ $bayar->notrx }}">Jumlah Bayar:</label>
-                                <input type="number" class="form-control jumlahBayar" id="jumlahBayar{{ $bayar->notrx }}"
+                                <input type="text" class="form-control jumlahBayar" id="jumlahBayar{{ $bayar->notrx }}"
                                     name="jumlahBayar" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="totalBayar{{ $bayar->notrx }}">Total yang Harus Dibayar:</label>
-                                <input type="number" class="form-control totalBayar" id="totalBayar{{ $bayar->notrx }}"
-                                    name="totalBayar" value="{{ $bayar->sisa }}" readonly>
+                                <input type="text" class="form-control totalBayar" id="totalBayar{{ $bayar->notrx }}"
+                                    name="totalBayar" value="{{ formatRupiah($bayar->sisa) }}" readonly>
                             </div>
 
                             <div class="buktiTransferOptions" id="buktiTransferOptions{{ $bayar->notrx }}"
@@ -183,6 +186,12 @@
                 const notrx = $(this).data('notrx');
                 const totalBayar = $(`#totalBayar${notrx}`);
                 totalBayar.val($(this).val());
+            });
+        });
+
+        $(document).ready(function() {
+            $('.jumlahBayar').mask('#.##0', {
+                reverse: true
             });
         });
     </script>

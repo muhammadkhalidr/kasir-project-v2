@@ -157,6 +157,12 @@
         <div class="nk-sidebar">
             <div class="nk-nav-scroll">
                 <ul class="metismenu" id="menu">
+                    <li class="nav-label">Data Master</li>
+                    <li>
+                        <a href="{{ url('home') }}" aria-expanded="false">
+                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-basket menu-icon"></i><span class="nav-text">Transaksi</span>

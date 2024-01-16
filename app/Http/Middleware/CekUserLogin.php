@@ -24,7 +24,9 @@ class CekUserLogin
 
         if ($user->level == $rules)
             return $next($request);
+        return $next($request);
+        return $next($request);
 
-        return redirect('login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
     }
 }

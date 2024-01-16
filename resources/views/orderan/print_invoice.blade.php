@@ -257,14 +257,12 @@
                     <!-- begin invoice-note -->
                     <div class="invoice-note">
                         <h6>
-                            {{-- jika tidak ada data via maka redirect back --}}
-                            {{-- @if ($via->count() == 0)
-                        @php
-                            return redirect()->back();
-                        @endphp
-                    @endif --}}
                             STATUS : {{ $orderanGroup->first()->status }} <br>
-                            PEMBAYARAN : {{ $via->first()->bank == '1' ? 'BANK' : 'TUNAI' }}
+                            @if ($via->first() == null)
+                                PEMBAYARAN : BELUM ADA PEMBAYARAN
+                            @else
+                                PEMBAYARAN : {{ $via->first()->bank == '1' ? 'BANK' : 'TUNAI' }}
+                            @endif
                         </h6>
                     </div>
                     <!-- end invoice-note -->

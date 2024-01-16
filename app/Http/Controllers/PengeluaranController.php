@@ -15,8 +15,10 @@ use App\Models\Pengguna;
 use App\Models\Rekening;
 use App\Models\setting;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use PDF;
 
 
@@ -26,13 +28,26 @@ class PengeluaranController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $perPage = 10;
         $pengeluarans = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
-            ->orderBy('id_pengeluaran', 'desc')
-            ->paginate($perPage);
+            ->orderBy('id_pengeluaran', 'desc');
+
+        // Apply date filter
+        if ($request->query('start_date') && $request->query('end_date')) {
+            $start_date = Carbon::parse($request->query('start_date'))->startOfDay();
+            $end_date = Carbon::parse($request->query('end_date'))->endOfDay();
+
+            // Debugging messages
+            // Log::info('Start Date: ' . $start_date);
+            // Log::info('End Date: ' . $end_date);
+
+            $pengeluarans->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        $pengeluarans = $pengeluarans->paginate($perPage);
 
         $groupedPengeluarans = $pengeluarans->sortByDesc('id_pengeluaran')->groupBy('id_pengeluaran');
 
@@ -44,6 +59,7 @@ class PengeluaranController extends Controller
             $pengeluaran->formatted_date = Carbon::parse($pengeluaran->created_at)->isoFormat('dddd, DD/MM/YYYY');
             return $pengeluaran;
         });
+
 
         // dd($groupedPengeluarans);
 
@@ -75,31 +91,9 @@ class PengeluaranController extends Controller
         ]);
     }
 
-    public function printPengeluaran()
+    public function cariData(Request $request)
     {
-        $user = Auth::user();
-        $datas = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])->get();
-        $total = Pengeluaran::select('total')->sum('total');
-
-        // dd($datas);
-
-        $pdf = PDF::loadView('pengeluaran.print', [
-            'title' => 'Cetak Pengeluaran',
-            'datas' => $datas,
-            'name_user' => $user->name,
-            'breadcrumb' => 'Pengeluaran',
-            'total' => $total
-        ]);
-
-        return $pdf->download('Rekap_Pengeluaran.pdf');
-
-        // return view('pengeluaran.print', [
-        //     'title' => 'Cetak Pengeluaran',
-        //     'datas' => $datas,
-        //     'name_user' => $user->name,
-        //     'breadcrumb' => 'Pengeluaran',
-        //     'total' => $total
-        // ]);
+        return $this->index($request);
     }
 
     public function tambahPengeluaran()
@@ -114,9 +108,6 @@ class PengeluaranController extends Controller
             'nomorSelanjutnya' => $nomorSelanjutnya,
         ]);
     }
-
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -282,5 +273,49 @@ class PengeluaranController extends Controller
         ]);
 
         return $pdf->download($cetaks->id_pengeluaran . ' laporanPengeluaran.pdf');
+    }
+
+
+    public function printPengeluaran()
+    {
+        $user = Auth::user();
+        $datas = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])->get();
+        $total = Pengeluaran::select('total')->sum('total');
+        $setting = setting::all()->first();
+
+        if ($datas->isEmpty()) {
+            return redirect()->back()->with('error', 'Data Tidak Ditemukan!');
+        } else {
+            return view('pengeluaran.print', [
+                'title' => 'Cetak Pengeluaran',
+                'datas' => $datas,
+                'name_user' => $user->name,
+                'breadcrumb' => 'Pengeluaran',
+                'total' => $total,
+                'info' => $setting
+            ]);
+        }
+        // dd($datas);
+
+        // $pdf = PDF::loadView('pengeluaran.print', [
+        //     'title' => 'Cetak Pengeluaran',
+        //     'datas' => $datas,
+        //     'name_user' => $user->name,
+        //     'breadcrumb' => 'Pengeluaran',
+        //     'total' => $total,
+        //     'info' => $setting
+
+        // ]);
+
+        // return $pdf->download('Rekap_Pengeluaran.pdf');
+
+        return view('pengeluaran.print', [
+            'title' => 'Cetak Pengeluaran',
+            'datas' => $datas,
+            'name_user' => $user->name,
+            'breadcrumb' => 'Pengeluaran',
+            'total' => $total,
+            'info' => $setting
+        ]);
     }
 }

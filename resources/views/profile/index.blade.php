@@ -13,6 +13,7 @@
                                     src="{{ asset('/') }}assets/images/avatar/{{ $user->foto }}" width="100">
                                 <h4 class="card-widget__title text-dark mt-3">{{ $user->name }}</h4>
                                 <p class="text-muted">{{ $user->email }}</p>
+                                <b>{{ $user->level == 1 ? 'Super Admin' : ($user->level == 2 ? 'Owner' : 'Kasir') }}</b>
                             </div>
                         @endforeach
                     </div>
@@ -99,7 +100,7 @@
                                 </div>
                             @endforeach
                             <label>Pilih Foto Baru</label> <br>
-                            <input type="file"  name="foto">
+                            <input type="file" name="foto">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

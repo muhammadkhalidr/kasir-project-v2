@@ -50,11 +50,11 @@
                                 <a class="text-center" href="{{ asset('/') }}">
                                     <h4>Login</h4>
                                 </a>
-                                @if (session('msg'))
+                                @if (session('error'))
                                     <div class="alert alert-danger alert-dismissible fade show">
                                         <button type="button" class="close" data-dismiss="alert"
                                             aria-label="Close"><span aria-hidden="true">&times;</span>
-                                        </button> {{ session('msg') }}
+                                        </button> {{ session('error') }}
                                     </div>
                                 @endif
                                 <form class="mb-5 login-input" action="{{ url('login/proses') }}" method="post">

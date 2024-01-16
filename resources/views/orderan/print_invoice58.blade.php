@@ -364,7 +364,7 @@
                                         <td class="border-top-0"></td>
                                     </tr>
                                     <tr>
-                                        <td class="text-left">{{ $orderanGroup->first()->namapemesan }}</td>
+                                        <td class="text-left">{{ $orderanGroup->first()->pelanggans->nama }}</td>
                                         <td class="border-top-0"></td>
                                         <td class="text-right">{{ $user->name }}</td>
                                     </tr>

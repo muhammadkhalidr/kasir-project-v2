@@ -23,7 +23,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($log as $d)
-                                    @if ($d->pemasukan !== null || $d->pengeluaran !== null)
+                                    @if (($d->pemasukan !== null && $d->pemasukan != 0) || ($d->pengeluaran !== null && $d->pengeluaran != 0))
                                         <tr>
                                             <td>
                                                 @if ($d->pemasukan)
@@ -50,6 +50,7 @@
                                         </tr>
                                     @endif
                                 @endforeach
+
                                 <tr>
                                     <td colspan="5"><span class="text-success text-bold">Total Pemasukan</span></td>
                                     <td><span class="text-success text-bold">

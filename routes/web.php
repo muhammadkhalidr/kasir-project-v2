@@ -14,6 +14,7 @@ use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\CetakLaporanController;
 use App\Http\Controllers\CetakLaporanGajiController;
 use App\Http\Controllers\CetakLaporanPembelianController;
+use App\Http\Controllers\DetailPengeluaranController;
 use App\Http\Controllers\GajiKaryawanController;
 use App\Http\Controllers\GajiKaryawanV2Controller;
 use App\Http\Controllers\HutangController;
@@ -50,7 +51,10 @@ use App\Models\Pengeluaran;
 
 // Route::get('login', [LoginController::class, 'index'])->name('login');
 
-Route::get('/', [LayoutController::class, 'index'])->middleware('auth');
+// Route::get('/', [LayoutController::class, 'index'])->middleware('auth');
+Route::get('/', function () {
+    return redirect()->to('home');
+});
 Route::get('/home', [LayoutController::class, 'index'])->middleware('auth');
 
 Route::controller(LoginController::class)->group(function () {
@@ -61,7 +65,7 @@ Route::controller(LoginController::class)->group(function () {
 
 // Akses Untuk Admin
 Route::group(['middleware' => ['auth']], function () {
-    Route::group(['middleware' => ['CekLevelUser:1']], function () {
+    Route::group(['middleware' => ['auth', 'CekUserLogin:1']], function () {
         // Untuk Karyawan
         Route::resource('karyawan', KaryawanController::class);
         Route::get('/karyawan', [KaryawanController::class, 'index']);
@@ -102,7 +106,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Untuk Pengeluaran
         Route::resource('pengeluaran', PengeluaranController::class)->middleware('can:pengeluaran.data');
+        Route::get('cetakpengeluaran', [PengeluaranController::class, 'printPengeluaran'])->name('pengeluaran.print');
         Route::get('/pengeluaranbaru', [PengeluaranController::class, 'tambahPengeluaran']);
+        Route::get('/pengeluaran.cari', [PengeluaranController::class, 'cariData'])->name('pengeluaran.cari');
+
 
         // Untuk Data Keuangan
         Route::get('/keuangan', [KeuanganController::class, 'index'])->name('keuangan');
@@ -173,20 +180,17 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     // Akses Untuk Owner
-    Route::group(['middleware' => ['CekLevelUser:2']], function () {
+    Route::group(['middleware' => ['auth', 'CekUserLogin:2']], function () {
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
         Route::resource('pengguna', PenggunaController::class)->middleware('can:pengguna.data');
         Route::get('/admin-baru', [PenggunaController::class, 'tambahPengguna']);
     });
 
-
-    // Akses Untuk Kasir
-    Route::group(['middleware' => ['CekLevelUser:3']], function () {
-
+    Route::group(['middleware' => ['auth', 'CekUserLogin:3']], function () {
         // Untuk Orderan
         Route::resource('orderan', OrderanController::class);
-        Route::get('/orderan', [OrderanController::class, 'index'])->middleware('can:orderan.data');
+        Route::get('/orderan', [OrderanController::class, 'index']);
         Route::get('/orderan/{id}', [OrderanController::class, 'index']);
         Route::get('/orderan-baru', [OrderanController::class, 'tambahOrderan']);
         Route::post('/orderan.pelunasan', [OrderanController::class, 'pelunasan'])->name('orderan.pelunasan');
@@ -196,7 +200,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/home', [DashboardController::class, 'index']);
 
         // Untuk Pembelian
-        Route::resource('/pembelian', PembelianController::class)->middleware('can:pembelian.data');
+        Route::resource('/pembelian', PembelianController::class);
         Route::get('/pembelianbaru', [PembelianController::class, 'tambahPembelian']);
 
         // Untuk Pelanggan
@@ -208,7 +212,6 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Untuk Pengeluaran
         Route::resource('pengeluaran', PengeluaranController::class)->except(['show']);
-        Route::get('cetakpengeluaran', [PengeluaranController::class, 'printPengeluaran'])->name('pengeluaran.print');
     });
 });
 
