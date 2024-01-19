@@ -22,7 +22,31 @@ class StorePenggunaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'username' => 'required',
+            'password' => 'required',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nama.required'          => ':attribute Tidak Boleh Kosong',
+            'email.required'         => ':attribute Tidak Boleh Kosong',
+            'email.unique'           => ':attribute Sudah Terdaftar Gunakan Email Lain',
+            'username.required'         => ':attribute Tidak Boleh Kosong',
+            'password.required'         => ':attribute Tidak Boleh Kosong',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'nama' => 'Nama Lengkap',
+            'email' => 'Email',
+            'username' => 'Username',
+            'password' => 'Password',
         ];
     }
 }

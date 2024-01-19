@@ -48,7 +48,7 @@
                                                     <hr class="p-1 m-0">
                                                     Telp: <span id="nohp"></span>
                                                     <hr class="p-1 m-0">
-                                                    <form id="formCariProduk" method="GET"
+                                                    {{-- <form id="formCariProduk" method="GET"
                                                         action="{{ url('orderan') }}">
                                                         @csrf
                                                         <div class="input-group input-group-sm mb-0">
@@ -56,7 +56,15 @@
                                                                 class="form-control" placeholder="Cari produk">
                                                         </div>
                                                         <div id="product-list"></div>
-                                                    </form>
+                                                    </form> --}}
+                                                    <div class="input-group input-group-sm mb-0">
+                                                        <input type="text" name="cari_produk" id="cari_produk"
+                                                            class="form-control" placeholder="Cari produk">
+                                                        <button class="btn btn-sm btn-primary" type="button"
+                                                            onclick="masukkanProduk()" id="btnTambahProduk"
+                                                            disabled>Tambah</button>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -127,9 +135,10 @@
                                 <input type="hidden" class="form-control namapemesan" name="namapemesan[]"
                                     id="pemesan2">
                                 <input type="hidden" class="form-control idpemesan" name="idpelanggan[]">
-                                <input type="hidden" class="form-control id_produk" id="idnya"
+                                ID PRODUK : <input type="text" class="form-control id_produk" id="idnya"
                                     name="idproduk[]">
-                                <input type="hidden" class="form-control id_bahan" id="id_bahan" name="idbahan[]">
+                                ID BAHAN : <input type="text" class="form-control id_bahan" id="id_bahan"
+                                    name="idbahan[]">
                                 <div class="col">
                                     <label for="">Produk</label>
                                     <input type="text" class="form-control produk" id="produk" name="produk[]"
@@ -141,12 +150,19 @@
                                         required>
                                 </div>
                                 <div class="col">
+                                    <label for="">Bahan</label>
+                                    <input type="text" class="form-control bahan" id="bahan" name="bahan[]"
+                                        required>
+                                </div>
+                                <div class="col">
                                     <label for="">Ukuran</label>
-                                    <input type="text" class="form-control ukuran" name="ukuran[]" required>
+                                    <input type="text" class="form-control ukuran" id="ukuran" name="ukuran[]"
+                                        required>
                                 </div>
                                 <div class="col">
                                     <label for="">Jumlah Barang</label>
-                                    <input type="text" class="form-control jumlah" name="jumlah[]" required>
+                                    <input type="text" class="form-control jumlah" id="jumlah" name="jumlah[]"
+                                        required>
                                 </div>
                                 <div class="col">
                                     <label for="">Harga Barang</label>
@@ -213,7 +229,6 @@
             </div>
         </div>
         </form>
-
     </div>
 
     {{-- Modal DATATransaksi --}}
@@ -342,8 +357,8 @@
                                 </div>
                                 <div class="col">
                                     <label for="">Bahan</label>
-                                    <input type="text" class="form-control bahan"
-                                        value="{{ $detail->bahans->bahan }}" readonly>
+                                    <input type="text" class="form-control bahan" value="{{ $detail->bahan }}"
+                                        readonly>
                                 </div>
                                 <div class="col">
                                     <label for="">Jumlah Barang</label>

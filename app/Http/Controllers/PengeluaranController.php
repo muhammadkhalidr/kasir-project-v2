@@ -40,10 +40,6 @@ class PengeluaranController extends Controller
             $start_date = Carbon::parse($request->query('start_date'))->startOfDay();
             $end_date = Carbon::parse($request->query('end_date'))->endOfDay();
 
-            // Debugging messages
-            // Log::info('Start Date: ' . $start_date);
-            // Log::info('End Date: ' . $end_date);
-
             $pengeluarans->whereBetween('created_at', [$start_date, $end_date]);
         }
 
@@ -279,7 +275,8 @@ class PengeluaranController extends Controller
     public function printPengeluaran()
     {
         $user = Auth::user();
-        $datas = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])->get();
+        $datas = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
+            ->get();
         $total = Pengeluaran::select('total')->sum('total');
         $setting = setting::all()->first();
 

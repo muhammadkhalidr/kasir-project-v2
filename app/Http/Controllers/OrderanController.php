@@ -133,8 +133,34 @@ class OrderanController extends Controller
         }
     }
 
+    public function cariProdukAjax()
+    {
+        $produk = Produk::select('id', 'id_bahan', 'judul', 'harga_jual', 'ukuran', 'jumlah')->where("status", "Y")->get();
+        $data = [];
 
+        foreach ($produk as $item) {
+            $data[] = $item->judul;
+        }
 
+        if (empty($data)) {
+            $data[] = "Tidak Ada Data Produk";
+        }
+
+        return $data;
+    }
+
+    public function getDataProduk(Request $request)
+    {
+        try {
+            $judul = $request->input('judul');
+            $produk = Produk::with('bahans')->where("judul", $judul)->first();
+
+            return response()->json($produk);
+        } catch (\Exception $e) {
+            Log::error('Error in getDataProduk: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
 
     public function cariData(Request $request)
     {
@@ -199,6 +225,7 @@ class OrderanController extends Controller
                 'id_produk' => $data['idproduk'][$key],
                 'id_bahan' => $data['idbahan'][$key],
                 'keterangan' => $data['keterangan'][$key],
+                'bahan' => $data['bahan'][$key],
                 'jumlah' => $data['jumlah'][$key],
                 'ukuran' => $data['ukuran'][$key],
                 'harga' => str_replace('.', '', $data['harga'][$key]),

@@ -29,7 +29,7 @@
                             <form class="form-valide" action="{{ url('pengguna') }}" method="POST">
                                 @csrf
                                 <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for="nama">Nama Admin<span
+                                    <label class="col-lg-4 col-form-label" for="nama">Nama Lengkap<span
                                             class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-6">
@@ -96,15 +96,15 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <input type="hidden" name="level" value="1">
+                                {{-- <input type="hidden" name="level" value="1"> --}}
                                 <div class="form-group row">
                                     <label class="col-lg-4 col-form-label" for="role">Role<span
                                             class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-6">
-                                        <select name="level" class="form-control" id="role">
-                                            <option value="0"> ==> Pilih Role <== </option>
-                                            <option value="1">Admin</option>
+                                        <select name="level" class="form-control" id="role" required>
+                                            <option value="0"> Pilih Role Pengguna</option>
+                                            <option value="2">Owner</option>
                                             <option value="3">Kasir</option>
                                         </select>
                                     </div>

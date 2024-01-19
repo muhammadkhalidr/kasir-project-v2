@@ -1,153 +1,82 @@
-<!DOCTYPE html>
-<html>
-<meta charset='UTF-8' />
-<meta content='width=device-width, initial-scale=1, user-scalable=1, minimum-scale=1, maximum-scale=5' name='viewport' />
-<meta content='IE=edge' http-equiv='X-UA-Compatible' />
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Sono:wght@600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
-<script src="https://unpkg.com/typeit@8.7.0/dist/index.umd.js"></script>
-<link href="https://feeldreams.github.io/dibacadong/style.css" rel="stylesheet" type="text/css" />
-<script src="https://kit.fontawesome.com/4f3ce16e3e.js" crossorigin="anonymous"></script>
+<!doctype html>
+<html lang="en">
 
 <head>
-    <title>Script HTML buat Kamu - Feeldream.id</title>
-    <meta name="description" content="HTML Replit Coding">
-    <!--
-  Made with love by Rayys!
-  
-     Blog: feeldream.id
-     Instagram: @rayyarrr
-     TikTok: @feelthisray
-     Email: rayyarr73@gmail.com
-     
-  Thanks to all <3
--->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery UI Autocomplete - Default functionality</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        var dataProduk = [];
+
+        function initAutocomplete() {
+            $.ajax({
+                type: "GET",
+                url: "/cari-produk",
+                success: function(response) {
+                    dataProduk = response;
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            // Panggil fungsi initAutocomplete saat dokumen siap
+            initAutocomplete();
+
+            // Atur event shown.bs.modal untuk inisialisasi Autocomplete setelah modal ditampilkan
+            $('#exampleModal').on('shown.bs.modal', function() {
+                $('#tags').autocomplete({
+                    source: dataProduk,
+                    appendTo: '.modal-body' // Tentukan elemen tempat hasil pencarian akan ditampilkan
+                });
+            });
+        });
+    </script>
+
 </head>
 
 <body>
 
-    <!-- Ganti Audio di sini -->
-    <audio src="https://feeldreams.github.io/audio/seandainya.mp3" id="linkmp3" class="sembunyi"></audio>
 
-    <div id="bodyblur">
-        <!-- Wallpaper --><img src="https://feeldreams.github.io/papjalan2.jpeg" id="wallpaper" />
-    </div>
 
-    <div id='Content'>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Launch demo modal
+    </button>
 
-        <div id="ftAwal">
-            <!-- Stiker Pembuka -->
-            <img src="https://feeldreams.github.io/pandaputih.gif" id="ftoAwal" />
-        </div>
-
-        <div id="loveIn">
-            <!-- Tombol LOVE --><label class='lovein'>&#10084;</label>
-        </div>
-        <p id="ket">Sentuh LOVEnya!</p>
-
-        <div class="kumpulanstiker">
-            <!-- Stiker untuk Konten -->
-            <img src="https://feeldreams.github.io/bwa2.gif" id="fotostiker" />
-            <img src="https://feeldreams.github.io/wortel.gif" id="fotostiker1" />
-            <img src="https://feeldreams.github.io/ngumpet.gif" id="fotostiker2" />
-            <img src="https://feeldreams.github.io/pusn.gif" id="fotostiker3" />
-        </div>
-
-        <div class="kumpulanwp" class="sembunyi">
-            <img src="https://feeldreams.github.io/papjalan.jpeg" id="wallpaper2" />
-            <img src="https://feeldreams.github.io/papjalan3.jpeg" id="wallpaper3" />
-            <img src="https://feeldreams.github.io/paplalulintas4.jpeg" id="wallpaper4" />
-        </div>
-
-        <div>
-            <div id='pergeseran'>
-
-                <p><b>
-                        <span>hii ayaangggg</span>
-                    </b></p>
-
-                <p><b>
-                        <span>maaf yaa kalo aku<br>suka bkin kamu kesel</span>
-                    </b></p>
-
-                <p><b>
-                        <span>aku cuma mau bilang</span>
-                    </b></p>
-
-                <p><b>
-                        <span>pncet ini dlu ya 👉💌</span>
-                    </b></p>
-
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="ui-widget">
+                        <label for="tags">Tags: </label>
+                        <input id="tags" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
-
-        <p id="ketgeser">Klik untuk Geser!</p>
-
-        <div>
-            <blockquote id='bq'>
-                <p id="kalimat">maaf ya aku belum bisa jadi yang terbaik buat kamu,<br><br>aku juga gabisa sepenuhnya
-                    ngertiin gimana cara kamu ingin dicintai,<br><br>aku terlalu banyak kurangnya buat cewe secantik
-                    kamu,<br><br>tapi aku akan terus berusaha yang terbaik buat kamu hehe..</p>
-                <p id="pesanAkhir">stay with me. i love uu 🤍</p>
-                <p id="pesanAkhir3">Norek Nya di kirim ke wa aja ya sayang</p>
-            </blockquote>
-        </div>
-
     </div>
 
-    <script>
-        const body = document.querySelector("body");
-        const iniwp = [];
-        iden = 1;
-        iniwp[1] = wallpaper.src;
-        iniwp[2] = wallpaper2.src;
-        iniwp[3] = wallpaper3.src;
-        iniwp[4] = wallpaper4.src;
-        katakata = kalimat.innerHTML;
-        pesanAkhir2 = pesanAkhir3.innerHTML;
-        kalimat.innerHTML = "";
-        pesanAkhir3.innerHTML = "";
-        const swalst = Swal.mixin({
-            timer: 2500,
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            timerProgressBar: true,
-            imageHeight: 90,
-        });
-
-        audio = new Audio('' + linkmp3.src);
-        ftganti = 0;
-        fungsi = 0;
-        fungsiAwal = 0;
-        deffotostiker = fotostiker.src;
-
-        function berjatuhan() {
-            const heart = document.createElement("div");
-            heart.className = "fas fa-heart";
-            heart.style.left = (Math.random() * 90) + "vw";
-            heart.style.animationDuration = (Math.random() * 3) + 2 + "s";
-            body.appendChild(heart);
-        }
-        setInterval(function name(params) {
-            var heartArr = document.querySelectorAll(".fa-heart");
-            if (heartArr.length > 100) {
-                heartArr[0].remove()
-            }
-        }, 100);
-        Content.style = "opacity:1;margin-top:14vh";
-        const swals = Swal.mixin({
-            allowOutsideClick: false,
-            cancelButtonColor: '#FF0040',
-            imageHeight: 80,
-        });
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>
-    <script src="https://feeldreams.github.io/dibacadong/script.js"></script>
 </body>
 
 </html>

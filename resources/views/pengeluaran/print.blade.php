@@ -181,9 +181,9 @@
                 </td>
                 <td colspan="2" class="tgl">LAPORAN PENGELUARAN</td>
             </tr>
-            {{-- <tr class="">
-                <td colspan="2">Periode,{{ $start_date }} - {{ $end_date }}</td>
-            </tr> --}}
+            <tr class="">
+                <td colspan="2">Periode, - </td>
+            </tr>
             <tr class="">
                 <td colspan="2"></td>
             </tr>

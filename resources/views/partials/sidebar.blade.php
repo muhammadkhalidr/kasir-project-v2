@@ -76,6 +76,7 @@
                             <i class="icon-settings menu-icon"></i><span class="nav-text">Pengaturan</span>
                         </a>
                         <ul aria-expanded="false">
+                            <li><a href="{{ url('pengguna') }}">Pengguna</a></li>
                             <li><a href="{{ url('setting') }}">Aplikasi</a></li>
                             <li><a href="{{ url('rekening') }}">Rekening</a></li>
                             <li><a href="{{ url('jenis-pengeluaran') }}">Jenis Pengeluaran</a></li>

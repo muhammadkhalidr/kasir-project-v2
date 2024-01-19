@@ -52,7 +52,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($penggunas as $data)
-                                        <tr>    
+                                        <tr>
                                             <th><span class="label label-info">{{ $loop->iteration }}</span>
                                             </th>
                                             <th>{{ $data->name }}</th>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('notrx')->nullable();
             $table->string('namabarang', 50)->nullable();
             $table->string('ukuran');
+            $table->string('bahan');
             $table->string('satuan')->nullable();
             $table->integer('jumlah')->nullable();
             $table->bigInteger('harga')->nullable();

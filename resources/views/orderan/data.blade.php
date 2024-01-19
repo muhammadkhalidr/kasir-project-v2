@@ -222,6 +222,7 @@
         </div>
     </div>
 
+
     @include('orderan.components.modal')
 
     <!-- #/ container -->
@@ -601,6 +602,80 @@
     $(document).ready(function() {
         $('.jumlahBayar').mask('#.##0', {
             reverse: true
+        });
+    });
+</script>
+<script>
+    var dataProduk = [];
+
+    function initAutocomplete() {
+        $.ajax({
+            type: "GET",
+            url: "/cari-produk",
+            success: function(response) {
+                console.log(response);
+                dataProduk = response;
+            }
+        });
+    }
+
+    function getDataProduk(judul) {
+        var result;
+        $.ajax({
+            type: "GET",
+            url: "/get-data-produk",
+            data: {
+                judul: judul
+            },
+            async: false,
+            success: function(response) {
+                result = response;
+            },
+            error: function() {
+                console.error("Error fetching data for " + judul);
+            }
+        });
+        return result;
+    }
+
+    function masukkanProduk($data) {
+        if ($data) {
+            // Set data produk ke dalam inputan
+            $("#idnya").val($data.id);
+            $("#id_bahan").val($data.id_bahan);
+            $("#produk").val($data.judul);
+            $("#harga").val($data.harga_jual);
+            $("#ukuran").val($data.ukuran);
+            $("#bahan").val($data.bahans.bahan);
+            $("#jumlah").val($data.jumlah);
+        }
+    }
+
+    $(document).ready(function() {
+        initAutocomplete();
+
+        $('.bd-transaksi-modal-lg').on('shown.bs.modal', function() {
+            $('#cari_produk').autocomplete({
+                source: dataProduk,
+                appendTo: '.modal-body',
+                select: function(event, ui) {
+                    $('#btnTambahProduk').prop('disabled', false);
+                }
+            });
+
+            $('#cari_produk').on('keyup', function() {
+                var inputValue = $(this).val();
+                $('#btnTambahProduk').prop('disabled', inputValue.trim() === '');
+            });
+        });
+
+        $('#btnTambahProduk').click(function() {
+            var judul = $('#cari_produk').val();
+            var data = getDataProduk(judul);
+
+            if (data) {
+                masukkanProduk(data);
+            }
         });
     });
 </script>

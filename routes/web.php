@@ -175,15 +175,22 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/omset', [OrderanController::class, 'omset'])->name('omset');
         Route::post('omset/cari', [OrderanController::class, 'omset'])->name('omset.cari');
 
+        // Untuk KasBon
         Route::resource('kasbon', KasbonController::class)->except(['show']);
         Route::get('kasbon/print', [KasbonController::class, 'printKasBon'])->name('kasbon.print');
+
+        // Untuk Pengguna
+        Route::resource('pengguna', PenggunaController::class);
+        Route::get('/admin-baru', [PenggunaController::class, 'tambahPengguna']);
     });
+
+    // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------
 
     // Akses Untuk Owner
     Route::group(['middleware' => ['auth', 'CekUserLogin:2']], function () {
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
-        Route::resource('pengguna', PenggunaController::class)->middleware('can:pengguna.data');
+        Route::resource('pengguna', PenggunaController::class);
         Route::get('/admin-baru', [PenggunaController::class, 'tambahPengguna']);
     });
 
@@ -241,6 +248,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/tescode', function () {
     return view('tescode');
 });
+
+Route::get('/cari-produk', [OrderanController::class, 'cariProdukAjax']);
+
+Route::get('/get-data-produk', [OrderanController::class, 'getDataProduk']);
 
 Route::get('/cek', [OrderanController::class, 'cek']);
 
