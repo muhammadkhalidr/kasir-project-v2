@@ -213,8 +213,9 @@
                 <td style="width:2%!important">NO TRX</td>
                 <td align="center" style="width:5%!important">PELANGGAN</td>
                 <td align="center" style="width:5%!important">KETERANGAN</td>
+                <td align="center" style="width:2%!important;text-align:right">TOTAL</td>
                 <td align="center" style="width:2%!important">BAYAR</td>
-                <td style="width:5%!important;text-align:right">NOMINAL</td>
+                <td style="width:5%!important;text-align:right">PIUTANG</td>
                 <td align="center" style="width:5%!important">TANGGAL ORDER</td>
             </tr>
             @foreach ($datas as $item)
@@ -229,9 +230,10 @@
                             @endif
                         @endforeach
                     </td>
+                    <td class="border" align="right">{{ formatRupiah($item->subtotal, true) }}</td>
                     <td align="center" class="border">Rp. {{ formatRupiah($item->pelunasans->total_bayar ?? '0') }}
                     </td>
-                    <td class="border" align="right">{{ formatRupiah($item->subtotal, true) }}</td>
+                    <td class="border" align="right">{{ formatRupiah($item->sisa, true) }}</td>
                     <td class="border" align="center">{{ $item->created_at }}</td>
                 </tr>
             @endforeach

@@ -8,7 +8,7 @@ use App\Models\Rekening;
 use App\Models\setting;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 use PDF;
 
 class PiutangController extends Controller
@@ -46,7 +46,15 @@ class PiutangController extends Controller
             $datas[] = $items->first();
         }
 
-        $total = DetailOrderan::select('total')->sum('total');
+        $total = DetailOrderan::where('status', 'Belum Lunas')
+            ->whereIn('id', function ($query) {
+                $query->select(DB::raw('MIN(id)'))
+                    ->from('detail_orderans')
+                    ->where('status', 'Belum Lunas')
+                    ->groupBy('notrx');
+            })
+            ->sum('sisa');
+
         $setting = Setting::all()->first();
 
         if (empty($datas)) {
