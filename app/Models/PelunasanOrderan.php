@@ -9,21 +9,21 @@ class PelunasanOrderan extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'id',
-        'id_orderan',
-        'notrx',
-        'total_bayar',
-        'created_at',
-        'updated_at',
-        'bank',
-        'via',
-        'bukti_transfer',
-        'id_bayar'
-    ];
+    protected $guarded = ['id'];
+    protected $table = 'pelunasan_orderans';
+
+    public function pelanggans()
+    {
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
+    }
 
     public function rekenings()
     {
         return $this->belongsTo(Rekening::class, 'bank');
+    }
+
+    public function orderans()
+    {
+        return $this->belongsTo(DetailOrderan::class, 'id');
     }
 }

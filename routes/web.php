@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/orderan', [OrderanController::class, 'index'])->middleware('can:orderan.data');
         Route::get('/orderan-baru', [OrderanController::class, 'tambahOrderan']);
         Route::post('/orderan.pelunasan', [OrderanController::class, 'pelunasan'])->name('orderan.pelunasan');
+        Route::delete('/orderan/{notrx}', [OrderanController::class, 'destroy'])->name('orderan.destroy');
         Route::post('/orderan/tambahPelanggan', [OrderanController::class, 'tambahPelanggan'])->name('orderan.tambahPelanggan');
         Route::post('/orderan.cari', [OrderanController::class, 'cariData'])->name('orderan.cari');
         Route::post('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
@@ -143,6 +144,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Piutang Penjualan
         Route::get('/piutang', [PiutangController::class, 'index']);
+        Route::get('print-piutang', [PiutangController::class, 'printPiutang'])->name('print.piutang');
 
         // Rincian Pendapatan
         // Belum ada

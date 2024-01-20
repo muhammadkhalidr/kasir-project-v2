@@ -135,14 +135,13 @@
                                 <input type="hidden" class="form-control namapemesan" name="namapemesan[]"
                                     id="pemesan2">
                                 <input type="hidden" class="form-control idpemesan" name="idpelanggan[]">
-                                ID PRODUK : <input type="text" class="form-control id_produk" id="idnya"
+                                <input type="hidden" class="form-control id_produk" id="idnya"
                                     name="idproduk[]">
-                                ID BAHAN : <input type="text" class="form-control id_bahan" id="id_bahan"
-                                    name="idbahan[]">
+                                <input type="hidden" class="form-control id_bahan" id="id_bahan" name="idbahan[]">
                                 <div class="col">
                                     <label for="">Produk</label>
                                     <input type="text" class="form-control produk" id="produk" name="produk[]"
-                                        required>
+                                        required readonly>
                                 </div>
                                 <div class="col">
                                     <label for="">Keterangan</label>

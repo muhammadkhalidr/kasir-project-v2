@@ -51,6 +51,16 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('/') }}assets/js/transaksi.js"></script>
 
+@if (Session::has('error'))
+    <script>
+        swal.fire('Warning!', '{{ Session::get('error') }}', 'warning');
+    </script>
+@endif
+@if (Session::has('success'))
+    <script>
+        swal.fire('Success!', '{{ Session::get('success') }}', 'success');
+    </script>
+@endif
 </body>
 
 </html>

@@ -149,6 +149,28 @@
         .cobas {
             border-top: 2px dashed #000;
         }
+
+        .hormat-kami {
+            display: flex;
+            justify-content: center;
+            gap: 10em;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .stamp {
+            padding: 10px;
+            display: inline-block;
+        }
+
+        .stamp img {
+            max-width: 150px;
+        }
+
+        .text-container p {
+            text-decoration: underline;
+            margin: 0;
+        }
     </style>
 
 </head>
@@ -252,12 +274,26 @@
                             </div>
                         </div>
                         <!-- end invoice-price -->
+
+                        <div class="hormat-kami">
+                            <div class="stamp">
+                                <img src="{{ asset('/') . $stamp }}" alt="{{ $alt }}">
+                            </div>
+                            <div class="text-container">
+                                <h6>Hormat Kami,</h6> <br>
+                                <p>( {{ $user->name }} )</p>
+                            </div>
+                            <div class="text-container">
+                                <h6>Pemesan,</h6> <br>
+                                <p>( {{ $orderanGroup->first()->pelanggans->nama }} )</p>
+                            </div>
+                        </div>
+
                     </div>
                     <!-- end invoice-content -->
                     <!-- begin invoice-note -->
                     <div class="invoice-note">
                         <h6>
-                            STATUS : {{ $orderanGroup->first()->status }} <br>
                             @if ($via->first() == null)
                                 PEMBAYARAN : BELUM ADA PEMBAYARAN
                             @else

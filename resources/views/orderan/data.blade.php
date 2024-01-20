@@ -80,24 +80,6 @@
                 <div class="card">
                     <div class="card-body">
                         <div id="pesanoff"></div>
-                        <div class="pesan mt-2">
-                            @if (session('msg'))
-                                <div class="alert alert-primary alert-dismissible fade show">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span>
-                                    </button> {{ session('msg') }}
-                                </div>
-                            @endif
-                        </div>
-                        <div class="pesan mt-2">
-                            @if (session('success'))
-                                <div class="alert alert-primary alert-dismissible fade show">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span>
-                                    </button> {{ session('success') }}
-                                </div>
-                            @endif
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered">
                                 <thead>
@@ -115,12 +97,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($dataOrderan as $item)
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($dataOrderan as $index => $item)
                                         @if (!$loop->first && $item->notrx == $dataOrderan[$loop->index - 1]->notrx)
                                             @continue
                                         @endif
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $index + $dataOrderan->firstItem() }}</td>
                                             <td><a class="label label-success text-white" style="cursor: pointer"
                                                     data-toggle="modal"
                                                     data-target=".bd-datatransaksi-modal-lg{{ $item->notrx }}"><i
@@ -178,13 +163,15 @@
                                                             style="display: inline" id="hapusOrderanForm">
                                                             @csrf
                                                             @method('DELETE')
-
                                                             <button type="button" title="Hapus Data"
-                                                                class="dropdown-item" onclick="hapusOrderan()">
+                                                                data-notrx="{{ $item->notrx }}"
+                                                                class="dropdown-item"
+                                                                onclick="konfirmasiHapus('{{ $item->notrx }}')">
                                                                 <span class="badge badge-danger flat">
                                                                     <i class="fa fa-trash"></i> HAPUS DATA
                                                                 </span>
                                                             </button>
+
                                                         </form>
 
                                                     </div>
@@ -253,6 +240,8 @@
             newForm.find(".produk").val("");
             newForm.find(".id_produk").val("");
             newForm.find(".jumlah").val("");
+            newForm.find(".keterangan").val("");
+            newForm.find(".ukuran").val("");
             newForm.find(".harga").val("");
             newForm.find(".total").val("");
 
@@ -555,23 +544,51 @@
     });
 </script>
 <script>
-    function hapusOrderan() {
+    function konfirmasiHapus(notrx) {
         Swal.fire({
-            title: 'Yakin ingin menghapus data ini?',
-            text: 'Data yang dihapus tidak dapat dikembalikan!',
+            title: 'Apakah Anda yakin?',
+            text: 'Data akan dihapus permanen!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Hapus',
-            cancelButtonText: 'Batal'
+            confirmButtonText: 'Ya, Hapus!'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('hapusOrderanForm').submit();
+                hapusOrderan(notrx);
+            }
+        });
+    }
+
+    function hapusOrderan(notrx) {
+        $.ajax({
+            type: 'POST',
+            url: '/orderan/' + notrx,
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: response.success,
+                    icon: 'success',
+                }).then((result) => {
+                    // Reload halaman jika pengguna mengklik "OK"
+                    if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop ||
+                        result.dismiss === Swal.DismissReason.esc) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function(error) {
+                console.error('Error:', error);
+                Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
             }
         });
     }
 </script>
+
 <script>
     $(document).ready(function() {
         $(document).on('keyup', '.harga', function() {
@@ -640,16 +657,19 @@
 
     function masukkanProduk($data) {
         if ($data) {
-            // Set data produk ke dalam inputan
-            $("#idnya").val($data.id);
-            $("#id_bahan").val($data.id_bahan);
-            $("#produk").val($data.judul);
-            $("#harga").val($data.harga_jual);
-            $("#ukuran").val($data.ukuran);
-            $("#bahan").val($data.bahans.bahan);
-            $("#jumlah").val($data.jumlah);
+            // Set data produk ke dalam inputan di form terakhir
+            var formIndex = $(".form-transaksi").length - 1; // Ambil indeks form terakhir
+            $(".form-transaksi:eq(" + formIndex + ") .id_produk").val($data.id);
+            $(".form-transaksi:eq(" + formIndex + ") .id_bahan").val($data.id_bahan);
+            $(".form-transaksi:eq(" + formIndex + ") .produk").val($data.judul);
+            $(".form-transaksi:eq(" + formIndex + ") .harga").val($data.harga_jual);
+            $(".form-transaksi:eq(" + formIndex + ") .ukuran").val($data.ukuran);
+            $(".form-transaksi:eq(" + formIndex + ") .bahan").val($data.bahans.bahan);
+            $(".form-transaksi:eq(" + formIndex + ") .jumlah").val($data.jumlah);
         }
     }
+
+
 
     $(document).ready(function() {
         initAutocomplete();

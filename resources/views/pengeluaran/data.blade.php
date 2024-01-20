@@ -82,19 +82,6 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        {{-- <button type="button" class="btn btn-primary"
-                            onclick="window.location='{{ url('pengeluaranbaru') }}'">
-                            <i class="fa fa-plus-circle"></i> Tambah Data Baru
-                        </button> --}}
-                        <div class="pesan mt-2">
-                            @if (session('msg'))
-                                <div class="alert alert-primary alert-dismissible fade show">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span>
-                                    </button> {{ session('msg') }}
-                                </div>
-                            @endif
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered">
                                 <thead>
@@ -404,8 +391,3 @@
         });
     });
 </script>
-@if (Session::has('error'))
-    <script>
-        swal.fire('Warning!', '{{ Session::get('error') }}', 'warning');
-    </script>
-@endif

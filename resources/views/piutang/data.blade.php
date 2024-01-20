@@ -19,6 +19,10 @@
                             <input type="hidden" name="end_date" id="end_date" />
                             <input type="text" class="form-control w-10" name="daterange" />
                         </form>
+                        <button class="btn btn-info" type="button" data-placement="left">
+                            <i class="fa fa-file-pdf-o"></i>
+                            <a href="{{ route('print.piutang') }}" class="text-white" target="_blank">Print</a>
+                        </button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
@@ -34,15 +38,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $item)
+                                @php
+                                    $no = 1;
+                                @endphp
+                                @foreach ($data as $index => $item)
                                     @if ($item->status != 'Lunas')
                                         @if (!$loop->first && $item->notrx == $data[$loop->index - 1]->notrx)
                                             @continue
                                         @endif
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $index + $data->firstItem() }}</td>
                                             <td>{{ $item->notrx }}</td>
-                                            <td>{{ $item->namapemesan }}</td>
+                                            <td>{{ $item->pelanggans->nama }}</td>
                                             <td>{{ $item->created_at }}</td>
                                             <td align="center"><button class="btn btn-sm btn-success text-white"
                                                     data-toggle="modal" data-target="#detailsModal{{ $item->notrx }}"><i

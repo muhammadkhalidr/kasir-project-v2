@@ -58,7 +58,7 @@ class OrderanController extends Controller
         }
 
         // Set default per page value
-        $perPage = $request->input('dataOptions', 10);
+        $perPage = $request->input('dataOptions', 20);
 
         // Adjust pagination based on the user's selection
         $dataOrderan = $dataOrderan->paginate($perPage);
@@ -277,7 +277,7 @@ class OrderanController extends Controller
         // $omset->total = str_replace('.', '', $data['total'][$key]);
         // $omset->save();
 
-        return redirect('orderan')->with('msg', 'Data Berhasil Ditambahkan!');
+        return redirect('orderan')->with('success', 'Data Berhasil Ditambahkan!');
     }
 
     public function omset(Request $request)
@@ -327,6 +327,18 @@ class OrderanController extends Controller
 
     public function pelunasan(Request $request)
     {
+
+        $latestPelunasan = PelunasanOrderan::latest('id')->first();
+
+        if ($latestPelunasan) {
+            $id_pelunasan = $latestPelunasan->toArray();
+            $id = $id_pelunasan['id'] + 1;
+        } else {
+            // Handle the case where no records were found
+            $id = 1; // Set a default value or handle it according to your requirements
+        }
+
+
         // Ambil data dari form
         $via = $request->input('via');
         $jumlahBayar = str_replace('.', '', $request->input('jumlahBayar'));
@@ -361,6 +373,7 @@ class OrderanController extends Controller
             ->update([
                 'sisa' => max(0, floatval($totalBayar) - floatval($jumlahBayar)),
                 'status' => $totalBayar == $jumlahBayar ? 'Lunas' : 'Belum Lunas',
+                'id_pelunasan' => $id,
             ]);
 
         // Cek apakah pembayaran menggunakan tunai
@@ -441,7 +454,7 @@ class OrderanController extends Controller
             $kasMasuk->save();
         }
 
-        return redirect('orderan')->with('msg', 'Data Berhasil Diubah!');
+        return redirect('orderan')->with('success', 'Data Berhasil Diubah!');
     }
 
     /**
@@ -452,8 +465,14 @@ class OrderanController extends Controller
      */
     public function destroy($notrx)
     {
-        $orderan = DetailOrderan::where('notrx', $notrx);
+        $orderan = DetailOrderan::where('notrx', $notrx)->first();
+
+        if (!$orderan) {
+            return response()->json(['error' => 'Data tidak ditemukan.'], 404);
+        }
+
         $orderan->delete();
+        return response()->json(['success' => 'Data berhasil dihapus.']);
 
         // Delete data from KasMasuk table
         $kasMasuk = KasMasuk::where('id_generate', $notrx);
@@ -465,7 +484,7 @@ class OrderanController extends Controller
         $omset = OmsetPenjualan::where('notrx', $notrx);
         $omset->delete();
 
-        return redirect('orderan')->with('msg', 'Data Berhasil Di-hapus!');
+        return redirect('orderan')->with('success', 'Data Berhasil Di-hapus!');
     }
 
     public function printInvoice($notrx)
@@ -475,7 +494,16 @@ class OrderanController extends Controller
         $data = DetailOrderan::all();
         $setting = setting::all();
         $via = PelunasanOrderan::with('rekenings')->where('notrx', $notrx)->get();
-
+        $dataOrderan = DetailOrderan::with('pelanggans')->select('status', 'sisa')->where('notrx', $notrx)->get();
+        foreach ($dataOrderan as $datas) {
+            if ($datas->status == 'Lunas') {
+                $stamp = 'assets/images/settings/' . $setting->first()->logo_lunas;
+                $alt = 'LUNAS';
+            } elseif ($datas->status == 'Belum Lunas') {
+                $stamp = 'assets/images/settings/' . $setting->first()->logo_blunas;
+                $alt = 'BELUM LUNAS';
+            }
+        }
 
         $logo = setting::all();
         $rekening = Rekening::all();
@@ -495,6 +523,8 @@ class OrderanController extends Controller
             'rekening' => $rekening,
             'user' => $user,
             'formatTgl' => $formatTgl,
+            'stamp' => $stamp,
+            'alt' => $alt
         ]);
 
         // dd($logo);
