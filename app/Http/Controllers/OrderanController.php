@@ -194,7 +194,14 @@ class OrderanController extends Controller
 
         $noTrx = DetailOrderan::latest('id')->first();
 
-        // $pelanggan = Pelanggan::where('nama', $data['namapemesan'])->first();
+        $latestPelunasan = PelunasanOrderan::latest('id')->first();
+
+        if ($latestPelunasan) {
+            $id_pelunasan = $latestPelunasan->toArray();
+            $id = $id_pelunasan['id'] + 1;
+        } else {
+            $id = 1;
+        }
 
         $idTransaksiBaru = 0;
         $idTransaksiBaru++;
@@ -224,6 +231,7 @@ class OrderanController extends Controller
                 'namabarang' => $data['produk'][$key],
                 'id_produk' => $data['idproduk'][$key],
                 'id_bahan' => $data['idbahan'][$key],
+                'id_pelunasan' => $id,
                 'keterangan' => $data['keterangan'][$key],
                 'bahan' => $data['bahan'][$key],
                 'jumlah' => $data['jumlah'][$key],
@@ -243,6 +251,14 @@ class OrderanController extends Controller
                 'produk' => $data['produk'][$key],
                 'jumlah' => $data['jumlah'][$key],
                 'total' => str_replace('.', '', $data['total'][$key]),
+
+                PelunasanOrderan::create([
+                    'notrx' => $data['notrx'][$key],
+                    'total_bayar' => str_replace('.', '', $data['uangmuka']),
+                    'bank' => $data['bayarDp'],
+                    'via' => $data['bayarDp'],
+                    'id_bayar' => $data['idpelanggan'][$key],
+                ])
             ]);
 
             // Tambahkan notrx ke dalam array processedNotrx
@@ -334,8 +350,7 @@ class OrderanController extends Controller
             $id_pelunasan = $latestPelunasan->toArray();
             $id = $id_pelunasan['id'] + 1;
         } else {
-            // Handle the case where no records were found
-            $id = 1; // Set a default value or handle it according to your requirements
+            $id = 1;
         }
 
 
