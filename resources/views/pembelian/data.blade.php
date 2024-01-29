@@ -41,12 +41,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Data Pembelian</h4>
-                        <button type="button" class="btn btn-primary"
-                            onclick="window.location='{{ url('pembelianbaru') }}'">
-                            <i class="fa fa-plus-circle"></i> Tambah Data Baru
-                        </button>
-                        {{-- <button type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target=".bd-pembelian-modal-lg"> <i class="fa fa-plus"></i> Tambah Data</button> --}}
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                            data-target=".bd-pembelian-modal-lg"> <i class="fa fa-plus"></i> Tambah Data</button>
                         <div class="pesan mt-2">
                             @if (session('msg'))
                                 <div class="alert alert-primary alert-dismissible fade show">
@@ -132,125 +128,110 @@
                 <div class="modal-body">
                     <form action="{{ url('pembelian') }}" method="POST">
                         @csrf
-                        <div class="col-md-12">
-                            <table class="table table-striped table-sm" id="table_pengeluaran">
-                                <thead>
-                                    <tr>
-                                        <td>No Faktur</td>
-                                        <td>Bahan</td>
-                                        <td>Jenis</td>
-                                        <td>Qty</td>
-                                        <td>Satuan</td>
-                                        <td>DP</td>
-                                        <td>Sisa</td>
-                                        <td>Sub total</td>
-                                        {{-- <td><button type="button" class="btn btn-info btn-sm add_mores"><i
-                                                    class="fa fa-plus"></i></button></td> --}}
-                                    </tr>
-                                </thead>
+                        <div class='row'>
+                            <div class="col-12">
+                                <div class="d-flex flex-column flex-md-row">
+                                    <input type="hidden" id="idpembelian" value="" readonly>
+                                    <div class="mr-auto p-2">
+                                        <div class="d-inline p-2 bg-info text-white">No. <span id="id_pembelian"></span>
+                                        </div>
+                                        <div class="d-inline p-2 bg-default">Kasir : <span id="nama"></span></div>
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-prepend">
+                                                <span class="input-group-text">Tanggal Transaksi</span>
+                                            </span>
+                                            <input type="text" class="form-control form-control-sm w-150px date_p"
+                                                id="date_p" value="" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm" id="table_pembelian">
+                                        <thead>
+                                            <tr>
+                                                <td>Bahan</td>
+                                                <td>Jenis akun</td>
+                                                <td>Supplier</td>
+                                                <td>Qty</td>
+                                                <td>Nominal</td>
+                                                <td>Satuan</td>
+                                                <td>Sub total</td>
+                                                <td><button type="button" class="btn btn-info btn-sm add_mores"><i
+                                                            class="fa fa-plus"></i></button></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="row_Count" id="row_Count">
+                                                <td class="col-12 col-md-1">
+                                                    <div class="form-group p-0 m-0">
+                                                        <input type="text" class="form-control input-default"
+                                                            id="bahan" name="bahan" />
+                                                    </div>
+                                                </td>
+                                                <td class="col-12 col-md-1">
+                                                    <div class="form-group p-0 m-0">
+                                                        <input type="text" class="form-control input-default"
+                                                            id="jenisakun" name="jenis" />
+                                                    </div>
+                                                </td>
+                                                <td class="col-12 col-md-1">
+                                                    <div class="form-group p-0 m-0">
+                                                        <input type="text" class="form-control input-default"
+                                                            id="supplier" name="supplier" />
+                                                    </div>
 
-                                <tbody>
-                                    <tr class="row_Count" id="row_Count">
-                                        <td>
-                                            <input type="text"
-                                                class="form-control input-default @error('txtid')
-                                        is-invalid
-                                        @enderror"
-                                                id="txtid" name="txtid" value="{{ old('txtid') }}">
-                                            @error('txtid')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </td>
-                                        <td>
-                                            <div class="input-group mb-3">
-                                                <input type="text"
-                                                    class="form-control input-default @error('txtbahan')
-                                            is-invalid
-                                            @enderror"
-                                                    id="txtbahan" name="txtbahan" value="{{ old('txtbahan') }}">
-                                                @error('txtbahan')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
+                                                </td>
+                                                <td class="col-12 col-md-1">
+                                                    <div class="form-group p-0 m-0">
+                                                        <input type="text" class="form-control input-default"
+                                                            id="jumlah" name="jumlah" />
                                                     </div>
-                                                @enderror
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group mb-3">
-                                                <input type="text"
-                                                    class="form-control input-default @error('txtjenis')
-                                            is-invalid
-                                            @enderror"
-                                                    id="txtjenis" name="txtjenis" value="{{ old('txtjenis') }}">
-                                                @error('txtjenis')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
+                                                </td>
+                                                <td class="col-md-1">
+                                                    <div class="form-group p-0 m-0">
+                                                        <input type="text" class="form-control input-default"
+                                                            id="bahan_" name="bahan" />
                                                     </div>
-                                                @enderror
-                                            </div>
-                                        </td>
-                                        <td> <input type="text"
-                                                class="form-control input-default @error('txtjumlah')
-                                        is-invalid
-                                        @enderror"
-                                                id="txtjumlah" name="txtjumlah" value="{{ old('txtjumlah') }}">
-                                            @error('txtjumlah')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </td>
-                                        <td> <input type="text"
-                                                class="form-control input-default @error('txtsatuan')
-                                        is-invalid
-                                        @enderror"
-                                                id="txtsatuan" name="txtsatuan" value="{{ old('txtsatuan') }}">
-                                            @error('txtsatuan')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </td>
-                                        <td>
-                                            <input type="text"
-                                                class="form-control input-default @error('txtsisa')
-                                    is-invalid
-                                    @enderror"
-                                                id="txtsisa" name="txtsisa" value="{{ old('txtsisa') }}">
-                                            @error('txtsisa')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </td>
-                                        <td> <input type="text"
-                                                class="form-control input-default @error('txtdp')
-                                        is-invalid
-                                        @enderror"
-                                                id="txtdp" name="txtdp" value="{{ old('txtdp') }}">
-                                            @error('txtdp')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </td>
-                                        <td> <input type="text"
-                                                class="form-control input-default @error('txttotal')
-                                    is-invalid
-                                    @enderror"
-                                                id="txttotal" name="txttotal" value="{{ old('txttotal') }}">
-                                            @error('txttotal')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                                </td>
+                                                <td class="col-12 col-md-1">
+                                                    <div class="form-group p-0 m-0">
+                                                        <input type="text" class="form-control input-default"
+                                                            id="nominal" name="nominal" />
+                                                    </div>
+                                                </td>
+                                                <td class="col-12 col-md-1">
+                                                    <div class="form-group p-0 m-0">
+                                                        <input type="text" class="form-control input-default"
+                                                            id="satuan" name="satuan" />
+                                                    </div>
+                                                </td>
+                                                <td class="col-12 col-md-1">
+                                                    <button type="button" class="btn btn-danger btn-sm del_more"><i
+                                                            class="fa fa-times"></i></button>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="5">&nbsp;</td>
+                                                <td>Total pembelian</td>
+                                                <td colspan="1"><input class="form-control form-control-sm"
+                                                        id="total_pembelian" type="text" readonly></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="8">&nbsp;</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>
@@ -260,28 +241,6 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $(".add_mores").click(function() {
-                var newRow = '<tr class="row_Count" id="row_Count">' +
-                    '<td><input id="id_pengeluaran_" type="hidden"><input class="form-control form-control-sm" type="text"></td>' +
-                    '<td><div class="input-group mb-3"><input class="form-control form-control-sm" type="text"><input type="hidden"></div></td>' +
-                    '<td><div class="input-group mb-3"><input class="form-control form-control-sm flat" id="supplier_" type="text"><input id="id_supplier_" type="hidden"></div></td>' +
-                    '<td><input class="form-control form-control-sm" type="text"></td>' +
-                    '<td><input class="form-control form-control-sm" type="text"></td>' +
-                    '<td><input class="form-control form-control-sm" type="text"></td>' +
-                    '<td><input class="form-control form-control-sm" type="text"></td>' +
-                    '<td><input class="form-control form-control-sm" type="text"></td>' +
-                    '<td><button class="btn btn-danger btn-sm del_more"><i class="fa fa-times"></i></button></td>' +
-                    '</tr>';
-
-                // Menambahkan baris baru ke dalam tabel
-                $("#table_pengeluaran tbody").append(newRow);
-            });
-        });
-    </script>
 
     <!--**********************************
             Content body end

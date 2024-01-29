@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Supplier;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
+use Illuminate\Support\Facades\Auth;
 
 class SupplierController extends Controller
 {
@@ -13,7 +14,13 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $supplier = Supplier::paginate(10);
+        return view('supplier.data', [
+            'title' => 'Data Supplier',
+            'name_user' => $user->name,
+            'datas' => $supplier
+        ]);
     }
 
     /**
@@ -29,7 +36,23 @@ class SupplierController extends Controller
      */
     public function store(StoreSupplierRequest $request)
     {
-        //
+
+        $validated = $request->validated();
+
+        $data = new Supplier;
+        $data->nama = $request->perusahaan;
+        $data->jenis_usaha = $request->jenisusaha;
+        $data->pemilik = $request->nama;
+        $data->jabatan = $request->jabatan;
+        $data->alamat = $request->alamat;
+        $data->nohp = $request->nohp;
+        $data->email = $request->email;
+        $data->norek = $request->norek;
+        $data->status = $request->status;
+        $data->save();
+        // dd($data);
+
+        return redirect()->back()->with(['success' => 'Data Berhasil Ditambahkan']);
     }
 
     /**

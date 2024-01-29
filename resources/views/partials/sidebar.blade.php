@@ -23,6 +23,7 @@
                             <li><a href="{{ url('bahan') }}">Jenis Bahan</a></li>
                             <li><a href="{{ url('kategori') }}">Kategori</a></li>
                             <li><a href="{{ url('satuan') }}">Satuan</a></li>
+                            <li><a href="{{ url('supplier') }}">Supplier</a></li>
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">

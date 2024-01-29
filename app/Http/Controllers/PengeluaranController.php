@@ -56,21 +56,13 @@ class PengeluaranController extends Controller
             return $pengeluaran;
         });
 
-
-        // dd($groupedPengeluarans);
-
         $latestExpense = Pengeluaran::orderBy('id_pengeluaran', 'desc')->first();
         $nomorP = $latestExpense ? sprintf('%03d', intval($latestExpense->id_pengeluaran) + 1) : '001';
 
         $bank = Rekening::all();
-        // dd($bank);
         $dataJenis = JenisPengeluaran::where('aktif', 1)->get();
         $dataKaryawan = Karyawan::all();
 
-        // $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
-        // $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
-
-        // dd($saldoBank, $saldoTunai);
 
         return view('pengeluaran.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pengeluaran',
