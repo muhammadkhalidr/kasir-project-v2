@@ -48,7 +48,7 @@ class PelangganController extends Controller
         $user = Auth::user();
 
         return view('pelanggan.tambah', [
-            'user' => $user,
+            'name_user' => $user->name,
             'title' => 'Pelanggan',
             'breadcrumb' => 'Pelanggan',
         ]);
@@ -85,12 +85,10 @@ class PelangganController extends Controller
         $pelanggan->nama = $request->namapelanggan;
         $pelanggan->alamat = $request->alamat;
         $pelanggan->nohp = $request->nohp;
-        $pelanggan->email = $request->email;
         $pelanggan->save();
 
-        // dd($pelanggan);
 
-        return redirect('pelanggan')->with('msg', 'Data Berhasil Ditambahkan!');
+        return redirect('pelanggan')->with('success', 'Data Berhasil Ditambahkan!');
     }
 
     /**
@@ -103,12 +101,11 @@ class PelangganController extends Controller
 
         return view('pelanggan.edit', [
             'title' => 'Edit Pelanggan',
-            'user' => $user,
+            'name_user' => $user->name,
         ])->with([
             'id' => $id,
             'nama' => $pelanggan->nama,
             'alamat' => $pelanggan->alamat,
-            'email' => $pelanggan->email,
             'nohp' => $pelanggan->nohp,
         ]);
     }
@@ -135,11 +132,10 @@ class PelangganController extends Controller
         // $data->id = $request->txtid;
         $data->nama = $request->nama;
         $data->alamat = $request->alamat;
-        $data->email = $request->email;
         $data->nohp = $request->nohp;
         $data->save();
 
-        return redirect('pelanggan')->with('msg', 'Data Berhasil Di-update!');
+        return redirect('pelanggan')->with('success', 'Data Berhasil Di-update!');
     }
 
     /**

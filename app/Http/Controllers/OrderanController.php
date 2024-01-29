@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Orderan;
 use App\Http\Requests\UpdateOrderanRequest;
 use App\Models\DetailOrderan;
+use App\Models\JenisBahan;
 use App\Models\KasMasuk;
 use App\Models\OmsetPenjualan;
 use App\Models\Pelanggan;
 use App\Models\PelunasanOrderan;
 use App\Models\Produk;
 use App\Models\Rekening;
+use App\Models\Satuan;
 use App\Models\setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,16 +29,16 @@ class OrderanController extends Controller
     {
         $user = Auth::user();
         $dataOrderan = DetailOrderan::with(['pelanggans', 'produks', 'bahans']);
-
-        // dd($dataOrderan);
         $kode_pelanggan = "";
         $dataPelanggan = Pelanggan::select('kode_pelanggan', 'nama')->get();
         $pelanggans = Pelanggan::all();
         $rekening = Rekening::all();
         $noTrx = DetailOrderan::latest('id')->first();
+
         $dataKasir = DetailOrderan::select('name_kasir')->where('notrx', $noTrx)->get();
         $dataPelunasan = PelunasanOrderan::all();
         $jamTransaksi = Setting::select('darijam', 'sampaijam')->first();
+        $satuan = Satuan::latest()->get();
 
         // Apply date filter
         if ($request->has('start_date') && $request->has('end_date')) {
@@ -57,11 +59,12 @@ class OrderanController extends Controller
             });
         }
 
-        // Set default per page value
-        $perPage = $request->input('dataOptions', 20);
+        $perPage = $request->input('dataOptions', 10);
 
-        // Adjust pagination based on the user's selection
-        $dataOrderan = $dataOrderan->paginate($perPage);
+        $dataOrderan = $dataOrderan
+            ->select('id_transaksi', 'namabarang', 'keterangan', 'ukuran', 'bahan', 'satuan', 'subtotal', 'sisa', 'status', 'name_kasir', 'id_pelunasan', 'notrx', 'id_pelanggan', 'id_produk', 'id_bahan', 'jumlah', 'harga', 'total', 'created_at')
+            ->paginate($perPage);
+
 
         if ($noTrx) {
             $idLama = $noTrx->notrx;
@@ -94,6 +97,9 @@ class OrderanController extends Controller
         $pelanggan = Pelanggan::where('nama', 'LIKE', '%' . $query . '%')
             ->simplePaginate(10);
 
+
+        $dataBahan = JenisBahan::where('status', 'Y')->get();
+
         return view('orderan.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Orderan',
             'breadcrumb' => 'Data Orderan',
@@ -108,10 +114,19 @@ class OrderanController extends Controller
             'pelunasan' => $dataPelunasan,
             'dataKasir' => $dataKasir,
             'jamTransaksi' => $jamTransaksi,
+            'dataBahan' => $dataBahan,
+            'satuan' => $satuan,
             'perPageOptions' => [10, 15, 25, 100],
+
         ]);
     }
 
+    public function getBahanByCategory($id_kategori)
+    {
+        $dataBahan = JenisBahan::where('id_kategori', $id_kategori)->get();
+
+        return response()->json($dataBahan);
+    }
     public function searchProduct(Request $request)
     {
         if ($request->ajax()) {
@@ -223,17 +238,21 @@ class OrderanController extends Controller
             // Tentukan nilai uangmuka
             $uangMuka = !empty($data['uangmuka']) ? str_replace('.', '', $data['uangmuka']) : 0;
 
+            // Tentukan nilai id_pelanggan
+            $idPelanggan = !empty($value) ? $value : 0;
+
             // Buat dan simpan objek DetailOrderan
             DetailOrderan::create([
                 'id_transaksi' => $idTransaksiBaru2,
                 'notrx' => $data['notrx'][$key],
-                'id_pelanggan' => $value,
+                'id_pelanggan' => $idPelanggan,
                 'namabarang' => $data['produk'][$key],
                 'id_produk' => $data['idproduk'][$key],
                 'id_bahan' => $data['idbahan'][$key],
                 'id_pelunasan' => $id,
                 'keterangan' => $data['keterangan'][$key],
                 'bahan' => $data['bahan'][$key],
+                'satuan' => $data['satuan'][$key],
                 'jumlah' => $data['jumlah'][$key],
                 'ukuran' => $data['ukuran'][$key],
                 'harga' => str_replace('.', '', $data['harga'][$key]),
@@ -333,7 +352,6 @@ class OrderanController extends Controller
         $pelanggan->kode_pelanggan = $request->kode;
         $pelanggan->nama = $request->nama;
         $pelanggan->nohp = $request->nohp;
-        $pelanggan->email = $request->email;
         $pelanggan->alamat = $request->alamat;
 
         $pelanggan->save();
@@ -480,27 +498,36 @@ class OrderanController extends Controller
      */
     public function destroy($notrx)
     {
-        $orderan = DetailOrderan::where('notrx', $notrx)->first();
+        // Delete data dari DetailOrderan tabel
+        $orderan = DetailOrderan::where('notrx', $notrx);
 
         if (!$orderan) {
             return response()->json(['error' => 'Data tidak ditemukan.'], 404);
         }
 
         $orderan->delete();
-        return response()->json(['success' => 'Data berhasil dihapus.']);
 
-        // Delete data from KasMasuk table
+        // Delete data dari KasMasuk tabel
         $kasMasuk = KasMasuk::where('id_generate', $notrx);
-        $kasMasuk->delete();
+        if ($kasMasuk) {
+            $kasMasuk->delete();
+        }
 
+        // Delete data dari PelunasanOrderan tabel
         $pelunasan = PelunasanOrderan::where('notrx', $notrx);
-        $pelunasan->delete();
+        if ($pelunasan) {
+            $pelunasan->delete();
+        }
 
+        // Delete data dari OmsetPenjualan tabel
         $omset = OmsetPenjualan::where('notrx', $notrx);
-        $omset->delete();
+        if ($omset) {
+            $omset->delete();
+        }
 
-        return redirect('orderan')->with('success', 'Data Berhasil Di-hapus!');
+        return redirect('orderan')->with('success', 'Data Berhasil Dihapus!');
     }
+
 
     public function printInvoice($notrx)
     {
@@ -564,7 +591,6 @@ class OrderanController extends Controller
         $rekening = Rekening::all();
         $dataOrderan = DetailOrderan::with('pelanggans')->select('status', 'sisa')->where('notrx', $notrx)->get();
 
-
         $formatTgl = $orderans->map(function ($orderanGroup) {
             $orderanGroup->formatted_date = Carbon::parse($orderanGroup->first()->created_at)->isoFormat('dddd, DD/MM/YYYY');
             return $orderanGroup;
@@ -592,7 +618,7 @@ class OrderanController extends Controller
             'user' => $user,
             'formatTgl' => $formatTgl,
             'stamp' => $stamp,
-            'alt' => $alt
+            'alt' => $alt,
         ]);
     }
 }

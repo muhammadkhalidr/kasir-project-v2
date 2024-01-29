@@ -89,23 +89,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for="email">Email<span
-                                            class="text-danger">*</span>
-                                    </label>
-                                    <div class="col-lg-6">
-                                        <input type="text"
-                                            class="form-control @error('email')
-                                        is-invalid
-                                        @enderror"
-                                            id="email" name="email" value="{{ $email }}">
-                                        @error('email')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="form-group row">
                                     <div class="col-lg-8 ml-auto">
                                         <button type="submit" class="btn btn-primary">Simpan</button>
                                     </div>

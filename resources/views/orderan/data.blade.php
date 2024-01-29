@@ -105,21 +105,21 @@
                                             @continue
                                         @endif
                                         <tr>
-                                            <td>{{ $index + $dataOrderan->firstItem() }}</td>
-                                            <td><a class="label label-success text-white" style="cursor: pointer"
-                                                    data-toggle="modal"
+                                            <td>{{ $no++ }}</td>
+                                            <td><a class="badge badge-success text-white p-2 notrx"
+                                                    style="cursor: pointer" data-toggle="modal"
                                                     data-target=".bd-datatransaksi-modal-lg{{ $item->notrx }}"><i
                                                         class="fa fa-search"></i> {{ $item->notrx }}</a>
                                             </td>
                                             <td>{{ $item->pelanggans->nama }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('l, d F Y') }}
+                                            <td>{{ $item->created_at->translatedFormat('l, d F Y') }}
                                             </td>
                                             <td>{{ $item->name_kasir }}</td>
                                             <td>{{ formatRupiah($item->subtotal) }}</td>
                                             <td>{{ formatRupiah($item->uangmuka) }}</td>
                                             <td>{{ formatRupiah($item->sisa) }}</td>
                                             <td><span
-                                                    class="label label-{{ $item->status == 'Lunas' ? 'success' : 'warning' }}">{{ $item->status }}</span>
+                                                    class="badge badge-{{ $item->status == 'Lunas' ? 'success' : 'warning' }} text-white p-2 notrx">{{ $item->status }}</span>
                                             </td>
                                             <td>
                                                 @php
@@ -183,11 +183,26 @@
                                     @if ($dataOrderan->count() == 0)
                                         <tr>
                                             <td colspan="10" class="text-center">
-                                                <h5>Tidak Ada Data</h5>
+                                                <p>Belum ada data transaksi</p>
                                             </td>
                                         </tr>
                                     @endif
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                        <th id="total"></th>
+                                        <th id="uangmuka"></th>
+                                        <th id="sisa"></th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </tfoot>
+
                             </table>
                             <div class="d-flex justify-content-start">
                                 @php
@@ -237,14 +252,17 @@
             newForm.find(".produk").attr("id", "produk" + formIndex);
 
             // Bersihkan nilai input di form baru kecuali nama pelanggan
-            newForm.find(".produk").val("");
-            newForm.find(".id_produk").val("");
-            newForm.find(".jumlah").val("");
-            newForm.find(".keterangan").val("");
-            newForm.find(".ukuran").val("");
-            newForm.find(".harga").val("");
-            newForm.find(".total").val("");
+            // newForm.find(".produk").val("");
+            // newForm.find(".id_produk").val("");
+            // newForm.find(".id_kategori").val("");
+            // newForm.find(".jumlah").val("");
+            // newForm.find(".keterangan").val("");
+            // newForm.find(".ukuran").val("");
+            // newForm.find(".harga").val("");
+            // newForm.find(".total").val("");
 
+            // Hapus label dari form baru
+            newForm.find("label").text("");
             // Sisipkan form baru setelah form terakhir
             $(".form-transaksi:last").after(newForm);
 
@@ -505,9 +523,6 @@
         var searchInput = document.getElementById('searchInput');
         var searchForm = document.getElementById('searchForm');
 
-        searchInput.addEventListener('input', function() {
-            searchForm.submit();
-        });
     });
 </script>
 <script>
@@ -573,12 +588,8 @@
                     title: 'Berhasil!',
                     text: response.success,
                     icon: 'success',
-                }).then((result) => {
-                    // Reload halaman jika pengguna mengklik "OK"
-                    if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop ||
-                        result.dismiss === Swal.DismissReason.esc) {
-                        location.reload();
-                    }
+                }).then(() => {
+                    location.reload();
                 });
             },
             error: function(error) {
@@ -630,7 +641,7 @@
             type: "GET",
             url: "/cari-produk",
             success: function(response) {
-                console.log(response);
+                // console.log(response);
                 dataProduk = response;
             }
         });
@@ -655,21 +666,19 @@
         return result;
     }
 
-    function masukkanProduk($data) {
-        if ($data) {
+    function masukkanProduk($data, $form) {
+        if ($data && $form) {
             // Set data produk ke dalam inputan di form terakhir
-            var formIndex = $(".form-transaksi").length - 1; // Ambil indeks form terakhir
-            $(".form-transaksi:eq(" + formIndex + ") .id_produk").val($data.id);
-            $(".form-transaksi:eq(" + formIndex + ") .id_bahan").val($data.id_bahan);
-            $(".form-transaksi:eq(" + formIndex + ") .produk").val($data.judul);
-            $(".form-transaksi:eq(" + formIndex + ") .harga").val($data.harga_jual);
-            $(".form-transaksi:eq(" + formIndex + ") .ukuran").val($data.ukuran);
-            $(".form-transaksi:eq(" + formIndex + ") .bahan").val($data.bahans.bahan);
-            $(".form-transaksi:eq(" + formIndex + ") .jumlah").val($data.jumlah);
+            $form.find('.id_produk').val($data.id);
+            $form.find('.id_bahan').val($data.id_bahan);
+            $form.find('.id_kategori').val($data.id_kategori);
+            $form.find('.produk').val($data.judul);
+            $form.find('.harga').val(new Intl.NumberFormat('id-ID').format($data.harga_jual));
+            $form.find('.ukuran').val($data.ukuran);
+            $form.find('.bahan').val($data.bahans.bahan);
+            $form.find('.jumlah').val($data.jumlah);
         }
     }
-
-
 
     $(document).ready(function() {
         initAutocomplete();
@@ -694,8 +703,83 @@
             var data = getDataProduk(judul);
 
             if (data) {
-                masukkanProduk(data);
+                // Duplikat form-transaksi
+                var newForm = $(".form-transaksi:first").clone();
+
+                // Mengubah atribut id_produk untuk menghindari konflik
+                var formIndex = $(".form-transaksi").length;
+                newForm.find(".id_produk").attr("id", "idnya" + formIndex);
+                newForm.find(".produk").attr("id", "produk" + formIndex);
+
+                // Bersihkan nilai input di form baru kecuali nama pelanggan
+                newForm.find(".produk").val("");
+                newForm.find(".id_produk").val("");
+                newForm.find(".id_kategori").val("");
+                newForm.find(".jumlah").val("");
+                newForm.find(".keterangan").val("");
+                newForm.find(".ukuran").val("");
+                newForm.find(".harga").val("");
+                newForm.find(".total").val("");
+
+                // Hapus label dari form baru
+                newForm.find("label").text("");
+                // Sisipkan form baru setelah form terakhir
+                $(".form-transaksi:last").after(newForm);
+
+                // Set data produk ke dalam inputan di form terbaru
+                masukkanProduk(data, newForm);
+
+                // Memuat data bahan berdasarkan id_kategori
+                var id_kategori = data.id_kategori;
+                $.ajax({
+                    type: "GET",
+                    url: "/get-bahan/" + id_kategori,
+                    success: function(response) {
+                        // Mengosongkan dan mengisi opsi select dengan data bahan baru
+                        newForm.find('#bahan').empty();
+                        newForm.find('#bahan').append(
+                            '<option value="0">Pilih Bahan</option>');
+                        $.each(response, function(index, item) {
+                            newForm.find('#bahan').append('<option value="' + item
+                                .bahan + '">' +
+                                item.bahan + '</option>');
+                        });
+                    },
+                    error: function() {
+                        console.error("Error fetching data bahan for id_kategori " +
+                            id_kategori);
+                    }
+                });
             }
         });
+
+        // Tambahkan event handler untuk tombol hapus pada form
+        $(document).on("click", ".hapusform", function() {
+            // Hapus form saat tombol hapus diklik
+            $(this).closest(".form-transaksi").remove();
+        });
+    });
+</script>
+<script>
+    function validateForm() {
+        var namaPemesan = document.getElementById('pemesan').value;
+
+        if (namaPemesan.trim() === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan!!',
+                text: 'Nama pemesan tidak boleh kosong',
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+            return false;
+        }
+        return true;
+    }
+
+    var submitButton = document.getElementById('submitBtn');
+    submitButton.addEventListener('click', function() {
+        validateForm()
     });
 </script>

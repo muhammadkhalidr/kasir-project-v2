@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Percetakan & Digital Printing" />
 
+    <meta name="author" content="Khalid R">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&family=Young+Serif&display=swap');
 
@@ -19,17 +21,11 @@
         }
 
         body {
-
-            font-family: "Rajdhani", sans-serif;
+            font-family: "Microsoft Sans Serif", sans-serif;
             font-size: 10pt;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
             color-adjust: exact;
-            margin: 0 auto;
-        }
-
-        .w-58 {
-            width: 5.8cm !important;
             margin: 0 auto;
         }
 
@@ -39,7 +35,6 @@
         }
 
         .main-section {
-
             border: 2px dashed #ffffff;
         }
 
@@ -72,7 +67,7 @@
         .thumbnail {
             position: absolute;
             border: 0 !important;
-            z-index: 1;
+            z-index: -1;
             right: 30%;
             opacity: 0.7;
         }
@@ -205,21 +200,6 @@
                 /* Safari 6.0 - 9.0 */
                 filter: grayscale(100%);
             }
-
-            .table>tbody>tr>td,
-            .table>tbody>tr>th,
-            .table>tfoot>tr>td,
-            .table>tfoot>tr>th,
-            .table>thead>tr>td,
-            .table>thead>tr>th {
-                padding: 2px;
-            }
-
-            body {
-                margin: 0;
-                color: #000;
-                background-color: #fff;
-            }
         }
 
         img {
@@ -234,11 +214,14 @@
         .table>tfoot>tr>th,
         .table>thead>tr>td,
         .table>thead>tr>th {
-            padding: 1px;
+            padding: 2px;
         }
 
         .qrcode {
-            margin: 0 auto
+            position: absolute;
+            right: 0;
+            top: 0;
+            right: 10px
         }
     </style>
     {{-- <script type="text/javascript">
@@ -250,17 +233,15 @@
 </head>
 
 <body>
-
-
-    <div class="container padding">
+    <div class="container">
         <div class="row">
-
-            <div class="w-58">
+            <div class="col-md-3 col-sm-3 col-md-offset-5">
                 <div class="row main-section">
                     <div class="col-md-12 col-sm-12 header text-center">
                         <h1><img src="{{ asset('/') }}assets/images/settings/{{ $logo->first()->login_logo }}"
                                 width="75%" alt="" /></h1>
                     </div>
+
                     <div class="col-md-12 col-sm-12 content text-center">
 
                         <p>{{ $settings->first()->perusahaan }}</p>
@@ -277,11 +258,14 @@
                         </div>
 
                         <div class="col-md-12 col-sm-12 text-right">
-                            <div>
+                            <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <td coslpan="2" class="font-weight-bold">URAIAN ORDER</td>
+                                            <th class="text-left">Produk</th>
+                                            <th class="text-right">Qty</th>
+                                            <th class="text-right">Harga</th>
+                                            <th class="text-right">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -292,7 +276,7 @@
                                             </tr>
                                             <tr>
                                                 <td class="text-right font-weight-bold border-top-0">
-                                                    {{ $orderan->jumlah }} {{ $orderan->satuan }} x
+                                                    {{ $orderan->jumlah }} PCS x
                                                     {{ number_format($orderan->harga, 0, ',', '.') }}
                                                 </td>
                                                 <td class="text-right font-weight-bold border-top-0">
@@ -325,23 +309,17 @@
                                 <tbody>
                                     <tr>
                                         <td style="width:40px;font-weight:bold" class="font-weight-bold border-top-1">
-                                            Total Order</td>
+                                            Total
+                                            Order</td>
                                         <td style="width:40px;font-weight:bold" class="font-weight-bold border-top-1">
-                                            Rp.</td>
+                                            Rp.
+                                        </td>
                                         <td style="width:40px;font-weight:bold"
                                             class="text-right font-weight-bold border-top-1">
                                             {{ number_format($orderanGroup->first()->subtotal, 0, ',', '.') }}</td>
                                     </tr>
 
                                     </tr>
-
-                                    <td style="width:40px;font-weight:bold">Piutang</td>
-                                    <td style="width:40px;font-weight:bold" class="font-weight-bold border-top-1">Rp.
-                                    </td>
-                                    <td style="width:40px;font-weight:bold" class="text-right">
-                                        {{ number_format($orderanGroup->first()->sisa, 0, ',', '.') }}</td>
-
-
                                     <tr>
                                         <td class="border-bottom-0">
                                             <div class="thumbnail ">
@@ -374,12 +352,13 @@
                                     <tr>
                                         <td class="pr-0 border-top-0">
                                     <tr>
-                                        <td colspan="3" class="border-top-0">
+                                        <td colspan="1" class="border-top-0">
                                             <span>No.Rekening</span>
                                         </td>
                                         <td colspan="2" class="border-top-0 text-right">
                                             <span></span>
                                         </td>
+
                                     </tr>
                                     @foreach ($rekening as $item)
                                         <tr>
@@ -392,20 +371,14 @@
                                             </td>
                                         </tr>
                                     @endforeach
+
                                     </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" class="p-2">
-                                            <div class="qrcode" style="width:100px; height:100px;">
-                                                <img src="{{ asset('/') }}assets/images/qrcode/qrcode.jpg"
-                                                    alt="" style="width:100px; height:100px;" />
-                                            </div>
-                                        </td>
                                     </tr>
                                     <tr>
                                         <td colspan="3" class="pt-0">
                                             <address class="text-center">
-                                                Terima Kasih &#9829; <br> {{ $settings->first()->pesan }} </address>
+
+                                            </address>
                                         </td>
                                     </tr>
 
@@ -420,6 +393,7 @@
         </div>
     </div>
     @endforeach
+
 </body>
 
 </html>

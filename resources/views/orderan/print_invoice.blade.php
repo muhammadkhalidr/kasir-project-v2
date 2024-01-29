@@ -14,8 +14,19 @@
 
     <style>
         body {
-            margin-top: 20px;
-            background: #eee;
+            margin: 0;
+            padding: 0;
+            background: #ffff;
+            size: A4 portrait;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 21cm;
+            /* A4 width */
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .invoice {
@@ -315,9 +326,9 @@
                         </p>
                     </div>
                     <!-- end invoice-footer -->
-                    <div class="thank-you">
+                    {{-- <div class="thank-you">
                         <footer>Copyright &copy; Khalid R {{ date('Y') }}</footer>
-                    </div>
+                    </div> --}}
             </div>
         </div>
     </div>

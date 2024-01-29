@@ -26,7 +26,6 @@
                                                         <label for="" class="form-label">Nama Pemesan</label>
                                                         <input type="text" class="form-control" id="pemesan"
                                                             autocomplete="off" readonly>
-                                                        {{-- <h4 id="pemesan"></h4> --}}
                                                     </h5>
                                                     <div class="d-flex ">
                                                         <div class="btn-group" role="group">
@@ -48,15 +47,6 @@
                                                     <hr class="p-1 m-0">
                                                     Telp: <span id="nohp"></span>
                                                     <hr class="p-1 m-0">
-                                                    {{-- <form id="formCariProduk" method="GET"
-                                                        action="{{ url('orderan') }}">
-                                                        @csrf
-                                                        <div class="input-group input-group-sm mb-0">
-                                                            <input type="text" name="cari_produk" id="cari_produk"
-                                                                class="form-control" placeholder="Cari produk">
-                                                        </div>
-                                                        <div id="product-list"></div>
-                                                    </form> --}}
                                                     <div class="input-group input-group-sm mb-0">
                                                         <input type="text" name="cari_produk" id="cari_produk"
                                                             class="form-control" placeholder="Cari produk">
@@ -121,11 +111,12 @@
                     <hr class="my-0">
                     <div class="row d-flex justify-content-end mt-2">
                         <div class="col-1">
-                            <a class="btn btn-success tambahform" title="Copy"> <i class="fa fa-plus"></i></a>
+                            <a class="btn btn-success tambahform" title="Duplikat Data"> <i class="fa fa-copy"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <form action="{{ url('orderan') }}" method="POST">
+                    <form action="{{ url('orderan') }}" method="POST" id="formTransaksi">
                         @csrf
                         <div id="formContainer" class="form-transaksi">
                             <input type="hidden" class="form-control notrx" name="notrx[]"
@@ -138,6 +129,7 @@
                                 <input type="hidden" class="form-control id_produk" id="idnya"
                                     name="idproduk[]">
                                 <input type="hidden" class="form-control id_bahan" id="id_bahan" name="idbahan[]">
+                                <input type="hidden" class="form-control id_kategori">
                                 <div class="col">
                                     <label for="">Produk</label>
                                     <input type="text" class="form-control produk" id="produk" name="produk[]"
@@ -148,10 +140,17 @@
                                     <input type="text" class="form-control keterangan" name="keterangan[]"
                                         required>
                                 </div>
+
                                 <div class="col">
                                     <label for="">Bahan</label>
-                                    <input type="text" class="form-control bahan" id="bahan" name="bahan[]"
-                                        required>
+                                    <select name="bahan[]" class="form-control id_bahan" id="bahan">
+                                        <option value="0">Pilih Bahan</option>
+                                        @foreach ($dataBahan as $item)
+                                            <option value="{{ $item->bahan }}">
+                                                {{ $item->bahan }}</option>
+                                        @endforeach
+                                    </select>
+
                                 </div>
                                 <div class="col">
                                     <label for="">Ukuran</label>
@@ -162,6 +161,15 @@
                                     <label for="">Jumlah Barang</label>
                                     <input type="text" class="form-control jumlah" id="jumlah" name="jumlah[]"
                                         required>
+                                </div>
+                                <div class="col">
+                                    <label for="">Satuan</label>
+                                    <select name="satuan[]" class="form-control satuan" id="satuan" required>
+                                        <option value="0">Pilih Satuan</option>
+                                        @foreach ($satuan as $item)
+                                            <option value="{{ $item->satuan }}">{{ $item->satuan }} </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col">
                                     <label for="">Harga Barang</label>
@@ -198,7 +206,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="submitBtn">Simpan</button>
+                            <button type="submit" class="btn btn-primary simpanTransaksi"
+                                id="submitBtn">Simpan</button>
                             <button type="button" class="btn btn-success" data-toggle="modal"
                                 data-target="#bayarDpModal">Bayar</button>
                         </div>
@@ -494,7 +503,7 @@
                         <div class="col mt-2">
                             <label for="nama">Nama</label>
                             <input type="text" class="form-control mb-3" placeholder="Cari Nama Pelanggan"
-                                name="q" id="cariPelanggan">
+                                name="q" id="cariPelanggan" autocomplete="off" autofocus>
                             <span id="listPelanggan"></span>
                         </div>
                 </div>
@@ -532,10 +541,6 @@
                         <div class="col">
                             <label for="nohp">No Hanphone</label>
                             <input type="text" class="form-control mb-3" name="nohp" required>
-                        </div>
-                        <div class="col">
-                            <label for="email">Email</label>
-                            <input type="text" class="form-control mb-3" name="email" required>
                         </div>
                         <div class="col">
                             <label for="alamat">Alamat</label>

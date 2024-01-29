@@ -21617,3 +21617,8 @@ input[type="file"]::file-selector-button:active {
 .ui-menu-item {
   padding: 8px;
 }
+
+.notrx {
+  text-transform: uppercase;
+  font-weight: bold;
+}

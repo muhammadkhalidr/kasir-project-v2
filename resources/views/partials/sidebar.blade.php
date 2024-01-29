@@ -9,13 +9,10 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="mega-menu mega-menu-sm">
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-basket menu-icon"></i><span class="nav-text">Transaksi</span>
+                    <li>
+                        <a href="{{ url('orderan') }}" aria-expanded="false">
+                            <i class="icon-basket menu-icon"></i><span class="nav-text">Data Transaksi</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('orderan') }}">Data Transaksi</a></li>
-                        </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
@@ -25,6 +22,7 @@
                             <li><a href="{{ url('produk') }}">Produk</a></li>
                             <li><a href="{{ url('bahan') }}">Jenis Bahan</a></li>
                             <li><a href="{{ url('kategori') }}">Kategori</a></li>
+                            <li><a href="{{ url('satuan') }}">Satuan</a></li>
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
@@ -83,17 +81,6 @@
                             <li><a href="{{ url('menu') }}">Menu Admin</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Laporan</li>
-                    <li class="mega-menu mega-menu-sm">
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-doc menu-icon"></i><span class="nav-text">Data Laporan</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('laporan') }}">Laporan Pengeluaran</a></li>
-                            <li><a href="{{ url('laporan/pembelian') }}">Laporan Pembelian</a></li>
-                            <li><a href="{{ url('laporan/gaji') }}">Laporan Gaji Karyawan</a></li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -140,17 +127,6 @@
                             <i class="icon-wallet people-icon"></i><span class="nav-text">Data Pelanggan</span>
                         </a>
                     </li>
-                    <li class="nav-label">Laporan</li>
-                    <li class="mega-menu mega-menu-sm">
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-doc menu-icon"></i><span class="nav-text">Data Laporan</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('laporan') }}">Laporan Pengeluaran</a></li>
-                            <li><a href="{{ url('laporan/pembelian') }}">Laporan Pembelian</a></li>
-                            <li><a href="{{ url('laporan/gaji') }}">Laporan Gaji Karyawan</a></li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -196,17 +172,6 @@
                         <a href="{{ url('pelanggan') }}" aria-expanded="false">
                             <i class="icon-wallet people-icon"></i><span class="nav-text">Data Pelanggan</span>
                         </a>
-                    </li>
-                    <li class="nav-label">Laporan</li>
-                    <li class="mega-menu mega-menu-sm">
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-doc menu-icon"></i><span class="nav-text">Data Laporan</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('laporan') }}">Laporan Pengeluaran</a></li>
-                            <li><a href="{{ url('laporan/pembelian') }}">Laporan Pembelian</a></li>
-                            <li><a href="{{ url('laporan/gaji') }}">Laporan Gaji Karyawan</a></li>
-                        </ul>
                     </li>
                 </ul>
             </div>

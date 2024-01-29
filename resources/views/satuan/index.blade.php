@@ -10,7 +10,7 @@
     <div class="row page-titles mx-0">
         <div class="col p-md-0">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Data Laporan</a></li>
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Satuan</a></li>
             </ol>
         </div>
     </div>
@@ -25,14 +25,5 @@
 <!--**********************************
             Content body end
         ***********************************-->
-
-
 @include('partials.footer')
-
-<script>
-    $(function() {
-        $('input[name="daterange"]').daterangepicker({
-            opens: 'left'
-        });
-    });
-</script>
+@yield('js')

@@ -26,7 +26,7 @@
                                 onclick="window.location='{{ url('pelanggan') }}'" style="cursor: pointer"></i> Tambah
                             Data Pelanggan</h2>
                         <div class="form-validation">
-                            <form class="form-valide" action="{{ url('pelanggan') }}" method="POST">
+                            <form class="form-valide" action="{{ route('tambah.pelanggan') }}" method="POST">
                                 @csrf
                                 <div class="form-group row">
                                     <label class="col-lg-4 col-form-label" for="kodepelanggan">Kode Pelanggan<span
@@ -95,24 +95,6 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for="email">Email<span
-                                            class="text-danger">*</span>
-                                    </label>
-                                    <div class="col-lg-6">
-                                        <input type="text"
-                                            class="form-control @error('email')
-                                        is-invalid
-                                        @enderror"
-                                            id="email" name="email" value="{{ old('email') }}">
-                                        @error('email')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </div>
-
                                 <div class="form-group row">
                                     <div class="col-lg-8 ml-auto">
                                         <button type="submit" class="btn btn-primary">Simpan</button>

@@ -11,10 +11,6 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PengeluaranController;
-use App\Http\Controllers\CetakLaporanController;
-use App\Http\Controllers\CetakLaporanGajiController;
-use App\Http\Controllers\CetakLaporanPembelianController;
-use App\Http\Controllers\DetailPengeluaranController;
 use App\Http\Controllers\GajiKaryawanController;
 use App\Http\Controllers\GajiKaryawanV2Controller;
 use App\Http\Controllers\HutangController;
@@ -28,11 +24,9 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekeningController;
+use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\SettingController;
-use App\Models\DetailOrderan;
-use App\Models\Orderan;
-use App\Models\Pelanggan;
-use App\Models\Pengeluaran;
+use App\Http\Controllers\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +89,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/orderan.cari', [OrderanController::class, 'cariData'])->name('orderan.cari');
         Route::post('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
         Route::get('/ajax/search/product', [OrderanController::class, 'searchProduct'])->name('ajax.search.product');
+        Route::get('/get-bahan/{id_kategori}', [OrderanController::class, 'getBahanByCategory']);
 
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
@@ -134,7 +129,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('pelanggan', PelangganController::class);
         Route::get('/pelanggan', [PelangganController::class, 'index']);
         Route::get('tambah-pelanggan', [PelangganController::class, 'tambahPelanggan']);
-
+        Route::post('tambah-pelanggan', [PelangganController::class, 'store'])->name('tambah.pelanggan');
 
         // Untuk Rekening
         Route::resource('rekening', RekeningController::class);
@@ -184,6 +179,12 @@ Route::group(['middleware' => ['auth']], function () {
         // Untuk Pengguna
         Route::resource('pengguna', PenggunaController::class);
         Route::get('/admin-baru', [PenggunaController::class, 'tambahPengguna']);
+
+        // Untuk Satuan
+        Route::resource('satuan', SatuanController::class);
+
+        // Untuk Supplier
+        Route::resource('supplier', SupplierController::class);
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------
@@ -233,16 +234,6 @@ Route::get('pembelian/print_faktur/{id_pembelian}', [PembelianController::class,
 // Route::get('/laporan/cetak-laporan', [LaporanController::class, 'cetakLaporan'])->name('laporan.cetakLaporan');
 // Route::post('/laporan/cetak-laporan', [LaporanController::class, 'cetakLaporan']);
 
-
-// Untuk Laporan Keuangan
-Route::get('laporan', [CetakLaporanController::class, 'index'])->name('laporan');
-Route::get('laporan/records', [CetakLaporanController::class, 'records'])->name('laporan/records');
-
-Route::get('laporan/pembelian', [CetakLaporanPembelianController::class, 'index'])->name('laporan/pembelian');
-Route::get('laporan/pembelian/records', [CetakLaporanPembelianController::class, 'records_pembelian'])->name('laporan/pembelian/records');
-
-Route::get('laporan/gaji', [CetakLaporanGajiController::class, 'index'])->name('laporan/gaji');
-Route::get('laporan/gaji/records', [CetakLaporanGajiController::class, 'laporan_Gaji'])->name('laporan/gaji/records');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 

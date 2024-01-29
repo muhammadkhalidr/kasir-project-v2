@@ -11,15 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_pembelians', function (Blueprint $table) {
+        Schema::create('satuans', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_generate');
-            $table->integer('id_supplier');
-            $table->integer('id_bahan');
-            $table->integer('id_bank');
-            $table->text('keterangan');
-            $table->integer('jumlah');
-            $table->integer('total');
             $table->string('satuan');
             $table->timestamps();
         });
@@ -30,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_pembelians');
+        Schema::dropIfExists('satuans');
     }
 };

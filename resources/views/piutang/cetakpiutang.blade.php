@@ -213,8 +213,8 @@
                 <td style="width:2%!important">NO TRX</td>
                 <td align="center" style="width:5%!important">PELANGGAN</td>
                 <td align="center" style="width:5%!important">KETERANGAN</td>
-                <td align="center" style="width:2%!important;text-align:right">TOTAL</td>
-                <td align="center" style="width:2%!important">BAYAR</td>
+                <td align="center" style="width:4%!important;text-align:right">TOTAL</td>
+                <td align="center" style="width:4%!important">BAYAR</td>
                 <td style="width:5%!important;text-align:right">PIUTANG</td>
                 <td align="center" style="width:5%!important">TANGGAL ORDER</td>
             </tr>
