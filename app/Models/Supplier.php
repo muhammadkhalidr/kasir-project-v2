@@ -11,4 +11,9 @@ class Supplier extends Model
 
     protected $guards = ['id'];
     protected $table = 'suppliers';
+
+    public function pembelians()
+    {
+        return $this->hasMany(Pembelian::class, 'id_supplier');
+    }
 }

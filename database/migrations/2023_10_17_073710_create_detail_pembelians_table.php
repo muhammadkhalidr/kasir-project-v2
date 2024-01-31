@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('detail_pembelians', function (Blueprint $table) {
             $table->id();
             $table->string('id_pembelian_generate');
-            $table->integer('id_generate');
+            $table->string('id_generate');
             $table->integer('id_supplier');
             $table->integer('id_jenis');
             $table->integer('id_bahan');
@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->integer('total');
             $table->string('satuan');
+            $table->integer('id_user');
             $table->timestamps();
         });
     }

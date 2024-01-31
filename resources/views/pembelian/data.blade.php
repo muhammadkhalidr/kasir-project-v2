@@ -53,11 +53,12 @@
                                                 <table class="table table-striped">
                                                     <thead class="thead-success">
                                                         <tr>
-                                                            <th>No Pengeluaran</th>
+                                                            <th>No Pembelian</th>
                                                             <th>
                                                                 <button class="btn btn-dark btn-sm">#
-                                                                    {{ $groupedPenmbelian[0]->id }}</button>
+                                                                    {{ $groupedPenmbelian[0]->id_pembelian_generate }}</button>
                                                             </th>
+                                                            <th></th>
                                                             <th></th>
                                                             <th></th>
                                                             <th></th>
@@ -70,7 +71,8 @@
                                                             <th>Keterangan</th>
                                                             <th class="text-left" style="width:10%!important">Jumlah
                                                             </th>
-                                                            <th class="text-center">Harga</th>
+                                                            <th class="text-center">Supplier</th>
+                                                            <th class="text-center">Bahan</th>
                                                             <th class="text-right">Nominal</th>
                                                             <th class="text-right">Jenis</th>
                                                             <th class="text-right">Tanggal</th>
@@ -85,7 +87,10 @@
                                                                 <td>{{ $pembelian->keterangan }}</td>
                                                                 <td class="text-left">{{ $pembelian->jumlah }}</td>
                                                                 <td class="text-center">
-                                                                    {{ formatRupiah($pembelian->harga, true) }}
+                                                                    {{ $pembelian->suppliers->nama ?? 'kosong' }}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    {{ $pembelian->bahans->bahan }}
                                                                 </td>
                                                                 <td class="text-right">
                                                                     {{ formatRupiah($pembelian->total, true) }}
@@ -99,22 +104,32 @@
                                                                     @if ($firstRow)
                                                                         <form method="POST"
                                                                             action="{{ 'pembelian/' . $pembelian->id }}"
-                                                                            style="display: inline"
-                                                                            id="hapusPembelianForm">
+                                                                            id="hapusPembelian{{ $pembelian->id }}">
                                                                             @csrf
                                                                             @method('DELETE')
                                                                             <button type="button" title="Hapus Data"
                                                                                 class="btn btn-sm btn-danger hapus-btn"
-                                                                                onclick="hapusPengeluaran()">
-                                                                                <i class="fa fa-trash"></i> Hapus
+                                                                                onclick="hapusPembelian('{{ $pembelian->id }}')">
+                                                                                <i class="fa fa-trash"></i> HAPUS
                                                                             </button>
                                                                         </form>
 
-                                                                        <a href="{{ route('cetak.print_invoice', $pengeluaran->id) }}"
+                                                                        <form method="POST"
+                                                                            action="{{ 'pembelian/' . $pembelian->id }}"
+                                                                            class="mt-2">
+                                                                            @csrf
+                                                                            @method('POST')
+                                                                            <button type="button" title="BAYAR"
+                                                                                class="btn btn-sm btn-success">
+                                                                                <i class="fa fa-money"></i> BAYAR
+                                                                            </button>
+                                                                        </form>
+
+                                                                        {{-- <a href="{{ route('cetak.print_invoice', $pengeluaran->id) }}"
                                                                             class="btn btn-sm btn-primary mb-1"
                                                                             title="Print Invoice" target="_blank">
                                                                             <i class="fa fa-print"></i>
-                                                                        </a>
+                                                                        </a> --}}
                                                                         @php $firstRow = false; @endphp
                                                                     @endif
                                                                 </td>
@@ -124,6 +139,7 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
+                                                            <td class="text-center"></td>
                                                             <td class="text-center"></td>
                                                             <td class="text-center"></td>
                                                             <td class="text-right">
@@ -179,99 +195,120 @@
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('pembelian') }}" method="POST">
-                        @csrf
-                        <div class='row'>
-                            <div class="col-12">
-                                <div class="d-flex flex-column flex-md-row">
-                                    <input type="text" id="id" value="{{ $nomorPembelian }}"
-                                        name="nopembelian[]" readonly>
-                                    <div class="mr-auto p-2">
-                                        <div class="d-inline p-2 bg-info text-white">No. #{{ $nomorPembelian }} <span
-                                                id="id_pembelian"></span>
-                                        </div>
-                                        <div class="d-inline p-2 bg-default">Kasir : <span
-                                                id="nama">{{ $name_user }}</span></div>
+                    <div class='row'>
+                        <div class="col-12">
+                            <div class="d-flex flex-column flex-md-row">
+                                <div class="mr-auto p-2">
+                                    <div class="d-inline p-2 bg-info text-white">No. #{{ $nomorPembelian }} <span
+                                            id="id_pembelian"></span>
                                     </div>
-                                    <div class="p-2">
-                                        <div class="input-group">
-                                            <span class="input-group-prepend">
-                                                <span class="input-group-text">Tanggal Transaksi</span>
-                                            </span>
-                                            <input type="text" class="form-control form-control-sm w-150px date_p"
-                                                id="date_p"
-                                                value="{{ \Carbon\Carbon::now()->toFormattedDateString() }}" readonly>
-                                        </div>
+                                    <div class="d-inline p-2 bg-default">Kasir : <span
+                                            id="nama">{{ $name_user }}</span></div>
+                                </div>
+                                <div class="p-2">
+                                    <div class="input-group">
+                                        <span class="input-group-prepend">
+                                            <span class="input-group-text">Tanggal Transaksi</span>
+                                        </span>
+                                        <input type="text" class="form-control form-control-sm w-150px date_p"
+                                            id="date_p" value="{{ \Carbon\Carbon::now()->toFormattedDateString() }}"
+                                            readonly>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-sm" id="table_pembelian">
-                                        <thead>
-                                            <tr>
-                                                <td>Bahan</td>
-                                                <td>Jenis akun</td>
-                                                <td>Supplier</td>
-                                                <td>Keterangan</td>
-                                                <td>Qty</td>
-                                                <td>Nominal</td>
-                                                <td>Satuan</td>
-                                                <td>Sub total</td>
-                                                <td><button type="button" class="btn btn-info btn-sm add_mores"><i
-                                                            class="fa fa-plus"></i></button></td>
-                                            </tr>
-                                        </thead>
+                        </div>
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-sm" id="table_pembelian">
+                                    <thead>
+                                        <tr>
+                                            <td>Bahan</td>
+                                            <td>Jenis akun</td>
+                                            <td>Supplier</td>
+                                            <td>Keterangan</td>
+                                            <td>Qty</td>
+                                            <td>Nominal</td>
+                                            <td>Satuan</td>
+                                            <td>Sub total</td>
+                                            <td>
+                                                <button type="button" class="btn btn-info btn-sm add_mores"
+                                                    title="Tambah Baru">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <form action="{{ url('pembelian') }}" method="POST" class="form-pembelian">
+                                        @csrf
                                         <tbody>
+                                            <input type="hidden" id="id" value="{{ $nomorPembelian }}"
+                                                name="nopembelian[]" class="newform" readonly>
+                                            <input type="hidden" name="id">
+                                            <input type="hidden" name="id_user[]" value="{{ $id_user }}">
+                                            <input type="hidden" name="metode[]" value="888">
                                             <tr class="row_Count" id="row_Count">
                                                 <td class="col-12 col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
+                                                        <input type="text" class="form-control input-default bahan"
                                                             id="bahan" name="bahan[]" />
+                                                        <input type="hidden" id="idBahanSelected"
+                                                            name="id_bahan[]" />
                                                     </div>
                                                 </td>
+
                                                 <td class="col-12 col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
+                                                        <input type="text" class="form-control input-default jenis"
                                                             id="jenisakun" name="jenis[]" />
+
+                                                        <input type="hidden" id="idJenis" name="id_jenis[]" />
                                                     </div>
                                                 </td>
                                                 <td class="col-12 col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
-                                                            id="supplier" name="supplier[]" />
+                                                        <input type="text"
+                                                            class="form-control input-default supplier" id="supplier"
+                                                            name="supplier[]" />
+
+                                                        <input type="hidden" id="idSupplier" name="id_supplier[]" />
+
                                                     </div>
 
                                                 </td>
                                                 <td class="col-12 col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
+                                                        <input type="text"
+                                                            class="form-control input-default keterangan"
                                                             id="keterangan" name="keterangan[]" />
                                                     </div>
 
                                                 </td>
                                                 <td class="col-12 col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
-                                                            id="jumlah" name="jumlah[]" />
+                                                        <input type="text"
+                                                            class="form-control input-default jumlah" id="jumlah"
+                                                            name="jumlah[]" />
                                                     </div>
                                                 </td>
                                                 <td class="col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
-                                                            id="nominal" name="nominal[]" />
+                                                        <input type="text"
+                                                            class="form-control input-default nominal" id="nominal"
+                                                            name="nominal[]" />
                                                     </div>
                                                 </td>
                                                 <td class="col-12 col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
-                                                            id="satuan" name="satuan[]" />
+                                                        <input type="text"
+                                                            class="form-control input-default satuan" id="satuan"
+                                                            name="satuan[]" />
                                                     </div>
                                                 </td>
                                                 <td class="col-12 col-md-1">
                                                     <div class="form-group p-0 m-0">
-                                                        <input type="text" class="form-control input-default"
-                                                            id="subtotal" name="subtotal[]" />
+                                                        <input type="text"
+                                                            class="form-control input-default subtotal" id="subtotal"
+                                                            name="subtotal[]" />
                                                     </div>
                                                 </td>
                                                 <td class="col-12 col-md-1">
@@ -279,28 +316,16 @@
                                                             class="fa fa-times"></i></button>
                                                 </td>
                                             </tr>
-
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="5">&nbsp;</td>
-                                                <td>Total pembelian</td>
-                                                <td colspan="1"><input class="form-control form-control-sm"
-                                                        id="total_pembelian" type="text"></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="8">&nbsp;</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
+                                </table>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
                     </form>
                 </div>
             </div>

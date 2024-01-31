@@ -28,4 +28,9 @@ class JenisBahan extends Model
     {
         return $this->hasMany(Produk::class, 'id_bahan');
     }
+
+    public function pembelians()
+    {
+        return $this->hasMany(DetailPembelian::class, 'id');
+    }
 }

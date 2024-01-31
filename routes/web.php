@@ -91,13 +91,21 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/orderan/filterJumlah', [OrderanController::class, 'filterJumlah'])->name('orderan.filterJumlah');
         Route::get('/ajax/search/product', [OrderanController::class, 'searchProduct'])->name('ajax.search.product');
         Route::get('/get-bahan/{id_kategori}', [OrderanController::class, 'getBahanByCategory']);
-
+        Route::get('/cari-produk', [OrderanController::class, 'cariProdukAjax']);
+        Route::get('/get-data-produk', [OrderanController::class, 'getDataProduk']);
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
 
         // Untuk Pembelian
         Route::resource('/pembelian', PembelianController::class);
         Route::get('/pembelianbaru', [PembelianController::class, 'tambahPembelian']);
+        Route::get('/cari-bahan', [PembelianController::class, 'cariBahanAjax']);
+        Route::get('/get-data-bahan', [PembelianController::class, 'getDataBahan']);
+        Route::get('/cari-jenispengeluaran', [PembelianController::class, 'cariJenisPengeluaranAjax']);
+        Route::get('/get-data-jenispengeluaran', [PembelianController::class, 'getDataJenisPengeluaran']);
+        Route::get('/cari-supplier', [PembelianController::class, 'cariSupplier']);
+        Route::get('/get-data-supplier', [PembelianController::class, 'getSupplier']);
+
         // Route::get('/pembelian/{id_pembelian}', [PembelianController::class, 'index']);
 
 
@@ -242,10 +250,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/tescode', function () {
     return view('tescode');
 });
-
-Route::get('/cari-produk', [OrderanController::class, 'cariProdukAjax']);
-
-Route::get('/get-data-produk', [OrderanController::class, 'getDataProduk']);
 
 Route::get('/cek', [OrderanController::class, 'cek']);
 

@@ -6,11 +6,14 @@ use App\Models\Pembelian;
 use App\Http\Requests\StorePembelianRequest;
 use App\Http\Requests\UpdatePembelianRequest;
 use App\Models\DetailPembelian;
+use App\Models\JenisBahan;
+use App\Models\JenisPengeluaran;
 use App\Models\KasMasuk;
+use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
 use PDF;
 
 class PembelianController extends Controller
@@ -22,8 +25,10 @@ class PembelianController extends Controller
     {
         $user = Auth::user();
         $perPage = 10;
-        $Pembelian = DetailPembelian::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
-            ->orderBy('id_pengeluaran', 'desc');
+        $Pembelian = DetailPembelian::with(['bahans', 'suppliers', 'jenisP'])
+            ->orderBy('id', 'desc');
+
+        // dd($Pembelian);
 
         // Apply date filter
         if ($request->query('start_date') && $request->query('end_date')) {
@@ -35,19 +40,25 @@ class PembelianController extends Controller
 
         $Pembelian = $Pembelian->paginate($perPage);
 
-        $groupedPembelian = $Pembelian->sortByDesc('id_pengeluaran')->groupBy('id_pengeluaran');
+        $groupedPembelian = $Pembelian->sortByDesc('id')->groupBy('id');
 
         $totals = $groupedPembelian->map(function ($group) {
             return $group->sum('total');
         });
 
         $latestExpense = DetailPembelian::orderBy('id', 'desc')->first();
-        $nomorPembelian = $latestExpense ? sprintf('%03d', intval($latestExpense->id_pengeluaran) + 1) : '001';
+        $nomorPembelian = $latestExpense ? sprintf('%03d', intval($latestExpense->id) + 1) : '001';
+
+        $formattedPengeluarans = $Pembelian->map(function ($pembelian) {
+            $pembelian->formatted_date = Carbon::parse($pembelian->created_at)->isoFormat('dddd, DD/MM/YYYY');
+            return $pembelian;
+        });
 
         return view('pembelian.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pembelian',
             'breadcrumb' => 'Pembelian',
             'name_user' => $user->name,
+            'id_user' => $user->id,
             'groupedPembelians' => $groupedPembelian,
             'datas' => $Pembelian,
             'totals' => $totals,
@@ -65,6 +76,133 @@ class PembelianController extends Controller
         ]);
     }
 
+    // public function cariBahanAjax()
+    // {
+    //     $bahan = JenisBahan::select('id', 'bahan', 'id_kategori')->where("status", "Y")->get();
+    //     $data = [];
+
+    //     foreach ($bahan as $item) {
+    //         $data[] = $item->bahan;
+    //     }
+
+    //     if (empty($data)) {
+    //         $data[] = "Tidak Ada Data Bahan";
+    //     }
+
+    //     return $data;
+    // }
+
+    public function cariBahanAjax()
+    {
+        $bahan = JenisBahan::select('id', 'bahan', 'id_kategori')->where("status", "Y")->get();
+        $data = [];
+
+        foreach ($bahan as $item) {
+            $data[] = [
+                'id' => $item->id,
+                'label' => $item->bahan,
+                'id_bahan' => $item->id, // Tambahkan id_bahan
+            ];
+        }
+
+        if (empty($data)) {
+            $data[] = [
+                'id' => null,
+                'label' => "Tidak Ada Data Bahan",
+                'id_bahan' => null,
+            ];
+        }
+
+        return $data;
+    }
+
+    public function cariJenisPengeluaranAjax()
+    {
+        $jenisPengeluaran = JenisPengeluaran::select('id', 'nama_jenis')->where("aktif", "1")->get();
+        $data = [];
+
+        foreach ($jenisPengeluaran as $item) {
+            $data[] = [
+                'id' => $item->id,
+                'label' => $item->nama_jenis,
+                'id_jenis_pengeluaran' => $item->id,
+            ];
+        }
+
+        if (empty($data)) {
+            $data[] = [
+                'id' => null,
+                'label' => "Tidak Ada Data Jenis Pengeluaran",
+                'id_jenis_pengeluaran' => null,
+            ];
+        }
+
+        return $data;
+    }
+    public function cariSupplier()
+    {
+        $supplier = Supplier::select('id', 'nama')->where("status", "Y")->get();
+        $data = [];
+
+        foreach ($supplier as $item) {
+            $data[] = [
+                'id' => $item->id,
+                'label' => $item->nama,
+                'id_supplier' => $item->id,
+            ];
+        }
+
+        if (empty($data)) {
+            $data[] = [
+                'id' => null,
+                'label' => "Tidak Ada Data Supplier",
+                'id_supplier' => null,
+            ];
+        }
+
+        return $data;
+    }
+
+
+
+    public function getDataBahan(Request $request)
+    {
+        try {
+            $judul = $request->input('judul');
+            $jenisPengeluaran = JenisPengeluaran::where("nama_jenis", $judul)->first();
+
+            return response()->json($jenisPengeluaran);
+        } catch (\Exception $e) {
+            Log::error('Error in Data Bahan: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
+
+    public function getDataJenisPengeluaran(Request $request)
+    {
+        try {
+            $judul = $request->input('judul');
+            $jenisPengeluaran = JenisPengeluaran::where("nama_jenis", $judul)->first();
+
+            return response()->json($jenisPengeluaran);
+        } catch (\Exception $e) {
+            Log::error('Error in Data Bahan: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
+
+    public function getSupplier(Request $request)
+    {
+        try {
+            $judul = $request->input('judul');
+            $supplier = Supplier::where("nama", $judul)->first();
+
+            return response()->json($supplier);
+        } catch (\Exception $e) {
+            Log::error('Error in Data Supplier: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -82,38 +220,40 @@ class PembelianController extends Controller
             if ($lastIdGenerate) {
                 $lastIdNumber = substr($lastIdGenerate->id_generate, 2);
                 $newIdNumber = str_pad((int)$lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
-                $idBaru = 'PB-' . $newIdNumber;
+                $idBaru = 'P-' . $newIdNumber;
             } else {
-                $idBaru = 'PB-001';
+                $idBaru = 'P-001';
             }
         }
 
         $data = $request->all();
-        dd($request->all());
+        // dd($request->all());
         foreach ($data['nopembelian'] as $key => $value) {
 
             // Cek saldo kas masuk
             $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
             $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
 
-            if ($saldoBank && $saldoBank < str_replace('.', '', $data['total'][$key])) {
+            if ($saldoBank && $saldoBank < str_replace('.', '', $data['nominal'][$key])) {
                 return redirect('pengeluaran')->with('error', 'Saldo Kas Bank Tidak Cukup!');
-            } else if ($saldoTunai && $saldoTunai < str_replace('.', '', $data['total'][$key])) {
+            } else if ($saldoTunai && $saldoTunai < str_replace('.', '', $data['nominal'][$key])) {
                 return redirect('pengeluaran')->with('error', 'Saldo Kas Tunai Tidak Cukup!');
             }
 
             DetailPembelian::create([
                 'id_pembelian_generate' => $value,
                 'id_generate' => $idBaru,
-                'id_supplier' => $data['supplier'][$key],
-                'id_jenis' => $data['jenis'][$key],
-                'id_bahan' => $data['bahan'][$key],
-                'id_bank' => $data['metode'],
+                'id_supplier' => $data['id_supplier'][$key],
+                'id_jenis' => $data['id_jenis'][$key],
+                'id_bahan' => $data['id_bahan'][$key],
                 'keterangan' => $data['keterangan'][$key],
                 'jumlah' => $data['jumlah'][$key],
                 'satuan' => $data['satuan'][$key],
                 'total' => str_replace('.', '', $data['nominal'][$key]),
+                'id_user' => $user->id,
             ]);
+
+            // dd($data);
         }
 
         // Buat data kas masuk
@@ -155,28 +295,8 @@ class PembelianController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePembelianRequest $request, $id_pembelian)
+    public function update(UpdatePembelianRequest $request)
     {
-        $data = Pembelian::findOrFail($id_pembelian);
-        $data->id_pembelian = $request->txtid;
-        $data->bahan = $request->txtbahan;
-        $data->jenis = $request->txtjenis;
-        $data->jumlah = $request->txtjumlah;
-        $data->satuan = $request->txtsatuan;
-        $data->total = $request->txttotal;
-        $data->uang_muka = $request->txtdp;
-        $data->sisa_pembayaran = $request->txtsisa;
-        $data->save();
-
-        $kasMasuk = KasMasuk::where('id_generate', $data->id_generate)->first();
-        if ($kasMasuk) {
-            $kasMasuk->update([
-                'pengeluaran' => $data->total,
-                'keterangan' => $data->bahan,
-            ]);
-        }
-
-        return redirect('pembelian')->with('msg', 'Data Berhasil Di-update!');
     }
 
 
@@ -186,16 +306,16 @@ class PembelianController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id_generate)
+    public function destroy($id)
     {
-        $datas = Pembelian::findOrFail($id_generate);
+        $datas = DetailPembelian::findOrFail($id);
         $kasMasuk = KasMasuk::where('id_generate', $datas->id_generate)->get();
         $datas->delete();
 
         foreach ($kasMasuk as $kas) {
             $kas->delete();
         }
-        return redirect('pembelian')->with('msg', 'Data Berhasil Di-hapus!');
+        return redirect('pembelian')->with('success', 'Data Berhasil Di-hapus!');
     }
 
 
