@@ -84,7 +84,6 @@
                             <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>NO</th>
                                         <th>NO ORDER</th>
                                         <th>PELANGGAN</th>
                                         <th>TGL ORDER</th>
@@ -97,15 +96,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
-                                        $no = 1;
-                                    @endphp
                                     @foreach ($dataOrderan as $index => $item)
                                         @if (!$loop->first && $item->notrx == $dataOrderan[$loop->index - 1]->notrx)
                                             @continue
                                         @endif
                                         <tr>
-                                            <td>{{ $no++ }}</td>
                                             <td><a class="badge badge-success text-white p-2 notrx"
                                                     style="cursor: pointer" data-toggle="modal"
                                                     data-target=".bd-datatransaksi-modal-lg{{ $item->notrx }}"><i

@@ -7,11 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailPembelian extends Model
 {
-    use HasFactory;
+    protected $guarded = ['id'];
+    protected $table = 'detail_pembelians';
 
-    protected $detail_pembelians;
-    protected $primaryKey = 'id_pembelian';
-
-    public $incrementing = false;
-    public $timestamps = true;
+    // Sesuaikan dengan atribut yang ada pada formulir
+    protected $fillable = [
+        'id_pembelian_generate',
+        'id_generate',
+        'id_supplier',
+        'id_jenis',
+        'id_bahan',
+        'id_bank',
+        'keterangan',
+        'jumlah',
+        'satuan',
+        'total',
+    ];
 }

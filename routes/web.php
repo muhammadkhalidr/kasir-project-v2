@@ -27,6 +27,7 @@ use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupplierController;
+use App\Models\DetailPembelian;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,7 +96,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/home', [DashboardController::class, 'index']);
 
         // Untuk Pembelian
-        Route::resource('/pembelian', PembelianController::class)->middleware('can:pembelian.data');
+        Route::resource('/pembelian', PembelianController::class);
         Route::get('/pembelianbaru', [PembelianController::class, 'tambahPembelian']);
         // Route::get('/pembelian/{id_pembelian}', [PembelianController::class, 'index']);
 

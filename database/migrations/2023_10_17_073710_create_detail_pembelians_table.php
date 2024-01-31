@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('detail_pembelians', function (Blueprint $table) {
             $table->id();
+            $table->string('id_pembelian_generate');
             $table->integer('id_generate');
             $table->integer('id_supplier');
+            $table->integer('id_jenis');
             $table->integer('id_bahan');
-            $table->integer('id_bank');
+            $table->integer('id_bank')->nullable();
             $table->text('keterangan');
             $table->integer('jumlah');
             $table->integer('total');

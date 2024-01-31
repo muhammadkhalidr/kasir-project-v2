@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Pembelian;
 use App\Http\Requests\StorePembelianRequest;
 use App\Http\Requests\UpdatePembelianRequest;
+use App\Models\DetailPembelian;
 use App\Models\KasMasuk;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use PDF;
@@ -15,17 +18,40 @@ class PembelianController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $datas = Pembelian::all();
-        // dd($datas);
+        $perPage = 10;
+        $Pembelian = DetailPembelian::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
+            ->orderBy('id_pengeluaran', 'desc');
+
+        // Apply date filter
+        if ($request->query('start_date') && $request->query('end_date')) {
+            $start_date = Carbon::parse($request->query('start_date'))->startOfDay();
+            $end_date = Carbon::parse($request->query('end_date'))->endOfDay();
+
+            $Pembelian->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        $Pembelian = $Pembelian->paginate($perPage);
+
+        $groupedPembelian = $Pembelian->sortByDesc('id_pengeluaran')->groupBy('id_pengeluaran');
+
+        $totals = $groupedPembelian->map(function ($group) {
+            return $group->sum('total');
+        });
+
+        $latestExpense = DetailPembelian::orderBy('id', 'desc')->first();
+        $nomorPembelian = $latestExpense ? sprintf('%03d', intval($latestExpense->id_pengeluaran) + 1) : '001';
 
         return view('pembelian.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pembelian',
             'breadcrumb' => 'Pembelian',
             'name_user' => $user->name,
-            'pembelians' => $datas,
+            'groupedPembelians' => $groupedPembelian,
+            'datas' => $Pembelian,
+            'totals' => $totals,
+            'nomorPembelian' => $nomorPembelian
         ]);
     }
 
@@ -45,45 +71,60 @@ class PembelianController extends Controller
      */
     public function store(StorePembelianRequest $request)
     {
-        $validate = $request->validated();
         $user = Auth::user();
-        $pembelianBaru = Pembelian::latest('id_pembelian')->first();
+        $pembelianTerakhir = DetailPembelian::where('id', $request->id)->latest('id')->first();
 
-        if ($pembelianBaru) {
-            $idLama = $pembelianBaru->id_generate;
-            $idNumber = (int)substr($idLama, 2) + 1;
-            $idBaru = 'P-' . str_pad($idNumber, 3, '0', STR_PAD_LEFT);
+        if ($pembelianTerakhir) {
+            $idBaru = $pembelianTerakhir->id_generate;
         } else {
-            $idBaru = 'P-001';
+            $lastIdGenerate = DetailPembelian::latest('id_generate')->first();
+
+            if ($lastIdGenerate) {
+                $lastIdNumber = substr($lastIdGenerate->id_generate, 2);
+                $newIdNumber = str_pad((int)$lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
+                $idBaru = 'PB-' . $newIdNumber;
+            } else {
+                $idBaru = 'PB-001';
+            }
         }
 
-        $pembelian = new Pembelian;
-        $pembelian->id_pembelian = $request->txtid;
-        $pembelian->id_generate = $idBaru;
-        $pembelian->bahan = $request->txtbahan;
-        $pembelian->jenis = $request->txtjenis;
-        $pembelian->jumlah = $request->txtjumlah;
-        $pembelian->satuan = $request->txtsatuan;
-        $pembelian->total = $request->txttotal;
-        $pembelian->uang_muka = $request->txtdp;
-        $pembelian->sisa_pembayaran = $request->txtsisa;
+        $data = $request->all();
+        dd($request->all());
+        foreach ($data['nopembelian'] as $key => $value) {
 
-        // Cek saldo kas masuk
-        $saldoKasMasuk = KasMasuk::sum('pemasukan');
-        if ($saldoKasMasuk && $saldoKasMasuk < $pembelian->total) {
-            return redirect()->back()->with('error', 'Saldo tidak cukup!');
+            // Cek saldo kas masuk
+            $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
+            $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
+
+            if ($saldoBank && $saldoBank < str_replace('.', '', $data['total'][$key])) {
+                return redirect('pengeluaran')->with('error', 'Saldo Kas Bank Tidak Cukup!');
+            } else if ($saldoTunai && $saldoTunai < str_replace('.', '', $data['total'][$key])) {
+                return redirect('pengeluaran')->with('error', 'Saldo Kas Tunai Tidak Cukup!');
+            }
+
+            DetailPembelian::create([
+                'id_pembelian_generate' => $value,
+                'id_generate' => $idBaru,
+                'id_supplier' => $data['supplier'][$key],
+                'id_jenis' => $data['jenis'][$key],
+                'id_bahan' => $data['bahan'][$key],
+                'id_bank' => $data['metode'],
+                'keterangan' => $data['keterangan'][$key],
+                'jumlah' => $data['jumlah'][$key],
+                'satuan' => $data['satuan'][$key],
+                'total' => str_replace('.', '', $data['nominal'][$key]),
+            ]);
         }
 
-        $pembelian->save();
-
+        // Buat data kas masuk
         $kasMasuk = new KasMasuk;
         $kasMasuk->id_generate = $idBaru;
-        $kasMasuk->keterangan = "Pembelian dari No#" . $idBaru;
-        $kasMasuk->pengeluaran = $request->txttotal;
+        $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
         $kasMasuk->name_kasir = $user->name;
+        $kasMasuk->pengeluaran = str_replace('.', '', $data['nominal'][$key]);
+        $kasMasuk->bank = $data['metode'];
         $kasMasuk->save();
-
-        return redirect('pembelian')->with('msg', 'Data Berhasil Ditambahkan!');
+        return redirect('pembelian')->with('success', 'Data Berhasil Ditambahkan!');
     }
 
 
