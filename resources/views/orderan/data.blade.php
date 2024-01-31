@@ -152,22 +152,24 @@
                                                                 <i class="fa fa-file-pdf-o"></i> PRINT PDF
                                                             </span>
                                                         </a>
-
-                                                        <form method="POST"
-                                                            action="{{ route('orderan.destroy', $item->notrx) }}"
-                                                            style="display: inline" id="hapusOrderanForm">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button" title="Hapus Data"
-                                                                data-notrx="{{ $item->notrx }}"
-                                                                class="dropdown-item"
-                                                                onclick="konfirmasiHapus('{{ $item->notrx }}')">
-                                                                <span class="badge badge-danger flat">
-                                                                    <i class="fa fa-trash"></i> HAPUS DATA
-                                                                </span>
-                                                            </button>
-
-                                                        </form>
+                                                        @if (auth()->check())
+                                                            @if (auth()->user()->level == 1 || auth()->user()->level == 2)
+                                                                <form method="POST"
+                                                                    action="{{ route('orderan.destroy', $item->notrx) }}"
+                                                                    style="display: inline" id="hapusOrderanForm">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="button" title="Hapus Data"
+                                                                        data-notrx="{{ $item->notrx }}"
+                                                                        class="dropdown-item"
+                                                                        onclick="konfirmasiHapus('{{ $item->notrx }}')">
+                                                                        <span class="badge badge-danger flat">
+                                                                            <i class="fa fa-trash"></i> HAPUS DATA
+                                                                        </span>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        @endif
 
                                                     </div>
                                                 </div>
