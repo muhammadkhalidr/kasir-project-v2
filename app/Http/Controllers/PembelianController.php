@@ -270,7 +270,7 @@ class PembelianController extends Controller
 
                 $kasMasuk = new KasMasuk;
                 $kasMasuk->id_generate = $data['id_generate'][$key];
-                $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
+                $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank');
                 $kasMasuk->name_kasir = $user->name;
                 $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
                 $kasMasuk->bank = $id_bank[0];

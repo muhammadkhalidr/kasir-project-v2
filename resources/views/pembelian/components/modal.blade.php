@@ -190,14 +190,12 @@
                              </div>
                              <select name="tunai" id="tunai"
                                  class="custom-select form-control form-control-sm tunai">
-                                 <option value="0">Pilih Akun</option>
-                                 <option value="888">Kas Penjualan</option>
+                                 <option value="888" selected>Kas Penjualan</option>
                              </select>
                              <select name="rekening" id="rekening"
                                  class="custom-select form-control form-control-sm rekening">
-                                 <option value="0">Pilih Rekening</option>
                                  @foreach ($bank as $item)
-                                     <option value="{{ $item->id }}">{{ $item->bank }}</option>
+                                     <option value="{{ $item->id }}" selected>{{ $item->bank }}</option>
                                  @endforeach
                              </select>
                          </div>

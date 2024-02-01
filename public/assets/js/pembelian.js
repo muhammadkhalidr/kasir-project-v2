@@ -288,29 +288,68 @@ $(document).ready(function() {
 
 // });
 
+// $(document).ready(function () {
+//     $('#caraBayar').change(function () {
+//         var caraBayar = $(this).val();
+//         var id;
+//         if (caraBayar == 'tunai') {
+//             $('#tunai').show().attr('name', 'akun');
+//             $('#rekening').hide().removeAttr('name');
+//             id = $('#tunai').val(); // ID untuk kas penjualan
+//         } else if (caraBayar == 'transfer') {
+//             $('#rekening').show().attr('name', 'akun');
+//             $('#tunai').hide().removeAttr('name');
+//             id = $('#rekening').val(); // ID untuk rekening bank
+//         }
+//         $('#id_bank').val(id); // Menyimpan id_bank ke dalam form
+//         $.ajax({
+//             url: '/getSaldo/' + id,
+//             method: 'GET',
+//             success: function(data) {
+//                 console.log('saldo bank', + id,  data);
+//                 // $('#saldoKas').val(data.saldo);
+//                 $('#saldoKas').val(formatRupiah(data.saldo.toString()));
+//             }
+//         });
+//     });
+// });
+
 $(document).ready(function () {
+    // Sembunyikan dropdown akun saat halaman dimuat
+    $('#rekening').hide();
+
     $('#caraBayar').change(function () {
         var caraBayar = $(this).val();
-        var id;
+
         if (caraBayar == 'tunai') {
             $('#tunai').show().attr('name', 'akun');
             $('#rekening').hide().removeAttr('name');
-            id = $('#tunai').val(); // ID untuk kas penjualan
+            updateSaldo($('#tunai').val());
         } else if (caraBayar == 'transfer') {
-            $('#rekening').show().attr('name', 'akun');
             $('#tunai').hide().removeAttr('name');
-            id = $('#rekening').val(); // ID untuk rekening bank
+            $('#rekening').show().attr('name', 'akun');
+            updateSaldo($('#rekening').val());
         }
-        $('#id_bank').val(id); // Menyimpan id_bank ke dalam form
+    });
+
+    function updateSaldo(id) {
+        $('#id_bank').val(id);
+
         $.ajax({
             url: '/getSaldo/' + id,
             method: 'GET',
             success: function(data) {
-                console.log('saldo bank', + id,  data);
-                // $('#saldoKas').val(data.saldo);
+                // console.log('saldo bank', id, data);
                 $('#saldoKas').val(formatRupiah(data.saldo.toString()));
             }
         });
-    });
-});
+    }
 
+    // Fungsi untuk memformat angka menjadi format rupiah
+    function formatRupiah(angka) {
+        var reverse = angka.toString().split('').reverse().join(''),
+            ribuan = reverse.match(/\d{1,3}/g);
+        ribuan = ribuan.join('.').split('').reverse().join('');
+        return 'Rp ' + ribuan;
+    }
+});
