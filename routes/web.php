@@ -105,7 +105,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/get-data-jenispengeluaran', [PembelianController::class, 'getDataJenisPengeluaran']);
         Route::get('/cari-supplier', [PembelianController::class, 'cariSupplier']);
         Route::get('/get-data-supplier', [PembelianController::class, 'getSupplier']);
-
+        Route::get('pembelian/bayar', [PembelianController::class, 'bayarPembelian'])->name('pembelian.bayar');
+        Route::get('/getSaldo/{id}', [PembelianController::class, 'getSaldo']);
         // Route::get('/pembelian/{id_pembelian}', [PembelianController::class, 'index']);
 
 

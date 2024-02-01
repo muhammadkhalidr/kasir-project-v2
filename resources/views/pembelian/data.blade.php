@@ -129,6 +129,7 @@
                                                                     @endif
                                                                 </td>
                                                             </tr>
+                                                            
                                                         @endforeach
                                                         <tr style="background-color: #4d4d4d;color:white;">
                                                             <td></td>

@@ -1,11 +1,8 @@
-// $(document).ready(function() {
-//     $('#nominal').mask('#.##0', {
-//         reverse: true
-//     });
-//     $('#subtotal').mask('#.##0', {
-//         reverse: true
-//     });
-// });
+$(document).ready(function() {
+    $('#jumlahBayar').mask('#.##0', {
+        reverse: true
+    });
+});
 
 $(document).ready(function() {
     $(document).on('keyup', '#nominal', function() {
@@ -254,4 +251,64 @@ $(document).ready(function() {
 //         $(this).closest("tr").remove();
 //     });
 // });
+
+// $(document).ready(function () {
+//     // Fungsi untuk menangani perubahan pada dropdown 'caraBayar'
+//     $("#caraBayar").change(function () {
+//         handleCaraBayarChange();
+//     });
+
+//     // Fungsi untuk menangani perubahan saat modal dibuka
+//     $("#myModal").on("shown.bs.modal", function () {
+//         handleCaraBayarChange();
+//     });
+
+//     function handleCaraBayarChange() {
+//         var caraBayar = $("#caraBayar").val();
+//         var rekeningDropdown = $("#rekening");
+//         var totalBayarInput = $("#totalBayar");
+
+//         // Jika caraBayar adalah 'Tunai'
+//         if (caraBayar === "888") {
+//             // Mengambil data dari value tunai
+//             var tunaiData = $("#tunai").val();
+
+//             // Menonaktifkan dan menghapus nilai pada dropdown 'rekening'
+//             rekeningDropdown.prop("disabled", true).val(0);
+
+//         } else if (caraBayar === "transfer") {
+//             // Menghapus disabled pada dropdown 'rekening'
+//             rekeningDropdown.prop("disabled", false);
+
+//             // Mengosongkan nilai pada input 'totalBayar'
+//             totalBayarInput.val("");
+//         }
+//     }
+
+// });
+
+$(document).ready(function () {
+    $('#caraBayar').change(function () {
+        var caraBayar = $(this).val();
+        var id;
+        if (caraBayar == 'tunai') {
+            $('#tunai').show().attr('name', 'akun');
+            $('#rekening').hide().removeAttr('name');
+            id = 888; // ID untuk kas penjualan
+        } else if (caraBayar == 'transfer') {
+            $('#rekening').show().attr('name', 'akun');
+            $('#tunai').hide().removeAttr('name');
+            id = $('#rekening').val(); // ID untuk rekening bank
+        }
+        $.ajax({
+            url: '/getSaldo/' + id,
+            method: 'GET',
+            success: function(data) {
+                console.log('saldo bank', + id,  data);
+                // $('#saldoKas').val(data.saldo);
+                $('#saldoKas').val(formatRupiah(data.saldo.toString()));
+            }
+        });
+    });
+});
 

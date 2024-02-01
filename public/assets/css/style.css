@@ -21622,3 +21622,7 @@ input[type="file"]::file-selector-button:active {
   text-transform: uppercase;
   font-weight: bold;
 }
+
+.rekening {
+  display: none;
+}

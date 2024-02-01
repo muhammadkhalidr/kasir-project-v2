@@ -9,6 +9,7 @@ use App\Models\DetailPembelian;
 use App\Models\JenisBahan;
 use App\Models\JenisPengeluaran;
 use App\Models\KasMasuk;
+use App\Models\Rekening;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,6 +28,7 @@ class PembelianController extends Controller
         $perPage = 10;
         $Pembelian = DetailPembelian::with(['bahans', 'suppliers', 'jenisP'])
             ->orderBy('id', 'desc');
+        $bank = Rekening::select('id', 'no_rekening', 'atas_nama', 'bank')->get();
 
         // Apply date filter
         if ($request->query('start_date') && $request->query('end_date')) {
@@ -78,7 +80,8 @@ class PembelianController extends Controller
             'datas' => $Pembelian,
             'subtotals' => $subtotals,
             'nomorPembelian' => $nomorPembelian,
-            'idgenerate' => $idGeneratePembelian
+            'idgenerate' => $idGeneratePembelian,
+            'bank' => $bank
         ]);
     }
 
@@ -218,6 +221,13 @@ class PembelianController extends Controller
             Log::error('Error in Data Supplier: ' . $e->getMessage());
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
+    }
+
+    public function getSaldo($id)
+    {
+        // $saldo = DB::table('kas_masuk')->where('id', $id)->first()->saldo;
+        $saldo = KasMasuk::where('bank', $id)->first()->pemasukan;
+        return response()->json(['saldo' => $saldo]);
     }
 
     /**
