@@ -43,7 +43,7 @@ class PembelianController extends Controller
         $groupedPembelian = $Pembelian->sortByDesc('id')->groupBy('id_pembelian_generate');
 
         $subtotals = $groupedPembelian->map(function ($group) {
-            return $group->sum('subtotal');
+            return $group->sum('total');
         });
 
         $latestExpense = DetailPembelian::orderBy('id', 'desc')->first();
@@ -239,15 +239,15 @@ class PembelianController extends Controller
         $data = $request->all();
         $errors = [];
         $processIdGenerate = [];
-
         foreach ($data['nopembelian'] as $key => $value) {
 
             // Cek saldo kas masuk
             $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
             $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
 
-            $subtotal = str_replace('.', '', $data['totalpembelian'][$key]);
-
+            $subtotal = str_replace('.', '', $data['jumlahBayar'][$key]);
+            $id_bank = $request->input('id_bank');
+            $caraBayar = $request->input('caraBayar');
             if ($saldoBank <= 0 || $saldoBank < $subtotal) {
                 $errors[] = 'Saldo Kas Bank Tidak Cukup!';
             } else if ($saldoTunai <= 0 || $saldoTunai < $subtotal) {
@@ -258,26 +258,30 @@ class PembelianController extends Controller
                 $detailPembelian->id_generate = $data['id_generate'][$key];
                 $detailPembelian->id_supplier = $data['id_supplier'][$key];
                 $detailPembelian->id_jenis = $data['id_jenis'][$key];
+                $detailPembelian->id_bank = $id_bank[0];
                 $detailPembelian->id_bahan = $data['id_bahan'][$key];
                 $detailPembelian->keterangan = $data['keterangan'][$key];
                 $detailPembelian->jumlah = $data['jumlah'][$key];
                 $detailPembelian->satuan = $data['satuan'][$key];
                 $detailPembelian->total = str_replace('.', '', $data['nominal'][$key]);
-                $detailPembelian->subtotal = $subtotal;
+                $detailPembelian->subtotal = str_replace('.', '', $data['totalpembelian']);
                 $detailPembelian->id_user = $user->id;
                 $detailPembelian->save();
 
                 $kasMasuk = new KasMasuk;
                 $kasMasuk->id_generate = $data['id_generate'][$key];
-                $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
+                $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
                 $kasMasuk->name_kasir = $user->name;
                 $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
-                $kasMasuk->bank = $data['metode'];
+                $kasMasuk->bank = $id_bank[0];
                 $kasMasuk->save();
             }
 
             $processIdGenerate[] = ['id_generate' => $data['id_generate'][$key], 'nopembelian' => $value];
         }
+
+        // dd($data);
+
 
         if (!empty($errors)) {
             // Redirect with errors

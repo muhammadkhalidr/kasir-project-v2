@@ -111,7 +111,7 @@
                                                                             <button type="button" title="Hapus Data"
                                                                                 class="btn btn-sm btn-danger hapus-btn"
                                                                                 onclick="hapusPembelian('{{ $pembelian->id_pembelian_generate }}')">
-                                                                                <i class="fa fa-trash"></i> HAPUS
+                                                                                <i class="fa fa-trash"></i>
                                                                             </button>
                                                                         </form>
 
@@ -119,17 +119,16 @@
                                                                             action="{{ 'pembelian/' . $pembelian->id_pembelian_generate }}"
                                                                             class="mt-2">
                                                                             @csrf
-                                                                            @method('POST')
+                                                                            @method('PUT')
                                                                             <button type="button" title="BAYAR"
                                                                                 class="btn btn-sm btn-success">
-                                                                                <i class="fa fa-money"></i> BAYAR
+                                                                                <i class="fa fa-edit"></i>
                                                                             </button>
                                                                         </form>
                                                                         @php $firstRow = false; @endphp
                                                                     @endif
                                                                 </td>
                                                             </tr>
-                                                            
                                                         @endforeach
                                                         <tr style="background-color: #4d4d4d;color:white;">
                                                             <td></td>

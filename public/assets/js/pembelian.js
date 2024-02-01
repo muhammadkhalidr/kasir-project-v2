@@ -2,6 +2,7 @@ $(document).ready(function() {
     $('#jumlahBayar').mask('#.##0', {
         reverse: true
     });
+
 });
 
 $(document).ready(function() {
@@ -294,12 +295,13 @@ $(document).ready(function () {
         if (caraBayar == 'tunai') {
             $('#tunai').show().attr('name', 'akun');
             $('#rekening').hide().removeAttr('name');
-            id = 888; // ID untuk kas penjualan
+            id = $('#tunai').val(); // ID untuk kas penjualan
         } else if (caraBayar == 'transfer') {
             $('#rekening').show().attr('name', 'akun');
             $('#tunai').hide().removeAttr('name');
             id = $('#rekening').val(); // ID untuk rekening bank
         }
+        $('#id_bank').val(id); // Menyimpan id_bank ke dalam form
         $.ajax({
             url: '/getSaldo/' + id,
             method: 'GET',

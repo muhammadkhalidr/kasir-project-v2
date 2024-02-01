@@ -12,7 +12,7 @@
                          @csrf
                          <input type="hidden" name="id">
                          <input type="hidden" name="id_user">
-                         <input type="hidden" name="metode" value="888">
+                         {{-- <input type="hidden" name="metode" value="888"> --}}
                          <div class="col-12">
                              <div class="d-flex flex-column flex-md-row">
                                  <div class="mr-auto p-2">
@@ -145,22 +145,20 @@
                  </div>
 
                  <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                      <button type="button" class="btn btn-primary" data-toggle="modal"
                          data-target="#bayarPembelianModal">
                          Bayar
                      </button>
-                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                     <button type="submit" class="btn btn-primary">Simpan</button>
                  </div>
-                 </form>
              </div>
          </div>
      </div>
  </div>
 
  {{-- Modal Bayar Pembelian --}}
- <div class="modal fade" id="bayarPembelianModal" tabindex="-1" aria-labelledby="bayarPembelianModalLabel"
-     aria-hidden="true">
+ <div class="modal fade" id="bayarPembelianModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="bayarPembelianModalLabel" aria-hidden="true">
      <div class="modal-dialog modal-dialog-centered modal-lg">
          <div class="modal-content">
              <div class="modal-header">
@@ -170,70 +168,68 @@
                  </button>
              </div>
              <div class="modal-body pb-0">
-                 <form action="{{ route('pembelian.bayar') }}" method="POST">
-                     @method('POST')
-                     @csrf
-                     <div class="form-group row mb-0">
-                         <label class="col-4 col-form-label">
-                             <div class="input-group">
-                                 BAYAR
+                 <div class="form-group row mb-0">
+                     <label class="col-4 col-form-label">
+                         <div class="input-group">
+                             BAYAR
+                         </div>
+                     </label>
+                     <div class="col-8">
+                         <div class="input-group input-group mb-2">
+                             <div class="input-group-prepend">
+                                 <span class="input-group-text" for="caraBayar">CARA BAYAR</span>
                              </div>
-                         </label>
-                         <div class="col-8">
-                             <div class="input-group input-group mb-2">
-                                 <div class="input-group-prepend">
-                                     <span class="input-group-text" for="caraBayar">CARA BAYAR</span>
-                                 </div>
-                                 <select name="caraBayar" id="caraBayar"
-                                     class="custom-select form-control form-control-sm" required>
-                                     <option value="tunai" selected>Tunai</option>
-                                     <option value="transfer">Transfer</option>
-                                 </select>
-                                 <div class="input-group-prepend">
-                                     <span class="input-group-text">AKUN</span>
-                                 </div>
-                                 <select name="tunai" id="tunai"
-                                     class="custom-select form-control form-control-sm tunai">
-                                     <option value="0">Pilih Akun</option>
-                                     <option value="888">Kas Penjualan</option>
-                                 </select>
-                                 <select name="rekening" id="rekening"
-                                     class="custom-select form-control form-control-sm rekening">
-                                     <option value="0">Pilih Rekening</option>
-                                     @foreach ($bank as $item)
-                                         <option value="{{ $item->id }}">{{ $item->bank }}</option>
-                                     @endforeach
-                                 </select>
+                             <input type="hidden" id="id_bank" name="id_bank[]">
+                             <select name="caraBayar" id="caraBayar"
+                                 class="custom-select form-control form-control-sm" required>
+                                 <option value="tunai" selected>Tunai</option>
+                                 <option value="transfer">Transfer</option>
+                             </select>
+                             <div class="input-group-prepend">
+                                 <span class="input-group-text">AKUN</span>
                              </div>
+                             <select name="tunai" id="tunai"
+                                 class="custom-select form-control form-control-sm tunai">
+                                 <option value="0">Pilih Akun</option>
+                                 <option value="888">Kas Penjualan</option>
+                             </select>
+                             <select name="rekening" id="rekening"
+                                 class="custom-select form-control form-control-sm rekening">
+                                 <option value="0">Pilih Rekening</option>
+                                 @foreach ($bank as $item)
+                                     <option value="{{ $item->id }}">{{ $item->bank }}</option>
+                                 @endforeach
+                             </select>
                          </div>
                      </div>
-                     <div class="form-group row mb-1">
-                         <label for="saldoKas" class="col-4 col-form-label">SALDO KAS</label>
-                         <div class="col-8">
-                             <div class="input-group">
-                                 <input id="saldoKas" name="saldoKas" type="text"
-                                     class="form-control form-control-sm" value="" readonly>
-                             </div>
+                 </div>
+                 <div class="form-group row mb-1">
+                     <label for="saldoKas" class="col-4 col-form-label">SALDO KAS</label>
+                     <div class="col-8">
+                         <div class="input-group">
+                             <input id="saldoKas" name="saldoKas" type="text"
+                                 class="form-control form-control-sm" value="" readonly>
                          </div>
                      </div>
-                     <div class="form-group row mb-1">
-                         <label for="totalBayar" class="col-4 col-form-label">TOTAL BAYAR</label>
-                         <div class="col-8">
-                             <div class="input-group">
-                                 <input id="totalBayar" name="totalBayar" type="text"
-                                     class="form-control form-control-sm subtotal" readonly>
-                             </div>
+                 </div>
+                 <div class="form-group row mb-1">
+                     <label for="totalBayar" class="col-4 col-form-label">TOTAL BAYAR</label>
+                     <div class="col-8">
+                         <div class="input-group">
+                             <input id="totalBayar" name="totalBayar" type="text"
+                                 class="form-control form-control-sm subtotal" readonly>
                          </div>
                      </div>
-                     <div class="form-group row mb-0 flat">
-                         <label for="jumlahBayar" class="col-4 col-form-label">JUMLAH BAYAR</label>
-                         <div class="col-8">
-                             <div class="input-group flat">
-                                 <input id="jumlahBayar" name="jumlahBayar" type="text"
-                                     class="form-control form-control-sm input jumlahBayar">
-                             </div>
+                 </div>
+                 <div class="form-group row mb-0 flat">
+                     <label for="jumlahBayar" class="col-4 col-form-label">JUMLAH BAYAR</label>
+                     <div class="col-8">
+                         <div class="input-group flat">
+                             <input id="jumlahBayar" name="jumlahBayar" type="text"
+                                 class="form-control form-control-sm input jumlahBayar">
                          </div>
                      </div>
+                 </div>
              </div>
              <div class="modal-footer">
                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
