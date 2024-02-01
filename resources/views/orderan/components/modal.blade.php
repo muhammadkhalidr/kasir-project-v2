@@ -119,7 +119,7 @@
                     <form action="{{ url('orderan') }}" method="POST" id="formTransaksi">
                         @csrf
                         <div id="formContainer" class="form-transaksi">
-                            <input type="hidden" class="form-control notrx" name="notrx[]"
+                            <input type="text" class="form-control notrx" name="notrx[]"
                                 value="{{ $notrx }}">
                             <input type="hidden" value="{{ $name_user }}" name="namakasir">
                             <div class="row">

@@ -28,8 +28,6 @@ class PembelianController extends Controller
         $Pembelian = DetailPembelian::with(['bahans', 'suppliers', 'jenisP'])
             ->orderBy('id', 'desc');
 
-        // dd($Pembelian);
-
         // Apply date filter
         if ($request->query('start_date') && $request->query('end_date')) {
             $start_date = Carbon::parse($request->query('start_date'))->startOfDay();
@@ -39,11 +37,11 @@ class PembelianController extends Controller
         }
 
         $Pembelian = $Pembelian->paginate($perPage);
+        // dd($Pembelian);
+        $groupedPembelian = $Pembelian->sortByDesc('id')->groupBy('id_pembelian_generate');
 
-        $groupedPembelian = $Pembelian->sortByDesc('id')->groupBy('id');
-
-        $totals = $groupedPembelian->map(function ($group) {
-            return $group->sum('total');
+        $subtotals = $groupedPembelian->map(function ($group) {
+            return $group->sum('subtotal');
         });
 
         $latestExpense = DetailPembelian::orderBy('id', 'desc')->first();
@@ -54,6 +52,23 @@ class PembelianController extends Controller
             return $pembelian;
         });
 
+
+        $pembelianTerakhir = DetailPembelian::where('id', $request->id)->latest('id')->first();
+
+        if ($pembelianTerakhir) {
+            $idGeneratePembelian = $pembelianTerakhir->id_generate;
+        } else {
+            $lastIdGenerate = DetailPembelian::latest('id_generate')->first();
+
+            if ($lastIdGenerate) {
+                $lastIdNumber = substr($lastIdGenerate->id_generate, 2);
+                $newIdNumber = str_pad((int)$lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
+                $idGeneratePembelian = 'P-' . $newIdNumber;
+            } else {
+                $idGeneratePembelian = 'P-001';
+            }
+        }
+
         return view('pembelian.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Pembelian',
             'breadcrumb' => 'Pembelian',
@@ -61,8 +76,9 @@ class PembelianController extends Controller
             'id_user' => $user->id,
             'groupedPembelians' => $groupedPembelian,
             'datas' => $Pembelian,
-            'totals' => $totals,
-            'nomorPembelian' => $nomorPembelian
+            'subtotals' => $subtotals,
+            'nomorPembelian' => $nomorPembelian,
+            'idgenerate' => $idGeneratePembelian
         ]);
     }
 
@@ -210,60 +226,55 @@ class PembelianController extends Controller
     public function store(StorePembelianRequest $request)
     {
         $user = Auth::user();
-        $pembelianTerakhir = DetailPembelian::where('id', $request->id)->latest('id')->first();
-
-        if ($pembelianTerakhir) {
-            $idBaru = $pembelianTerakhir->id_generate;
-        } else {
-            $lastIdGenerate = DetailPembelian::latest('id_generate')->first();
-
-            if ($lastIdGenerate) {
-                $lastIdNumber = substr($lastIdGenerate->id_generate, 2);
-                $newIdNumber = str_pad((int)$lastIdNumber + 1, 3, '0', STR_PAD_LEFT);
-                $idBaru = 'P-' . $newIdNumber;
-            } else {
-                $idBaru = 'P-001';
-            }
-        }
-
         $data = $request->all();
-        // dd($request->all());
+        $errors = [];
+        $processIdGenerate = [];
+
         foreach ($data['nopembelian'] as $key => $value) {
 
             // Cek saldo kas masuk
             $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
             $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
 
-            if ($saldoBank && $saldoBank < str_replace('.', '', $data['nominal'][$key])) {
-                return redirect('pengeluaran')->with('error', 'Saldo Kas Bank Tidak Cukup!');
-            } else if ($saldoTunai && $saldoTunai < str_replace('.', '', $data['nominal'][$key])) {
-                return redirect('pengeluaran')->with('error', 'Saldo Kas Tunai Tidak Cukup!');
+            $subtotal = str_replace('.', '', $data['totalpembelian'][$key]);
+
+            if ($saldoBank <= 0 || $saldoBank < $subtotal) {
+                $errors[] = 'Saldo Kas Bank Tidak Cukup!';
+            } else if ($saldoTunai <= 0 || $saldoTunai < $subtotal) {
+                $errors[] = 'Saldo Kas Tunai Tidak Cukup!';
+            } else {
+                $detailPembelian = new DetailPembelian;
+                $detailPembelian->id_pembelian_generate = $data['nopembelian'][$key];
+                $detailPembelian->id_generate = $data['id_generate'][$key];
+                $detailPembelian->id_supplier = $data['id_supplier'][$key];
+                $detailPembelian->id_jenis = $data['id_jenis'][$key];
+                $detailPembelian->id_bahan = $data['id_bahan'][$key];
+                $detailPembelian->keterangan = $data['keterangan'][$key];
+                $detailPembelian->jumlah = $data['jumlah'][$key];
+                $detailPembelian->satuan = $data['satuan'][$key];
+                $detailPembelian->total = str_replace('.', '', $data['nominal'][$key]);
+                $detailPembelian->subtotal = $subtotal;
+                $detailPembelian->id_user = $user->id;
+                $detailPembelian->save();
+
+                $kasMasuk = new KasMasuk;
+                $kasMasuk->id_generate = $data['id_generate'][$key];
+                $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
+                $kasMasuk->name_kasir = $user->name;
+                $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
+                $kasMasuk->bank = $data['metode'];
+                $kasMasuk->save();
             }
 
-            DetailPembelian::create([
-                'id_pembelian_generate' => $value,
-                'id_generate' => $idBaru,
-                'id_supplier' => $data['id_supplier'][$key],
-                'id_jenis' => $data['id_jenis'][$key],
-                'id_bahan' => $data['id_bahan'][$key],
-                'keterangan' => $data['keterangan'][$key],
-                'jumlah' => $data['jumlah'][$key],
-                'satuan' => $data['satuan'][$key],
-                'total' => str_replace('.', '', $data['nominal'][$key]),
-                'id_user' => $user->id,
-            ]);
-
-            // dd($data);
+            $processIdGenerate[] = ['id_generate' => $data['id_generate'][$key], 'nopembelian' => $value];
         }
 
-        // Buat data kas masuk
-        $kasMasuk = new KasMasuk;
-        $kasMasuk->id_generate = $idBaru;
-        $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
-        $kasMasuk->name_kasir = $user->name;
-        $kasMasuk->pengeluaran = str_replace('.', '', $data['nominal'][$key]);
-        $kasMasuk->bank = $data['metode'];
-        $kasMasuk->save();
+        if (!empty($errors)) {
+            // Redirect with errors
+            return redirect('pembelian')->with('error', implode($errors));
+        }
+
+        // Redirect with success message
         return redirect('pembelian')->with('success', 'Data Berhasil Ditambahkan!');
     }
 
@@ -297,24 +308,26 @@ class PembelianController extends Controller
      */
     public function update(UpdatePembelianRequest $request)
     {
+        // 
     }
-
-
-
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($id_pembelian_generate)
     {
-        $datas = DetailPembelian::findOrFail($id);
-        $kasMasuk = KasMasuk::where('id_generate', $datas->id_generate)->get();
-        $datas->delete();
+        $datas = DetailPembelian::where('id_pembelian_generate', $id_pembelian_generate)->get();
 
-        foreach ($kasMasuk as $kas) {
-            $kas->delete();
+        foreach ($datas as $data) {
+            $kasMasuk = KasMasuk::where('id_generate', $data->id_generate)->get();
+            $data->delete();
+
+            foreach ($kasMasuk as $kas) {
+                $kas->delete();
+            }
         }
+
         return redirect('pembelian')->with('success', 'Data Berhasil Di-hapus!');
     }
 

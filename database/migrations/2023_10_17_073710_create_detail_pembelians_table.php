@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('keterangan');
             $table->integer('jumlah');
             $table->integer('total');
+            $table->integer('subtotal');
             $table->string('satuan');
             $table->integer('id_user');
             $table->timestamps();

@@ -1,11 +1,35 @@
+// $(document).ready(function() {
+//     $('#nominal').mask('#.##0', {
+//         reverse: true
+//     });
+//     $('#subtotal').mask('#.##0', {
+//         reverse: true
+//     });
+// });
+
 $(document).ready(function() {
-    $('#nominal').mask('#.##0', {
-        reverse: true
+    $(document).on('keyup', '#nominal', function() {
+        $(this).val(formatRupiah($(this).val()));
     });
-    $('#subtotal').mask('#.##0', {
-        reverse: true
-    });
+
 });
+
+function formatRupiah(angka, prefix) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+        split = number_string.split(','),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+        separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    return prefix === undefined ? rupiah : (rupiah ? +rupiah : '');
+}
+
 function hapusPembelian(id) {
     Swal.fire({
         title: 'Yakin ingin menghapus data ini?',
@@ -31,7 +55,6 @@ function initAutocomplete() {
         type: "GET",
         url: "/cari-bahan",
         success: function(response) {
-            console.log(response);
             dataBahan = response;
         }
     });
@@ -40,7 +63,6 @@ function initAutocomplete() {
         type: "GET",
         url: "/cari-jenispengeluaran",
         success: function(response) {
-            console.log(response);
             dataJenisPengeluaran = response;
         }
     });
@@ -49,7 +71,6 @@ function initAutocomplete() {
         type: "GET",
         url: "/cari-supplier",
         success: function(response) {
-            console.log(response);
             dataSupplier = response;
         }
     });
@@ -64,7 +85,6 @@ function getDataBahan(judul) {
                 judul: judul
             },
             success: function(response) {
-                console.log("Data Bahan Detail:", response);
                 resolve(response);
             },
             error: function() {
@@ -84,7 +104,6 @@ function getDataJenisPengeluaran(judul) {
                 judul: judul
             },
             success: function(response) {
-                console.log("Data Jenis Detail:", response);
                 resolve(response);
             },
             error: function() {
@@ -104,7 +123,6 @@ function getSupplier(judul) {
                 judul: judul
             },
             success: function(response) {
-                console.log("Data Supplier Detail:", response);
                 resolve(response);
             },
             error: function() {
@@ -119,35 +137,121 @@ $(document).ready(function() {
     initAutocomplete();
 
     $('.bd-pembelian-modal-lg').on('shown.bs.modal', function() {
-        $('#bahan').autocomplete({
-            source: dataBahan,
-            appendTo: '.modal-body',
-            select: function(event, ui) {
-                var selectedIdBahan = ui.item.id;
-                console.log("Selected ID Bahan:", selectedIdBahan);
-                $('#idBahanSelected').val(selectedIdBahan);
-            }
+        // Tambahkan event handler autocomplete untuk formulir yang baru ditambahkan
+        $(".body-tabel").on('focus', '.bahan', function() {
+            $(this).autocomplete({
+                source: dataBahan,
+                appendTo: '.modal-body',
+                select: function(event, ui) {
+                    var selectedIdBahan = ui.item.id;
+                    $(this).closest('tr').find('#idBahanSelected').val(selectedIdBahan);
+                }
+            });
         });
 
-        $('#jenisakun').autocomplete({
-            source: dataJenisPengeluaran,
-            appendTo: '.modal-body',
-            select: function(event, ui) {
-                var selectedIdJenisPengeluaran = ui.item.id;
-                console.log("Selected ID Jenis:", selectedIdJenisPengeluaran);
-                $('#idJenis').val(selectedIdJenisPengeluaran);
-            }
+        $(".body-tabel").on('focus', '.jenisakun', function() {
+            $(this).autocomplete({
+                source: dataJenisPengeluaran,
+                appendTo: '.modal-body',
+                select: function(event, ui) {
+                    var selectedIdJenisPengeluaran = ui.item.id;
+                    $(this).closest('tr').find('#idJenis').val(selectedIdJenisPengeluaran);
+                }
+            });
         });
 
-        $('#supplier').autocomplete({
-            source: dataSupplier,
-            appendTo: '.modal-body',
-            select: function(event, ui) {
-                var selectedIdSupplier = ui.item.id;
-                console.log("Selected ID Supplier:", selectedIdSupplier);
-                $('#idSupplier').val(selectedIdSupplier);
-            }
+        $(".body-tabel").on('focus', '.supplier', function() {
+            $(this).autocomplete({
+                source: dataSupplier,
+                appendTo: '.modal-body',
+                select: function(event, ui) {
+                    var selectedIdSupplier = ui.item.id;
+                    $(this).closest('tr').find('#idSupplier').val(selectedIdSupplier);
+                }
+            });
         });
     });
+
+    // Menangani klik pada tombol tambahform
+    $(document).on("click", ".add_mores", function() {
+        // Duplikat baris formulir
+        var newRow = $("#form_pembelian").clone();
+
+        // Mengatur atribut id untuk menghindari konflik
+        var formIndex = $(".form-pembelian").length + 1;
+        newRow.attr("id", "form_pembelian" + formIndex);
+
+        // Reset nilai input pada baris baru
+        // newRow.find("input").val("");
+        // newForm.find(".produk").val("");
+
+        // Sisipkan baris baru ke dalam .body-tabel
+        $(".body-tabel").append(newRow);
+    });
+
+    // Menangani klik pada tombol hapusform
+    $(document).on("click", ".hapusform", function() {
+        // Hapus baris formulir saat tombol hapus diklik
+        $(this).closest("tr").remove();
+    });
+    $(document).on("input", ".jumlah, .harga", function() {
+        // Menghitung total untuk setiap form
+        $(".form_pembelian").each(function() {
+            var jumlah = parseFloat($(this).find(".jumlah").val()) || 0;
+            var harga = parseFloat($(this).find(".harga").val().replace(/\./g, '').replace(
+                ',', '.')) || 0;
+
+            var total = jumlah * harga;
+
+            // Format total sesuai dengan harga
+            $(this).find(".total").val(formatRupiah(total.toString()));
+        });
+
+        // Menghitung subtotal dari semua total
+        var subtotal = 0;
+        $(".form_pembelian").each(function() {
+            subtotal += parseFloat($(this).find(".total").val().replace(/\./g, '').replace(
+                ',', '.')) || 0;
+        });
+
+        // Mengupdate nilai input subtotal
+        $(".subtotal").val(formatRupiah(subtotal.toString()));
+    });
+
+    // Menangani perubahan nilai saat formulir baru ditambahkan
+    $(document).on("input", ".form_pembelian:last .jumlah, .form_pembelian:last .harga", function() {
+        var jumlah = parseFloat($(this).closest(".row").find(".jumlah").val()) || 0;
+        var harga = parseFloat($(this).closest(".row").find(".harga").val().replace(/\./g, '')
+            .replace(',', '.')) || 0;
+
+        var total = jumlah * harga;
+
+        // Format total sesuai dengan harga
+        $(this).closest(".row").find(".total").val(formatRupiah(total.toString()));
+    });
 });
+
+// $(document).ready(function() {
+//     // Menangani klik pada tombol tambahform
+//     $(document).on("click", ".add_mores", function() {
+//         // Duplikat baris formulir
+//         var newRow = $("#form_pembelian").clone();
+
+//         // Mengatur atribut id untuk menghindari konflik
+//         var formIndex = $(".form-pembelian").length + 1;
+//         newRow.attr("id", "form_pembelian" + formIndex);
+
+//         // Reset nilai input pada baris baru
+//         newRow.find("input").val("");
+
+//         // Sisipkan baris baru ke dalam .body-tabel
+//         $(".body-tabel").append(newRow);
+//     });
+
+//     // Menangani klik pada tombol hapusform
+//     $(document).on("click", ".hapusform", function() {
+//         // Hapus baris formulir saat tombol hapus diklik
+//         $(this).closest("tr").remove();
+//     });
+// });
 

@@ -47,7 +47,7 @@ class LoginController extends Controller
             return redirect()->intended('/');
         }
 
-        return back()->with(['msg' => 'Username atau password salah!'])->onlyInput('username');
+        return back()->with(['error' => 'Username atau password salah!'])->onlyInput('username');
     }
 
     public function logout(Request $request)
