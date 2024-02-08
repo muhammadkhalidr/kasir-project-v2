@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\KategoriBahan;
 use App\Http\Requests\StoreKategoriBahanRequest;
 use App\Http\Requests\UpdateKategoriBahanRequest;
+use App\Models\JenisPengeluaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -91,9 +92,14 @@ class KategoriBahanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateKategoriBahanRequest $request, KategoriBahan $kategoriBahan)
+    public function update(UpdateKategoriBahanRequest $request, $id)
     {
-        //
+
+        $kategori = KategoriBahan::findOrFail($id);
+        $kategori->kategori = $request->kategori;
+        $kategori->status = $request->status;
+        $kategori->save();
+        return redirect()->back()->with('success', 'Data  Berhasil Di-Update');
     }
 
     /**

@@ -14,26 +14,39 @@
                             <i class="icon-basket menu-icon"></i><span class="nav-text">Data Transaksi</span>
                         </a>
                     </li>
+                    <li class="nav-label">Produk</li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-handbag menu-icon"></i><span class="nav-text">Data Produk</span>
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ url('produk') }}">Produk</a></li>
-                            <li><a href="{{ url('bahan') }}">Jenis Bahan</a></li>
-                            <li><a href="{{ url('kategori') }}">Kategori</a></li>
                             <li><a href="{{ url('satuan') }}">Satuan</a></li>
                             <li><a href="{{ url('supplier') }}">Supplier</a></li>
                         </ul>
                     </li>
+                    <li class="nav-label">Bahan & Stok</li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Laporan</span>
+                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Bahan & Stok</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('bahan') }}">Jenis Bahan</a></li>
+                            <li><a href="{{ url('kategori') }}">Kategori</a></li>
+                            <li><a href="{{ url('stok') }}">Data Stok</a></li>
+                            <li><a href="{{ url('stokmasuk') }}">Stok Masuk</a></li>
+                            <li><a href="{{ url('stokkeluar') }}">Stok Keluar</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-label">Laporan</li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-book-open menu-icon"></i><span class="nav-text">Laporan</span>
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ url('pengeluaran') }}">Pengeluaran</a></li>
                             <li><a href="{{ url('pembelian') }}">Pembelian</a></li>
-                            <li><a href="{{ url('hutang') }}">Hutang</a></li>
+                            {{-- <li><a href="{{ url('hutang') }}">Hutang</a></li> --}}
                             <li><a href="{{ url('pendapatan') }}">Rincian Pendapatan</a></li>
                             <li><a href="{{ url('piutang') }}">Rincian Piutang</a></li>
                             <li><a href="{{ url('omset') }}">Omset Penjualan</a></li>

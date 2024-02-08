@@ -47,15 +47,27 @@
                             <div class="input-group-prepend ml-2 mb-2 mb-md-0">
                                 <span class="input-group-text">Limit</span>
                             </div>
-
+                            <form method="post" action="{{ route('supplier.limit') }}">
+                                @csrf
+                                <div class="input-group-prepend mr-2">
+                                    <select class="form-control" id="dataOptions" name="dataOptions"
+                                        onchange="this.form.submit()">
+                                        @foreach ($perPageOptions as $option)
+                                            <option
+                                                value="{{ $option }}"{{ $datas->perPage() == $option ? 'selected' : '' }}>
+                                                {{ $option }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
                             <!-- Search input -->
                             <div class="input-group-prepend mb-2 mb-md-0">
                                 <span class="input-group-text"><i class="fa fa-search"></i></span>
                             </div>
-                            <form method="get" action="{{ url('jenis-pengeluaran') }}" id="searchForm">
+                            <form method="get" action="{{ url('supplier') }}" id="searchForm">
                                 @csrf
-                                <input type="text" class="form-control" name="searchdata" id="searchInput"
-                                    placeholder="Search..." />
+                                <input type="text" class="form-control" name="q" id="searchInput"
+                                    placeholder="Search..." value="{{ request()->q }}" />
                             </form>
                             <button class="btn btn-danger ml-2" id="clear">Clear</button>
                         </div>
@@ -69,16 +81,6 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
-                    <div class="pesan mt-2">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span>
-                                </button> {{ session('success') }}
-                            </div>
-                        @endif
-                    </div>
 
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
@@ -131,6 +133,13 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                                @if ($datas->count() == 0)
+                                    <tr>
+                                        <td colspan="10" class="text-center">
+                                            <p>Tidak Ada Data</p>
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-start">
@@ -145,6 +154,99 @@
             </div>
         </div>
     </div>
+
+
+    {{-- Modal Edit Data --}}
+    @foreach ($datas as $item)
+        <div class="modal fade" id="editSupplier{{ $item->id }}" tabindex="-1" aria-labelledby="editSupplierLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editSupplierLabel">Tambah Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('supplier.update', ['id' => $item->id]) }}" method="POST">
+                            @method('PUT')
+                            @csrf
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="perusahaan">Perusahaan</label>
+                                    <input type="text" class="form-control" id="perusahaan" name="perusahaan"
+                                        value="{{ $item->nama }}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="nama">Atas Nama</label>
+                                    <input type="text" class="form-control" id="nama" name="nama"
+                                        value="{{ $item->pemilik }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="jabatan">Jabatan</label>
+                                    <input type="text" class="form-control" id="jabatan" name="jabatan"
+                                        value="{{ $item->jabatan }}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="nohp">No Hp</label>
+                                    <input type="text" class="form-control" id="nohp" name="nohp"
+                                        value="{{ $item->nohp }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        value="{{ $item->email }}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="jenisusaha">Jenis Usaha</label>
+                                    <input type="text" class="form-control" id="jenisusaha" name="jenisusaha"
+                                        value="{{ $item->jenis_usaha }}">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="norek">No Rekening</label>
+                                    <input type="text" class="form-control" id="norek" name="norek"
+                                        value="{{ $item->norek }}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="alamat">Alamat</label>
+                                    <input type="text" class="form-control" id="alamat" name="alamat"
+                                        value="{{ $item->alamat }}">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="status">Status</label>
+                                    <select name="status" id="status" class="form-control">
+                                        @php
+                                            $status = ['Y' => 'Aktif', 'N' => 'Tidak Aktif'];
+                                        @endphp
+                                        @foreach ($status as $key => $value)
+                                            <option value="{{ $key }}"
+                                                {{ $item->status == $key ? 'selected' : '' }}>{{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="tombol mb-4">
+                                <button type="submit" class="btn btn-primary float-right ml-2">Simpan</button>
+                                <button type="button" class="btn btn-danger float-right"
+                                    data-dismiss="modal">Tutup</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+    {{-- End Modal Edit Data --}}
+
     {{-- Modal Tambah Data --}}
     <div class="modal fade" id="tambahDataSupplier" tabindex="-1" aria-labelledby="tambahDataSupplierLabel"
         aria-hidden="true">
@@ -217,83 +319,6 @@
             </div>
         </div>
         {{-- End Modal Tambah Data --}}
-
-        {{-- Modal Edit Data --}}
-        @foreach ($datas as $item)
-            <div class="modal fade" id="editSupplier{{ $item->id }}" tabindex="-1"
-                aria-labelledby="editSupplierLabel" aria-hidden="true">
-                <div class="modal-dialog modal-fullscreen">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editSupplierLabel">Tambah Data</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ url('supplier') }}" method="post">
-                                @method('POST')
-                                @csrf
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="perusahaan">Perusahaan</label>
-                                        <input type="text" class="form-control" id="perusahaan" name="perusahaan">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="nama">Atas Nama</label>
-                                        <input type="text" class="form-control" id="nama" name="nama">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="jabatan">Jabatan</label>
-                                        <input type="text" class="form-control" id="jabatan" name="jabatan">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="nohp">No Hp</label>
-                                        <input type="text" class="form-control" id="nohp" name="nohp">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="jenisusaha">Jenis Usaha</label>
-                                        <input type="text" class="form-control" id="jenisusaha" name="jenisusaha">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label for="norek">No Rekening</label>
-                                        <input type="text" class="form-control" id="norek" name="norek">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="alamat">Alamat</label>
-                                        <input type="text" class="form-control" id="alamat" name="alamat">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <label for="status">Status</label>
-                                        <select id="status" class="form-control" name="status">
-                                            <option value="Y">Aktif</option>
-                                            <option value="N">Tidak Aktif</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="tombol mb-4">
-                                    <button type="submit" class="btn btn-primary float-right ml-2">Simpan</button>
-                                    <button type="button" class="btn btn-danger float-right"
-                                        data-dismiss="modal">Tutup</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-        @endforeach
-
-        {{-- End Modal Edit Data --}}
     @endsection
     @section('js')
         <script>

@@ -24,4 +24,9 @@ class DetailPembelian extends Model
     {
         return $this->belongsTo(JenisPengeluaran::class, 'id_jenis');
     }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
 }

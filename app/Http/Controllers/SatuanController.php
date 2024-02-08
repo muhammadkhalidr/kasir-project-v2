@@ -6,21 +6,40 @@ use App\Models\Satuan;
 use App\Http\Requests\StoreSatuanRequest;
 use App\Http\Requests\UpdateSatuanRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+
 
 class SatuanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $data = Satuan::paginate(10);
+        $perPage = $request->input('dataOptions', 10);
+        $query = Satuan::query();
+        $jenis = $query->get();
+
+        // Terapkan filter pencarian jika ada
+        if ($request->has('q')) {
+            $query->where('satuan', 'like', '%' . $request->input('q') . '%');
+        }
+
+        // Ambil data dengan filter pencarian yang telah diterapkan
+        $data = $query->paginate($perPage);
         return view('satuan.data', [
             'title' => 'Data Satuan',
             'name_user' => $user->name,
-            'datas' => $data
+            'datas' => $data,
+            'perPageOptions' => [10, 15, 25, 100],
         ]);
+    }
+
+    public function limit(Request $request)
+    {
+        return $this->index($request);
     }
 
     /**

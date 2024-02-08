@@ -130,19 +130,31 @@ class PengeluaranController extends Controller
 
         $data = $request->all();
         foreach ($data['nopengeluaran'] as $key => $value) {
+
             $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
 
+            $metodePembayaran = $data['metode'];
+
             // Cek saldo kas masuk
-            // $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan');
-            // $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan');
+            if ($metodePembayaran == '1') {
+                $saldo = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
+                $namaMetode = 'Kas Bank';
+            } else if ($metodePembayaran == '2') {
+                $saldo = KasMasuk::where('bank', '2')->sum('pemasukan') - KasMasuk::where('bank', '2')->sum('pengeluaran');
+                $namaMetode = 'Kas Bank';
+            } else if ($metodePembayaran == '3') {
+                $saldo = KasMasuk::where('bank', '3')->sum('pemasukan') - KasMasuk::where('bank', '3')->sum('pengeluaran');
+                $namaMetode = 'Kas Bank';
+            } elseif ($metodePembayaran == '888') {
+                $saldo = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
+                $namaMetode = 'Kas Penjualan';
+            } else {
+                $saldo = 0;
+                $namaMetode = 'Metode Tidak Dikenali';
+            }
 
-            $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
-            $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
-
-            if ($saldoBank && $saldoBank < str_replace('.', '', $data['total'][$key])) {
-                return redirect('pengeluaran')->with('error', 'Saldo Kas Bank Tidak Cukup!');
-            } else if ($saldoTunai && $saldoTunai < str_replace('.', '', $data['total'][$key])) {
-                return redirect('pengeluaran')->with('error', 'Saldo Kas Tunai Tidak Cukup!');
+            if ($saldo < str_replace('.', '', $data['total'][$key])) {
+                return redirect('pengeluaran')->with('error', 'Saldo ' . $namaMetode . ' Tidak Cukup!');
             }
 
             Pengeluaran::create([
@@ -170,8 +182,6 @@ class PengeluaranController extends Controller
             }
         }
 
-
-
         // Buat data kas masuk
         $kasMasuk = new KasMasuk;
         $kasMasuk->id_generate = $idBaru;
@@ -181,7 +191,7 @@ class PengeluaranController extends Controller
         $kasMasuk->bank = $data['metode'];
         $kasMasuk->save();
 
-        return redirect('pengeluaran')->with('msg', 'Data Berhasil Ditambahkan!');
+        return redirect('pengeluaran')->with('success', 'Data Berhasil Ditambahkan!');
     }
 
 

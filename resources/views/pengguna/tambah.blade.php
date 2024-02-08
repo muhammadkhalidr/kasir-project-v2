@@ -104,7 +104,7 @@
                                     <div class="col-lg-6">
                                         <select name="level" class="form-control" id="role" required>
                                             <option value="0"> Pilih Role Pengguna</option>
-                                            <option value="2">Owner</option>
+                                            <option value="2">Admin</option>
                                             <option value="3">Kasir</option>
                                         </select>
                                     </div>

@@ -29,8 +29,6 @@
         Preloader end
     ********************-->
 
-
-
     <div class="login-form-bg h-100">
         <div class="container h-100">
             <div class="row justify-content-center h-100">
@@ -38,7 +36,7 @@
                     <div class="error-content">
                         <div class="card mb-0">
                             <div class="card-body text-center pt-5">
-                                <h4 class="error-text text-primary">Not Found</h4>
+                                <h4 class="text-primary">Not Found</h4>
                                 <h1 class="error-text text-primary">404</h1>
                                 <h4 class="mt-4"><i class="fa fa-exclamation text-danger"></i> Oppps, gak ketemu
                                     nih...</h4>

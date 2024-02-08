@@ -28,6 +28,7 @@ use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupplierController;
 use App\Models\DetailPembelian;
+use App\Models\Satuan;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +94,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/get-bahan/{id_kategori}', [OrderanController::class, 'getBahanByCategory']);
         Route::get('/cari-produk', [OrderanController::class, 'cariProdukAjax']);
         Route::get('/get-data-produk', [OrderanController::class, 'getDataProduk']);
+
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
 
@@ -107,7 +109,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/get-data-supplier', [PembelianController::class, 'getSupplier']);
         Route::get('pembelian/bayar', [PembelianController::class, 'bayarPembelian'])->name('pembelian.bayar');
         Route::get('/getSaldo/{id}', [PembelianController::class, 'getSaldo']);
-        // Route::get('/pembelian/{id_pembelian}', [PembelianController::class, 'index']);
+        Route::post('pembelian/limit', [PembelianController::class, 'limit'])->name('pembelian.limit');
+        Route::get('/print-pembelian', [PembelianController::class, 'printPembelian'])->name('pembelian.print');
 
 
         // Untuk Pengeluaran
@@ -161,19 +164,20 @@ Route::group(['middleware' => ['auth']], function () {
 
         // JenisPengeluran
         Route::resource('jenis-pengeluaran', JenisPengeluaranController::class);
+        Route::post('tambah-jenis', [JenisPengeluaranController::class, 'store'])->name('tambah.jenis');
         Route::put('jenis-pengeluaran/{id}', [JenisPengeluaranController::class, 'update'])->name('jenis-pengeluaran.update');
         Route::post('jenis-pengeluaran', [JenisPengeluaranController::class, 'limitJumlah'])->name('jenis-pengeluaran.limit');
 
         // Jenis Bahan
         Route::resource('bahan', JenisBahanController::class);
-
+        Route::post('/bahan', [JenisBahanController::class, 'limit'])->name('bahan.limit');
 
         // Kategori
         Route::resource('kategori', KategoriBahanController::class);
         Route::get('/kategori', [KategoriBahanController::class, 'index']);
-        Route::post('kategori/limit', [KategoriBahanController::class, 'limit'])->name('kategori.limit');
+        Route::post('kategorilimit', [KategoriBahanController::class, 'limit'])->name('kategori.limit');
         Route::get('kategori/cari', [KategoriBahanController::class, 'cariData'])->name('kategori.caridata');
-
+        Route::put('kategori/{id}', [KategoriBahanController::class, 'update'])->name('kategori.update');
         // Produkk
         Route::resource('produk', ProdukController::class);
         Route::get('/produk', [ProdukController::class, 'index']);
@@ -192,9 +196,13 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Untuk Satuan
         Route::resource('satuan', SatuanController::class);
+        Route::post('satuan/tambah', [SatuanController::class, 'store'])->name('satuan.tambah');
+        Route::post('satuan', [SatuanController::class, 'limit'])->name('satuan.limit');
 
         // Untuk Supplier
         Route::resource('supplier', SupplierController::class);
+        Route::post('supplier', [SupplierController::class, 'limit'])->name('supplier.limit');
+        Route::put('supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------

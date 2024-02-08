@@ -19,34 +19,34 @@
                             </button>
                         </div>
                         <div class="col-10 d-flex justify-content-end">
-                        <div class="input-group-prepend ml-2">
-                            <span class="input-group-text">Limit</span>
-                        </div>
-                        <form method="post" action="{{ route('kategori.limit') }}">
-                            @csrf
-                            <div class="input-group-prepend mr-2">
-                                <select class="form-control" id="dataOptions" name="dataOptions"
-                                    onchange="this.form.submit()">
-                                    @foreach ($perPageOptions as $option)
-                                        <option
-                                            value="{{ $option }}"{{ $datas->perPage() == $option ? 'selected' : '' }}>
-                                            {{ $option }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="input-group-prepend ml-2">
+                                <span class="input-group-text">Limit</span>
                             </div>
-                        </form>
+                            <form method="post" action="{{ route('kategori.limit') }}">
+                                @csrf
+                                <div class="input-group-prepend mr-2">
+                                    <select class="form-control" id="dataOptions" name="dataOptions"
+                                        onchange="this.form.submit()">
+                                        @foreach ($perPageOptions as $option)
+                                            <option
+                                                value="{{ $option }}"{{ $datas->perPage() == $option ? 'selected' : '' }}>
+                                                {{ $option }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
 
-                        <!-- Search input -->
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            <!-- Search input -->
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            </div>
+                            <form method="get" action="{{ url('kategori') }}" id="searchForm">
+                                @csrf
+                                <input type="text" class="form-control" name="searchdata" id="searchInput"
+                                    placeholder="Search..." />
+                            </form>
+                            <button class="btn btn-danger ml-2" id="clear">Clear</button>
                         </div>
-                        <form method="get" action="{{ url('kategori') }}" id="searchForm">
-                            @csrf
-                            <input type="text" class="form-control" name="searchdata" id="searchInput"
-                                placeholder="Search..." />
-                        </form>
-                        <button class="btn btn-danger ml-2" id="clear">Clear</button>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -110,6 +110,13 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            @if ($datas->count() == 0)
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        <p>Tidak Ada Data</p>
+                                    </td>
+                                </tr>
+                            @endif
                         </table>
                         <div class="d-flex justify-content-start">
                             <p class="mr-3">Menampilkan {{ $datas->firstItem() }} hingga {{ $datas->lastItem() }} dari
@@ -159,36 +166,36 @@
     {{-- End Modal Tambah Data --}}
 
     {{-- Modal Edit Data --}}
-    {{-- @foreach ($datas as $item)
-        <div class="modal fade" id="editJenisP{{ $item->id }}" tabindex="-1" aria-labelledby="editJenisPLabel"
-            aria-hidden="true">
+    @foreach ($datas as $item)
+        <div class="modal fade" id="editJenisBahan{{ $item->id }}" tabindex="-1"
+            aria-labelledby="editJenisBahanLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editJenisPLabel">Edit Jenis Transaksi</h5>
+                        <h5 class="modal-title" id="editJenisBahanLabel">Edit Jenis Transaksi</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('jenis-pengeluaran.update', ['id' => $item->id]) }}" method="POST">
+                        <form action="{{ route('kategori.update', ['id' => $item->id]) }}" method="POST">
                             @method('PUT')
                             @csrf
                             <div class="form-group">
-                                <label for="id_jenis">ID Jenis</label>
-                                <input type="text" class="form-control" id="id_jenis" name="id_jenis"
-                                    value="{{ $item->id_jenis }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="jenis">Jenis</label>
-                                <input type="text" class="form-control" id="jenis" name="jenis"
-                                    value="{{ $item->nama_jenis }}">
+                                <label for="jenis">Kategori</label>
+                                <input type="text" class="form-control" id="kategori" name="kategori"
+                                    value="{{ $item->kategori }}">
                             </div>
                             <div class="form-group">
                                 <label for="status">Status</label>
                                 <select name="status" id="status" class="form-control">
-                                    <option value="1">Aktif</option>
-                                    <option value="2">Tidak Aktif</option>
+                                    @php
+                                        $status = ['Y' => 'Aktif', 'N' => 'Tidak Aktif'];
+                                    @endphp
+                                    @foreach ($status as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ $item->status == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                     </div>
@@ -199,7 +206,7 @@
                 </div>
             </div>
         </div>
-    @endforeach --}}
+    @endforeach
     {{-- End Modal Edit Data --}}
 @endsection
 @section('js')

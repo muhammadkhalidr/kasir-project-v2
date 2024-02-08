@@ -9,7 +9,10 @@ use App\Models\DetailPembelian;
 use App\Models\JenisBahan;
 use App\Models\JenisPengeluaran;
 use App\Models\KasMasuk;
+use App\Models\Pengeluaran;
 use App\Models\Rekening;
+use App\Models\Satuan;
+use App\Models\setting;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,9 +29,10 @@ class PembelianController extends Controller
     {
         $user = Auth::user();
         $perPage = 10;
-        $Pembelian = DetailPembelian::with(['bahans', 'suppliers', 'jenisP'])
+        $Pembelian = DetailPembelian::with(['bahans', 'suppliers', 'jenisP', 'users'])
             ->orderBy('id', 'desc');
         $bank = Rekening::select('id', 'no_rekening', 'atas_nama', 'bank')->get();
+        $satuan = Satuan::all();
 
         // Apply date filter
         if ($request->query('start_date') && $request->query('end_date')) {
@@ -38,13 +42,39 @@ class PembelianController extends Controller
             $Pembelian->whereBetween('created_at', [$start_date, $end_date]);
         }
 
+        // Apply type (Jenis) filter
+        if ($request->has('jenis')) {
+            $Pembelian->whereHas('jenisP', function ($query) use ($request) {
+                $query->where('id_jenis', $request->input('jenis'));
+            });
+        }
+
+        // Apply user (pencatat) filter
+        if ($request->has('pencatat')) {
+            $Pembelian->whereHas('users', function ($query) use ($request) {
+                $query->where('id', $request->input('pencatat'));
+            });
+        }
+
+        // Apply search filter
+        if ($request->has('search')) {
+            $Pembelian->where('keterangan', 'like', '%' . $request->input('search') . '%');
+        }
+
+
         $Pembelian = $Pembelian->paginate($perPage);
-        // dd($Pembelian);
+
         $groupedPembelian = $Pembelian->sortByDesc('id')->groupBy('id_pembelian_generate');
 
         $subtotals = $groupedPembelian->map(function ($group) {
             return $group->sum('total');
         });
+
+        $totalPembelian = $groupedPembelian->map(function ($group) {
+            return $group->sum('subtotal');
+        });
+
+
 
         $latestExpense = DetailPembelian::orderBy('id', 'desc')->first();
         $nomorPembelian = $latestExpense ? sprintf('%03d', intval($latestExpense->id) + 1) : '001';
@@ -53,6 +83,7 @@ class PembelianController extends Controller
             $pembelian->formatted_date = Carbon::parse($pembelian->created_at)->isoFormat('dddd, DD/MM/YYYY');
             return $pembelian;
         });
+        // dd($groupedPembelian);
 
 
         $pembelianTerakhir = DetailPembelian::where('id', $request->id)->latest('id')->first();
@@ -81,7 +112,10 @@ class PembelianController extends Controller
             'subtotals' => $subtotals,
             'nomorPembelian' => $nomorPembelian,
             'idgenerate' => $idGeneratePembelian,
-            'bank' => $bank
+            'bank' => $bank,
+            'satuan' => $satuan,
+            'totalPembelian' => $totalPembelian,
+            'perPageOptions' => [10, 15, 25, 100],
         ]);
     }
 
@@ -93,6 +127,11 @@ class PembelianController extends Controller
             'breadcrumb' => 'Pembelian',
             'name_user' => $user->name,
         ]);
+    }
+
+    public function limit(Request $request)
+    {
+        return $this->index($request);
     }
 
     // public function cariBahanAjax()
@@ -239,19 +278,31 @@ class PembelianController extends Controller
         $data = $request->all();
         $errors = [];
         $processIdGenerate = [];
+
         foreach ($data['nopembelian'] as $key => $value) {
 
             // Cek saldo kas masuk
-            $saldoBank = KasMasuk::where('bank', '1')->sum('pemasukan') - KasMasuk::where('bank', '1')->sum('pengeluaran');
-            $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
-
-            $subtotal = str_replace('.', '', $data['jumlahBayar'][$key]);
             $id_bank = $request->input('id_bank');
             $caraBayar = $request->input('caraBayar');
-            if ($saldoBank <= 0 || $saldoBank < $subtotal) {
-                $errors[] = 'Saldo Kas Bank Tidak Cukup!';
-            } else if ($saldoTunai <= 0 || $saldoTunai < $subtotal) {
-                $errors[] = 'Saldo Kas Tunai Tidak Cukup!';
+
+            if ($caraBayar === 'tunai') {
+                $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
+                $saldo = $saldoTunai;
+                $namaMetode = 'Kas Penjualan';
+            } elseif ($caraBayar === 'transfer') {
+                $saldoBank = KasMasuk::where('bank', $id_bank[0])->sum('pemasukan') - KasMasuk::where('bank', $id_bank[0])->sum('pengeluaran');
+                $saldo = $saldoBank;
+                $namaMetode = 'Kas Bank';
+            } else {
+                // Metode pembayaran tidak dikenali
+                $saldo = 0;
+                $namaMetode = 'Metode Pembayaran Tidak Dikenali';
+            }
+
+            $subtotal = str_replace('.', '', $data['totalpembelian'][$key]);
+
+            if ($saldo <= 0 || $saldo < $subtotal) {
+                $errors[] = 'Saldo ' . $namaMetode . ' Tidak Cukup!';
             } else {
                 $detailPembelian = new DetailPembelian;
                 $detailPembelian->id_pembelian_generate = $data['nopembelian'][$key];
@@ -280,9 +331,6 @@ class PembelianController extends Controller
             $processIdGenerate[] = ['id_generate' => $data['id_generate'][$key], 'nopembelian' => $value];
         }
 
-        // dd($data);
-
-
         if (!empty($errors)) {
             // Redirect with errors
             return redirect('pembelian')->with('error', implode($errors));
@@ -291,7 +339,6 @@ class PembelianController extends Controller
         // Redirect with success message
         return redirect('pembelian')->with('success', 'Data Berhasil Ditambahkan!');
     }
-
 
     /**
      * Display the specified resource.
@@ -354,5 +401,60 @@ class PembelianController extends Controller
         $print = PDF::loadView('pembelian.print_faktur', compact('pembelian'));
 
         return $print->download($pembelian->id_pembelian . '' . 'faktur-pembelian.pdf');
+    }
+
+
+
+    public function printPembelian(Request $request)
+    {
+        $pembelianQuery = DetailPembelian::with(['bahans', 'suppliers', 'jenisP', 'users'])
+            ->orderBy('id', 'desc');
+
+        // Initialize start_date and end_date
+        $start_date = null;
+        $end_date = null;
+
+        // Apply date filter
+        if ($request->filled('daterange')) {
+            [$start_date, $end_date] = explode(' - ', $request->input('daterange'));
+
+            $start_date = Carbon::createFromFormat('m/d/Y', $start_date)->startOfDay();
+            $end_date = Carbon::createFromFormat('m/d/Y', $end_date)->endOfDay();
+
+            $pembelianQuery->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        // Apply type (Jenis) filter
+        if ($request->filled('jenis')) {
+            $pembelianQuery->whereHas('jenisP', function ($query) use ($request) {
+                $query->where('id_jenis', $request->input('jenis'));
+            });
+        }
+
+        // Apply user (pencatat) filter
+        if ($request->filled('pencatat')) {
+            $pembelianQuery->whereHas('users', function ($query) use ($request) {
+                $query->where('id', $request->input('pencatat'));
+            });
+        }
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $pembelianQuery->where('keterangan', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $pembelian = $pembelianQuery->get();
+        $user = Auth::user();
+        $total = DetailPembelian::select('total')->sum('total');
+        $setting = Setting::first();
+
+        return view('pembelian.print', [
+            'pembelian' => $pembelian,
+            'total' => $total,
+            'info' => $setting,
+            'name_user' => $user->name,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
     }
 }

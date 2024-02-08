@@ -22,17 +22,17 @@
                         <div class="input-group-prepend ml-2">
                             <span class="input-group-text">Limit</span>
                         </div>
-                        <form method="post" action="{{ route('jenis-pengeluaran.limit') }}">
+                        <form method="post" action="{{ route('satuan.limit') }}">
                             @csrf
                             <div class="input-group-prepend mr-2">
-                                {{-- <select class="form-control" id="dataOptions" name="dataOptions"
+                                <select class="form-control" id="dataOptions" name="dataOptions"
                                     onchange="this.form.submit()">
                                     @foreach ($perPageOptions as $option)
                                         <option
                                             value="{{ $option }}"{{ $datas->perPage() == $option ? 'selected' : '' }}>
                                             {{ $option }}</option>
                                     @endforeach
-                                </select> --}}
+                                </select>
                             </div>
                         </form>
 
@@ -40,10 +40,10 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
                         </div>
-                        <form method="get" action="{{ url('jenis-pengeluaran') }}" id="searchForm">
+                        <form method="get" action="{{ url('satuan') }}" id="searchForm">
                             @csrf
-                            <input type="text" class="form-control" name="searchdata" id="searchInput"
-                                placeholder="Search..." />
+                            <input type="text" class="form-control" name="q" id="searchInput"
+                                placeholder="Search..." value="{{ request('q') }}" />
                         </form>
                         <button class="btn btn-danger ml-2" id="clear">Clear</button>
                     </div>
@@ -55,25 +55,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
-                    <div class="pesan mt-2">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span>
-                                </button> {{ session('success') }}
-                            </div>
-                        @endif
-                    </div>
-
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>ID</th>
                                     <th>Satuan</th>
-                                    <th>Aksi</th>
+                                    <th class="text-right">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,9 +71,8 @@
                                 @foreach ($datas as $index => $item)
                                     <tr>
                                         <td>{{ $index + $datas->firstItem() }}</td>
-                                        <td>{{ $item->id }}</td>
                                         <td>{{ $item->satuan }}</td>
-                                        <td>
+                                        <td class="text-right">
                                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                                                 data-target="#editSatuan{{ $item->id }}">
                                                 <i class="fa fa-edit"></i>
@@ -127,7 +114,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('satuan') }}" method="post">
+                    <form action="{{ route('satuan.tambah') }}" method="post">
                         @method('POST')
                         @csrf
                         <div class="form-group">

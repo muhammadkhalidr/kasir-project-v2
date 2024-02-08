@@ -22,7 +22,7 @@
                         <div class="input-group-prepend ml-2">
                             <span class="input-group-text">Limit</span>
                         </div>
-                        {{-- <form method="post" action="{{ url('bahan') }}">
+                        <form method="post" action="{{ route('bahan.limit') }}">
                             @csrf
                             <div class="input-group-prepend mr-2">
                                 <select class="form-control" id="dataOptions" name="dataOptions"
@@ -34,15 +34,15 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </form> --}}
+                        </form>
 
                         <!-- Search input -->
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
                         </div>
-                        <form method="get" action="{{ url('jenis-pengeluaran') }}" id="searchForm">
+                        <form method="get" action="{{ url('bahan') }}" id="searchForm">
                             @csrf
-                            <input type="text" class="form-control" name="searchdata" id="searchInput"
+                            <input type="text" class="form-control" name="q" id="searchInput"
                                 placeholder="Search..." />
                         </form>
                         <button class="btn btn-danger ml-2" id="clear">Clear</button>
@@ -204,10 +204,13 @@
                             <div class="form-group">
                                 <label for="status">Status</label>
                                 <select name="status" id="status" class="form-control">
-                                    <option value="{{ $item->status }}">
-                                        {{ $item->status == 'Y' ? 'Aktif' : 'Tidak Aktif' }}</option>
-                                    <option value="Y">Aktif</option>
-                                    <option value="N">Tidak Aktif</option>
+                                    @php
+                                        $status = ['Y' => 'Aktif', 'N' => 'Tidak Aktif'];
+                                    @endphp
+                                    @foreach ($status as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ $item->status == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                     </div>

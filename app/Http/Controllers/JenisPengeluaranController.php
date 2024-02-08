@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JenisPengeluaran;
 use App\Http\Requests\StoreJenisPengeluaranRequest;
 use App\Http\Requests\UpdateJenisPengeluaranRequest;
+use App\Models\JenisBahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,18 +17,30 @@ class JenisPengeluaranController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $idJenis = JenisPengeluaran::latest('id_jenis')->first();
         $perPage = $request->input('dataOptions', 10);
 
-        $jenispengeluarans = JenisPengeluaran::paginate($perPage);
+        $query = JenisPengeluaran::query();
+        $jenis = $query->get();
+
+        // Terapkan filter pencarian jika ada
+        if ($request->has('q')) {
+            $query->where('nama_jenis', 'like', '%' . $request->input('q') . '%');
+        }
+
+        // Ambil data dengan filter pencarian yang telah diterapkan
+        $jenispengeluarans = $query->paginate($perPage);
+
         return view('jenispengeluaran.data', [
             'title' => env('APP_NAME') . ' | ' . 'Data Jenis Pengeluaran',
             'breadcrumb' => 'Jenis Pengeluaran',
             'name_user' => $user->name,
             'datas' => $jenispengeluarans,
+            'idJenis' => $idJenis->id_jenis + 1,
             'perPageOptions' => [10, 15, 25, 100],
-
         ]);
     }
+
 
     public function limitJumlah(Request $request)
     {
@@ -54,7 +67,7 @@ class JenisPengeluaranController extends Controller
         $jenis->aktif = $request->status;
         $jenis->save();
 
-        return redirect('/jenis-pengeluaran')->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('jenis-pengeluaran')->with('success', 'Data Berhasil di Tambahkan');
     }
 
     /**

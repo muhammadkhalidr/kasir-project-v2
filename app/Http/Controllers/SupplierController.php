@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Supplier;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SupplierController extends Controller
@@ -12,15 +13,33 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $supplier = Supplier::paginate(10);
+        $perPage = $request->input('dataOptions', 10);
+
+        $query = Supplier::query();
+        $sup = $query->get();
+
+        if ($request->has('q')) {
+            $query->where('nama', 'like', '%' . $request->input('q') . '%')
+                ->orWhere('pemilik', 'like', '%' . $request->input('q') . '%')
+                ->orWhere('nohp', 'like', '%' . $request->input('q') . '%')
+                ->orWhere('email', 'like', '%' . $request->input('q') . '%');
+        }
+
+        $supplier = $query->paginate($perPage);
         return view('supplier.data', [
             'title' => 'Data Supplier',
             'name_user' => $user->name,
-            'datas' => $supplier
+            'datas' => $supplier,
+            'perPageOptions' => [10, 15, 25, 100],
         ]);
+    }
+
+    public function limit(Request $request)
+    {
+        return $this->index($request);
     }
 
     /**
@@ -50,7 +69,6 @@ class SupplierController extends Controller
         $data->norek = $request->norek;
         $data->status = $request->status;
         $data->save();
-        // dd($data);
 
         return redirect()->back()->with(['success' => 'Data Berhasil Ditambahkan']);
     }
@@ -74,16 +92,31 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSupplierRequest $request, Supplier $supplier)
+    public function update(UpdateSupplierRequest $request, $id)
     {
-        //
+        $data = Supplier::findOrFail($id);
+
+        $data->nama = $request->perusahaan;
+        $data->jenis_usaha = $request->jenisusaha;
+        $data->pemilik = $request->nama;
+        $data->jabatan = $request->jabatan;
+        $data->alamat = $request->alamat;
+        $data->nohp = $request->nohp;
+        $data->email = $request->email;
+        $data->norek = $request->norek;
+        $data->status = $request->status;
+        $data->save();
+
+        return redirect()->back()->with(['success' => 'Data Berhasil Di Update']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Supplier $supplier)
+    public function destroy($id)
     {
-        //
+        $data = Supplier::findOrFail($id);
+        $data->delete();
+        return redirect()->back()->with(['success' => 'Data Berhasil Di Hapus']);
     }
 }

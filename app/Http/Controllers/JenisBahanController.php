@@ -23,18 +23,16 @@ class JenisBahanController extends Controller
         $query = JenisBahan::query();
 
         // Search Data
-        $search = $request->input('searchdata');
+        $search = $request->input('q');
         if ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('nama', 'like', '%' . $search . '%')
-                    ->orWhere('alamat', 'like', '%' . $search . '%');
+                $query->where('bahan', 'like', '%' . $search . '%')
+                    ->orWhereHas('kategories', function ($subQuery) use ($search) {
+                        $subQuery->where('kategori', 'like', '%' . $search . '%');
+                    });
             });
         }
-
         $data = $query->paginate($perPage);
-
-        // dd($data);
-
         return view('jbahan.data', [
             'title' => 'Jenis Bahan',
             'name_user' => $user->name,
@@ -43,6 +41,11 @@ class JenisBahanController extends Controller
             'perPageOptions' => [10, 15, 25, 100],
 
         ]);
+    }
+
+    public function limit(Request $request)
+    {
+        return $this->index($request);
     }
 
     /**

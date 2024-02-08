@@ -42,8 +42,8 @@
                         </div>
                         <form method="get" action="{{ url('jenis-pengeluaran') }}" id="searchForm">
                             @csrf
-                            <input type="text" class="form-control" name="searchdata" id="searchInput"
-                                placeholder="Search..." />
+                            <input type="text" class="form-control" name="q" id="searchInput"
+                                placeholder="Search..." value="{{ request('q') }}" />
                         </form>
                         <button class="btn btn-danger ml-2" id="clear">Clear</button>
                     </div>
@@ -110,6 +110,13 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                                @if ($datas->count() == 0)
+                                    <tr>
+                                        <td colspan="10" class="text-center">
+                                            <p>Tidak Ada Data</p>
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-start">
@@ -129,18 +136,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="tambahDataJenisLabel">Tmabah Jenis Transaksi</h5>
+                    <h5 class="modal-title" id="tambahDataJenisLabel">Tambah Jenis Transaksi</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('jenis-pengeluaran') }}" method="post">
+                    <form action="{{ route('tambah.jenis') }}" method="post">
                         @method('POST')
                         @csrf
                         <div class="form-group">
                             <label for="id_jenis">ID Jenis</label>
-                            <input type="text" class="form-control" id="id_jenis" name="id_jenis">
+                            <input type="text" class="form-control" id="id_jenis" name="id_jenis"
+                                value="{{ $idJenis }}" readonly>
                         </div>
                         <div class="form-group">
                             <label for="jenis">Jenis</label>
@@ -183,7 +191,7 @@
                             <div class="form-group">
                                 <label for="id_jenis">ID Jenis</label>
                                 <input type="text" class="form-control" id="id_jenis" name="id_jenis"
-                                    value="{{ $item->id_jenis }}">
+                                    value="{{ $item->id_jenis }}" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="jenis">Jenis</label>

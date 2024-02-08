@@ -58,7 +58,9 @@ class SettingController extends Controller
         $data = setting::first();
         $logoUpdated = false;
         $faviconUpdated = false;
-        $logoLoginUpdate = false;
+        $logoLoginUpdated = false;
+        $logoLunasUpdated = false;
+        $logoBlunasUpdated = false;
 
         if ($request->hasFile('logo')) {
             $foto_file = $request->file('logo');
@@ -84,7 +86,7 @@ class SettingController extends Controller
             $logo_login->move(public_path('assets/images/settings'), $logo_login_name);
 
             $data->login_logo = $logo_login_name;
-            $logoLoginUpdate = true;
+            $logoLoginUpdated = true;
         }
 
         if ($request->hasFile('lunas')) {
@@ -93,7 +95,7 @@ class SettingController extends Controller
             $lunas->move(public_path('assets/images/settings'), $lunas_name);
 
             $data->logo_lunas = $lunas_name; // Update the field to 'lunas_logo'
-            $logoLunas = true;
+            $logoLunasUpdated = true;
         }
 
         if ($request->hasFile('blunas')) {
@@ -102,25 +104,28 @@ class SettingController extends Controller
             $blunas->move(public_path('assets/images/settings'), $blunas_name);
 
             $data->logo_blunas = $blunas_name; // Update the field to 'blunas_logo'
-            $logoBlunas = true;
+            $logoBlunasUpdated = true;
         }
 
-        if ($logoUpdated || $faviconUpdated || $logoLoginUpdate) {
+        if ($logoUpdated || $faviconUpdated || $logoLoginUpdated || $logoLunasUpdated || $logoBlunasUpdated) {
             $data->save();
 
-            if ($logoUpdated && $faviconUpdated && $logoLoginUpdate) {
-                return redirect('setting')->with('msg', 'Logo dan Favicon Berhasil Diperbarui!');
-            } else if ($logoUpdated) {
-                return redirect('setting')->with('msg', 'Logo Berhasil Diperbarui!');
+            if ($logoUpdated) {
+                return redirect('setting')->with('success', 'Logo Berhasil Diperbarui!');
             } elseif ($faviconUpdated) {
-                return redirect('setting')->with('msg', 'Favicon Berhasil Diperbarui!');
-            } else {
-                return redirect('setting')->with('msg', 'Logo Login Berhasil Diperbarui!');
+                return redirect('setting')->with('success', 'Favicon Berhasil Diperbarui!');
+            } elseif ($logoLoginUpdated) {
+                return redirect('setting')->with('success', 'Logo Login Berhasil Diperbarui!');
+            } elseif ($logoLunasUpdated) {
+                return redirect('setting')->with('success', 'Logo Lunas Berhasil Diperbarui!');
+            } elseif ($logoBlunasUpdated) {
+                return redirect('setting')->with('success', 'Logo Blunas Berhasil Diperbarui!');
             }
         }
 
-        return redirect('setting')->with('msg', 'Tidak ada file yang dipilih.');
+        return redirect('setting')->with('error', 'Tidak ada file yang dipilih.');
     }
+
 
 
 
@@ -152,7 +157,7 @@ class SettingController extends Controller
         $data->pesan = $request->footer_invoice;
         $data->save();
 
-        return redirect('setting')->with('msg', 'Data Berhasil Di-perbarui!');
+        return redirect('setting')->with('success', 'Data Berhasil Di-perbarui!');
     }
 
 

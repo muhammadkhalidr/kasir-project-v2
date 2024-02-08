@@ -353,3 +353,25 @@ $(document).ready(function () {
         return 'Rp ' + ribuan;
     }
 });
+
+$(document).ready(function () {
+    // Handle 'Cari' button click event
+    $('#cari').click(function (e) {
+        e.preventDefault(); // Prevent the form from being submitted automatically
+        $('#hiddenJenis').val($('#jenis').val());
+        $('#hiddenpencatat').val($('#pencatat').val());
+        $('#searchForm').submit();
+    });
+});
+
+$(document).ready(function() {
+    $('input[name="daterange"]').daterangepicker({
+        format: 'MM/DD/YYYY'
+    });
+
+    $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+        $('#start_date').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+        $('#end_date').val(picker.endDate.format('YYYY-MM-DD HH:mm:ss'));
+        $('#searchForm').submit(); // assuming your form has an id="searchForm"
+    });
+});

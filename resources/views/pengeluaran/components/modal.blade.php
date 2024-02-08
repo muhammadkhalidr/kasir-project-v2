@@ -99,12 +99,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        {{-- <div class="form-group row">
-                                            <div class="col">
-                                                <input type="text" name="saldo" class="form-control"
-                                                    value="" id="saldo">
-                                            </div>
-                                        </div> --}}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger"
@@ -114,6 +108,95 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+                        {{-- Modal Bayar Pembelian --}}
+                        {{-- <div class="modal fade" id="bayarPengeluaran" data-backdrop="static" data-keyboard="false"
+                            tabindex="-1" aria-labelledby="bayarPengeluaranLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="bayarPengeluaranLabel">Pilih Metode Pembayaran
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body pb-0">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-4 col-form-label">
+                                                <div class="input-group">
+                                                    BAYAR
+                                                </div>
+                                            </label>
+                                            <div class="col-8">
+                                                <div class="input-group input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" for="caraBayar">CARA
+                                                            BAYAR</span>
+                                                    </div>
+                                                    <input type="hidden" id="id_bank" name="id_bank[]">
+                                                    <select name="caraBayar" id="caraBayar"
+                                                        class="custom-select form-control form-control-sm" required>
+                                                        <option value="tunai" selected>Tunai</option>
+                                                        <option value="transfer">Transfer</option>
+                                                    </select>
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">AKUN</span>
+                                                    </div>
+                                                    <select name="tunai" id="tunai"
+                                                        class="custom-select form-control form-control-sm tunai">
+                                                        <option value="888" selected>Kas Penjualan</option>
+                                                    </select>
+                                                    <select name="rekening" id="rekening"
+                                                        class="custom-select form-control form-control-sm rekening">
+                                                        @foreach ($bank as $item)
+                                                            <option value="{{ $item->id }}" selected>
+                                                                {{ $item->bank }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <label for="saldoKas" class="col-4 col-form-label">SALDO KAS</label>
+                                            <div class="col-8">
+                                                <div class="input-group">
+                                                    <input id="saldoKas" name="saldoKas" type="text"
+                                                        class="form-control form-control-sm" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <label for="totalBayar" class="col-4 col-form-label">TOTAL BAYAR</label>
+                                            <div class="col-8">
+                                                <div class="input-group">
+                                                    <input id="totalBayar" name="totalBayar" type="text"
+                                                        class="form-control form-control-sm subtotal" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-0 flat">
+                                            <label for="jumlahBayar" class="col-4 col-form-label">JUMLAH BAYAR</label>
+                                            <div class="col-8">
+                                                <div class="input-group flat">
+                                                    <input id="jumlahBayar" name="jumlahBayar" type="text"
+                                                        class="form-control form-control-sm input jumlahBayar">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Tutup</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                    </form>
+                </div>
+            </div>
+        </div> --}}
+
 
                     </form>
                 </div>

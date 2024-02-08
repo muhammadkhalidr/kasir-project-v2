@@ -54,7 +54,7 @@
 
 @if (Session::has('error'))
     <script>
-        swal.fire('Warning!', '{{ Session::get('error') }}', 'warning');
+        swal.fire('Peringatan!!', '{{ Session::get('error') }}', 'warning');
     </script>
 @endif
 @if (Session::has('success'))
