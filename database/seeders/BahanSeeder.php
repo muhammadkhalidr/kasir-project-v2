@@ -17,16 +17,19 @@ class BahanSeeder extends Seeder
             [
                 'bahan' => 'Flexy 280 G',
                 'status' => 'Y',
+                'stok' => 'N',
                 'id_kategori' => '1',
             ],
             [
                 'bahan' => 'Vinyl Rirtama',
                 'status' => 'Y',
+                'stok' => 'N',
                 'id_kategori' => '2',
             ],
             [
                 'bahan' => 'Duplex',
                 'status' => 'Y',
+                'stok' => 'N',
                 'id_kategori' => '3',
             ],
         ];

@@ -13,6 +13,7 @@ use App\Models\Pengeluaran;
 use App\Models\Rekening;
 use App\Models\Satuan;
 use App\Models\setting;
+use App\Models\StokMasuk;
 use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -280,65 +281,82 @@ class PembelianController extends Controller
         $processIdGenerate = [];
 
         foreach ($data['nopembelian'] as $key => $value) {
+            // Melakukan pengecekan stok pada tabel jenisbahan
+            $jenisBahan = JenisBahan::find($data['id_bahan'][$key]);
 
-            // Cek saldo kas masuk
-            $id_bank = $request->input('id_bank');
-            $caraBayar = $request->input('caraBayar');
+            if ($jenisBahan && $jenisBahan->stok === 'Y') {
+                // Stok tersedia, proses pembelian
+                // Cek saldo kas masuk
+                $id_bank = $request->input('id_bank');
+                $caraBayar = $request->input('caraBayar');
 
-            if ($caraBayar === 'tunai') {
-                $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
-                $saldo = $saldoTunai;
-                $namaMetode = 'Kas Penjualan';
-            } elseif ($caraBayar === 'transfer') {
-                $saldoBank = KasMasuk::where('bank', $id_bank[0])->sum('pemasukan') - KasMasuk::where('bank', $id_bank[0])->sum('pengeluaran');
-                $saldo = $saldoBank;
-                $namaMetode = 'Kas Bank';
+                if ($caraBayar === 'tunai') {
+                    $saldoTunai = KasMasuk::where('bank', '888')->sum('pemasukan') - KasMasuk::where('bank', '888')->sum('pengeluaran');
+                    $saldo = $saldoTunai;
+                    $namaMetode = 'Kas Penjualan';
+                } elseif ($caraBayar === 'transfer') {
+                    $saldoBank = KasMasuk::where('bank', $id_bank[0])->sum('pemasukan') - KasMasuk::where('bank', $id_bank[0])->sum('pengeluaran');
+                    $saldo = $saldoBank;
+                    $namaMetode = 'Kas Bank';
+                } else {
+                    // Metode pembayaran tidak dikenali
+                    $saldo = 0;
+                    $namaMetode = 'Metode Pembayaran Tidak Dikenali';
+                }
+
+                $subtotal = str_replace('.', '', $data['totalpembelian'][$key]);
+
+                if ($saldo <= 0 || $saldo < $subtotal) {
+                    $errors[] = 'Saldo ' . $namaMetode . ' Tidak Cukup!';
+                } else {
+                    $detailPembelian = new DetailPembelian;
+                    $detailPembelian->id_pembelian_generate = $data['nopembelian'][$key];
+                    $detailPembelian->id_generate = $data['id_generate'][$key];
+                    $detailPembelian->id_supplier = $data['id_supplier'][$key];
+                    $detailPembelian->id_jenis = $data['id_jenis'][$key];
+                    $detailPembelian->id_bank = $id_bank[0];
+                    $detailPembelian->id_bahan = $data['id_bahan'][$key];
+                    $detailPembelian->keterangan = $data['keterangan'][$key];
+                    $detailPembelian->jumlah = $data['jumlah'][$key];
+                    $detailPembelian->satuan = $data['satuan'][$key];
+                    $detailPembelian->total = str_replace('.', '', $data['nominal'][$key]);
+                    $detailPembelian->subtotal = str_replace('.', '', $data['totalpembelian']);
+                    $detailPembelian->id_user = $user->id;
+                    $detailPembelian->save();
+
+                    // Menambahkan data ke tabel kasmasuk
+                    $kasMasuk = new KasMasuk;
+                    $kasMasuk->id_generate = $data['id_generate'][$key];
+                    $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank');
+                    $kasMasuk->name_kasir = $user->name;
+                    $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
+                    $kasMasuk->bank = $id_bank[0];
+                    $kasMasuk->save();
+
+                    // Menambahkan data ke tabel stokmasuk
+                    $stokMasuk = new StokMasuk;
+                    $stokMasuk->id_bahan = $data['id_bahan'][$key];
+                    $stokMasuk->jumlah = $data['jumlah'][$key];
+                    $stokMasuk->keterangan = $data['keterangan'][$key];
+                    $stokMasuk->save();
+                }
             } else {
-                // Metode pembayaran tidak dikenali
-                $saldo = 0;
-                $namaMetode = 'Metode Pembayaran Tidak Dikenali';
-            }
-
-            $subtotal = str_replace('.', '', $data['totalpembelian'][$key]);
-
-            if ($saldo <= 0 || $saldo < $subtotal) {
-                $errors[] = 'Saldo ' . $namaMetode . ' Tidak Cukup!';
-            } else {
-                $detailPembelian = new DetailPembelian;
-                $detailPembelian->id_pembelian_generate = $data['nopembelian'][$key];
-                $detailPembelian->id_generate = $data['id_generate'][$key];
-                $detailPembelian->id_supplier = $data['id_supplier'][$key];
-                $detailPembelian->id_jenis = $data['id_jenis'][$key];
-                $detailPembelian->id_bank = $id_bank[0];
-                $detailPembelian->id_bahan = $data['id_bahan'][$key];
-                $detailPembelian->keterangan = $data['keterangan'][$key];
-                $detailPembelian->jumlah = $data['jumlah'][$key];
-                $detailPembelian->satuan = $data['satuan'][$key];
-                $detailPembelian->total = str_replace('.', '', $data['nominal'][$key]);
-                $detailPembelian->subtotal = str_replace('.', '', $data['totalpembelian']);
-                $detailPembelian->id_user = $user->id;
-                $detailPembelian->save();
-
-                $kasMasuk = new KasMasuk;
-                $kasMasuk->id_generate = $data['id_generate'][$key];
-                $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank');
-                $kasMasuk->name_kasir = $user->name;
-                $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
-                $kasMasuk->bank = $id_bank[0];
-                $kasMasuk->save();
+                // Stok tidak aktif, proses tidak dilanjutkan
+                $errors[] = 'Bahan ini tidak tersedia untuk stok';
             }
 
             $processIdGenerate[] = ['id_generate' => $data['id_generate'][$key], 'nopembelian' => $value];
         }
 
         if (!empty($errors)) {
-            // Redirect with errors
+            // Redirect dengan pesan kesalahan
             return redirect('pembelian')->with('error', implode($errors));
         }
 
-        // Redirect with success message
+        // Redirect dengan pesan sukses
         return redirect('pembelian')->with('success', 'Data Berhasil Ditambahkan!');
     }
+
 
     /**
      * Display the specified resource.

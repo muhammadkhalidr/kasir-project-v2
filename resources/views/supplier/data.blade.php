@@ -259,7 +259,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('supplier') }}" method="post">
+                    <form action="{{ route('supplier.tambah') }}" method="post">
                         @method('POST')
                         @csrf
                         <div class="form-row">

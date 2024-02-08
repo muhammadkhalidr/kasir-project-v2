@@ -26,9 +26,12 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StokMasukController;
 use App\Http\Controllers\SupplierController;
 use App\Models\DetailPembelian;
+use App\Models\JenisBahan;
 use App\Models\Satuan;
+use App\Models\StokMasuk;
 
 /*
 |--------------------------------------------------------------------------
@@ -171,7 +174,7 @@ Route::group(['middleware' => ['auth']], function () {
         // Jenis Bahan
         Route::resource('bahan', JenisBahanController::class);
         Route::post('/bahan', [JenisBahanController::class, 'limit'])->name('bahan.limit');
-
+        Route::post('tambahbahan', [JenisBahanController::class, 'store'])->name('tambah.bahan');
         // Kategori
         Route::resource('kategori', KategoriBahanController::class);
         Route::get('/kategori', [KategoriBahanController::class, 'index']);
@@ -202,7 +205,12 @@ Route::group(['middleware' => ['auth']], function () {
         // Untuk Supplier
         Route::resource('supplier', SupplierController::class);
         Route::post('supplier', [SupplierController::class, 'limit'])->name('supplier.limit');
+        Route::post('tambahsupplier', [SupplierController::class, 'store'])->name('supplier.tambah');
         Route::put('supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
+
+        // Untuk Data Stok
+        // Route::resource('stok', StokMasukController::class);
+        Route::get('datastok', [StokMasukController::class, 'dataStok'])->name('data.stok');
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------

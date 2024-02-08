@@ -73,6 +73,7 @@
                                     <th>No</th>
                                     <th>Bahan</th>
                                     <th>Kategori</th>
+                                    <th class="text-center">Stok</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -86,6 +87,13 @@
                                         <td>{{ $index + $datas->firstItem() }}</td>
                                         <td>{{ $item->bahan }}</td>
                                         <td>{{ $item->kategories->kategori }}</td>
+                                        <td class="text-center">
+                                            @if ($item->stok == 'Y')
+                                                <span class="badge badge-success">Ya</span>
+                                            @else
+                                                <span class="badge badge-danger">Tidak</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if ($item->status == 'Y')
                                                 <span class="badge badge-success">Aktif</span>
@@ -136,7 +144,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('bahan') }}" method="post">
+                    <form action="{{ route('tambah.bahan') }}" method="post">
                         @method('POST')
                         @csrf
                         <div class="form-group">
@@ -150,6 +158,14 @@
                                     <option value="{{ $item->id }}">{{ $item->kategori }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="stok">Stok</label>
+                            <select name="stok" id="stok" class="form-control">
+                                <option value="Y">Ya</option>
+                                <option value="N" selected>Tidak</option>
+                            </select>
+                            <span class="text-danger text-italic mt-2">Jika tidak ada stok, pilih tidak</span>
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>

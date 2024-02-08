@@ -14,6 +14,7 @@ use App\Models\Produk;
 use App\Models\Rekening;
 use App\Models\Satuan;
 use App\Models\setting;
+use App\Models\StokKeluar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -205,51 +206,30 @@ class OrderanController extends Controller
     {
         $user = Auth::user();
         $data = $request->all();
+        $errors = [];
 
+        // Ambil nomor transaksi terbaru dari DetailOrderan
+        $latestOrder = DetailOrderan::latest('id')->first();
+        $latestTransactionId = ($latestOrder) ? $latestOrder->id_transaksi + 1 : 1;
 
-        $noTrx = DetailOrderan::latest('id')->first();
-
-        $latestPelunasan = PelunasanOrderan::latest('id')->first();
-
-        if ($latestPelunasan) {
-            $id_pelunasan = $latestPelunasan->toArray();
-            $id = $id_pelunasan['id'] + 1;
-        } else {
-            $id = 1;
-        }
-
-        $idTransaksiBaru = 0;
-        $idTransaksiBaru++;
-
-        if ($idTransaksiBaru) {
-            $idLama = $idTransaksiBaru;
-            $idNumber = (int)substr($idLama, 4);
-            $idNumber++;
-            $idTransaksiBaru2 = 1 . str_pad($idNumber, 3, '0', STR_PAD_LEFT);
-        } else {
-            $idTransaksiBaru2 = 0;
-        }
-
-        $processedNotrx = [];
-
+        // Proses setiap item dalam pesanan
         foreach ($data['idpelanggan'] as $key => $value) {
             $status = ($data['sisa'] == 0) ? 'Lunas' : 'Belum Lunas';
 
-            // Tentukan nilai uangmuka
+            // Tentukan nilai uang muka
             $uangMuka = !empty($data['uangmuka']) ? str_replace('.', '', $data['uangmuka']) : 0;
 
-            // Tentukan nilai id_pelanggan
+            // Tentukan nilai id pelanggan
             $idPelanggan = !empty($value) ? $value : 0;
 
             // Buat dan simpan objek DetailOrderan
-            DetailOrderan::create([
-                'id_transaksi' => $idTransaksiBaru2,
+            $detailOrder = DetailOrderan::create([
+                'id_transaksi' => $latestTransactionId,
                 'notrx' => $data['notrx'][$key],
                 'id_pelanggan' => $idPelanggan,
                 'namabarang' => $data['produk'][$key],
                 'id_produk' => $data['idproduk'][$key],
                 'id_bahan' => $data['idbahan'][$key],
-                'id_pelunasan' => $id,
                 'keterangan' => $data['keterangan'][$key],
                 'bahan' => $data['bahan'][$key],
                 'satuan' => $data['satuan'][$key],
@@ -264,21 +244,25 @@ class OrderanController extends Controller
                 'name_kasir' => $data['namakasir']
             ]);
 
-            OmsetPenjualan::create([
+            // Buat dan simpan objek PelunasanOrderan
+            PelunasanOrderan::create([
                 'notrx' => $data['notrx'][$key],
-                'id_produk' => $data['idproduk'][$key],
-                'produk' => $data['produk'][$key],
-                'jumlah' => $data['jumlah'][$key],
-                'total' => str_replace('.', '', $data['total'][$key]),
-
-                PelunasanOrderan::create([
-                    'notrx' => $data['notrx'][$key],
-                    'total_bayar' => str_replace('.', '', $data['uangmuka']),
-                    'bank' => $data['bayarDp'],
-                    'via' => $data['bayarDp'],
-                    'id_bayar' => $data['idpelanggan'][$key],
-                ])
+                'total_bayar' => str_replace('.', '', $data['uangmuka']),
+                'bank' => $data['bayarDp'],
+                'via' => $data['bayarDp'],
+                'id_bayar' => $idPelanggan,
             ]);
+
+            // Jika stok Y, tambahkan data ke tabel StokKeluar
+            $jenisBahan = JenisBahan::find($data['idbahan'][$key]);
+            if ($jenisBahan && $jenisBahan->stok === 'Y') {
+                StokKeluar::create([
+                    'id_stok_masuk' => 100,
+                    'id_bahan' => $data['idbahan'][$key],
+                    'notrx' => $data['notrx'][$key],
+                    'jumlah' => $data['jumlah'][$key],
+                ]);
+            }
 
             // Tambahkan notrx ke dalam array processedNotrx
             $processedNotrx[] = $data['notrx'][$key];
@@ -305,15 +289,9 @@ class OrderanController extends Controller
             }
         }
 
-        // $omset = new OmsetPenjualan;
-        // $omset->id_produk = $data['idproduk'][0];
-        // $omset->jumlah = $data['jumlah'][0];
-        // $omset->produk = $data['produk'][0];
-        // $omset->total = str_replace('.', '', $data['total'][$key]);
-        // $omset->save();
-
         return redirect('orderan')->with('success', 'Data Berhasil Ditambahkan!');
     }
+
 
     public function omset(Request $request)
     {

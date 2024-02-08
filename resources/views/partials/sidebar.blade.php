@@ -33,7 +33,7 @@
                         <ul aria-expanded="false">
                             <li><a href="{{ url('bahan') }}">Jenis Bahan</a></li>
                             <li><a href="{{ url('kategori') }}">Kategori</a></li>
-                            <li><a href="{{ url('stok') }}">Data Stok</a></li>
+                            <li><a href="{{ url('datastok') }}">Data Stok</a></li>
                             <li><a href="{{ url('stokmasuk') }}">Stok Masuk</a></li>
                             <li><a href="{{ url('stokkeluar') }}">Stok Keluar</a></li>
                         </ul>
