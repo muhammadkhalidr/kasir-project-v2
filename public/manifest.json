@@ -2,10 +2,10 @@
     "name": "Khalid R - Arsip",
     "short_name": "Khalid R",
     "start_url": "/index.php",
-    "background_color": "#6777ef",
+    "background_color": "#000000",
     "description": "Aplikasi Arsip Keuangan",
     "display": "fullscreen",
-    "theme_color": "#6777ef",
+    "theme_color": "#6b0202",
     "icons": [
         {
             "src": "logo.png",

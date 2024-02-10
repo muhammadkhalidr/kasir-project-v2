@@ -342,7 +342,7 @@ class PembelianController extends Controller
                 }
             } else {
                 // Stok tidak aktif, proses tidak dilanjutkan
-                $errors[] = 'Bahan ini tidak tersedia untuk stok';
+                $errors[] = 'Bahan ini tidak tersedia untuk di stok';
             }
 
             $processIdGenerate[] = ['id_generate' => $data['id_generate'][$key], 'nopembelian' => $value];
@@ -463,7 +463,7 @@ class PembelianController extends Controller
 
         $pembelian = $pembelianQuery->get();
         $user = Auth::user();
-        $total = DetailPembelian::select('total')->sum('total');
+        $total = DetailPembelian::select('subtotal')->sum('subtotal');
         $setting = Setting::first();
 
         return view('pembelian.print', [

@@ -65,7 +65,7 @@
                             <form method="get" action="{{ url('orderan') }}" id="searchForm">
                                 @csrf
                                 <input type="text" class="form-control" name="searchdata" id="searchInput"
-                                    placeholder="Search..." />
+                                    placeholder="Search..." value="{{ request('searchdata') }}" />
                             </form>
                             <button class="btn btn-danger ml-2" id="clear">Clear</button>
                         </div>

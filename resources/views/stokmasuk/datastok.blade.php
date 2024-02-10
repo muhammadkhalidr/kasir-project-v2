@@ -15,7 +15,7 @@
                                 <span class="icon text-white-50">
                                     <i class="fa fa-plus fa-fw"></i>
                                 </span>
-                                <a href="pembelian">Tambah Stok</a>
+                                <a href="pembelian" class="text-white">Tambah Stok</a>
                             </button>
                         </div>
 
@@ -63,7 +63,7 @@
                                     <th>Bahan</th>
                                     <th>Stok Masuk</th>
                                     <th>Stok Keluar</th>
-                                    <th>Total Stok</th>
+                                    <th>Sisa Stok</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,14 +75,8 @@
                                         <td>{{ $index + $stokMasuk->firstItem() }}</td>
                                         <td>{{ $item->bahans->bahan }}</td>
                                         <td>{{ $item->jumlah }}</td>
-                                        <td>
-                                            @if (isset($stokKeluar[$index]))
-                                                {{ $stokKeluar[$index]->jumlah }}
-                                            @else
-                                                0
-                                            @endif
-                                        </td>
-                                        <td>{{ $item->jumlah - (isset($stokKeluar[$index]) ? $stokKeluar[$index]->jumlah : 0) }}
+                                        <td>{{ $item->stokkeluars->sum('jumlah') }} </td>
+                                        <td>{{ $item->jumlah - $item->stokkeluars->sum('jumlah') }}
                                         </td>
                                     </tr>
                                 @endforeach

@@ -212,6 +212,7 @@
                 <td align="center" style="width:5%!important">Jenis</td>
                 <td align="center" style="width:5%!important">Jumlah</td>
                 <td style="width:5%!important;text-align:right">Nominal</td>
+                <td style="width:5%!important;text-align:right">Total</td>
                 <td align="center" style="width:5%!important">Tanggal</td>
             </tr>
             @foreach ($pembelian as $item)
@@ -220,6 +221,7 @@
                     <td class="border">{{ $item->jenisp->nama_jenis }}</td>
                     <td align="center" class="border">{{ $item->jumlah }}</td>
                     <td class="border" align="right">{{ formatRupiah($item->total, true) }}</td>
+                    <td class="border" align="right">{{ formatRupiah($item->subtotal, true) }}</td>
                     <td class="border" align="center">{{ $item->created_at }}</td>
                 </tr>
             @endforeach
@@ -232,7 +234,7 @@
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
-                <td class="total1" style="width:12%">Total</td>
+                <td class="total1" style="width:12%">Sub Total</td>
                 <td class="total2" style="width:19%">{{ formatRupiah($total, true) }}</td>
             </tr>
         </table>

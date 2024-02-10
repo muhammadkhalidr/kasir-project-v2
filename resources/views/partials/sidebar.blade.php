@@ -31,7 +31,7 @@
                             <i class="icon-notebook menu-icon"></i><span class="nav-text">Bahan & Stok</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ url('bahan') }}">Jenis Bahan</a></li>
+                            <li><a href="{{ url('bahan') }}">Data Bahan</a></li>
                             <li><a href="{{ url('kategori') }}">Kategori</a></li>
                             <li><a href="{{ url('datastok') }}">Data Stok</a></li>
                             <li><a href="{{ url('stokmasuk') }}">Stok Masuk</a></li>

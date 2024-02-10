@@ -96,7 +96,7 @@
                             <div class="form-group">
                                 <label for="caraBayar{{ $bayar->notrx }}">Pilih Cara Bayar:</label>
                                 <select class="form-control caraBayar" data-notrx="{{ $bayar->notrx }}" name="caraBayar">
-                                    <option value="tunai">Tunai</option>
+                                    <option value="888">Tunai</option>
                                     <option value="transfer">Transfer Bank</option>
                                 </select>
                             </div>

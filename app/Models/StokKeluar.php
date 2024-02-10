@@ -14,7 +14,7 @@ class StokKeluar extends Model
 
     public function stokmasuks()
     {
-        return $this->belongsTo(StokMasuk::class, 'id_stok_masuk');
+        return $this->belongsTo(StokMasuk::class, 'id_bahan');
     }
 
     public function bahans()

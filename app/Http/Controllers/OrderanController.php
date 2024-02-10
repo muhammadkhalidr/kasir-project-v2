@@ -15,6 +15,7 @@ use App\Models\Rekening;
 use App\Models\Satuan;
 use App\Models\setting;
 use App\Models\StokKeluar;
+use App\Models\StokMasuk;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -216,6 +217,13 @@ class OrderanController extends Controller
         foreach ($data['idpelanggan'] as $key => $value) {
             $status = ($data['sisa'] == 0) ? 'Lunas' : 'Belum Lunas';
 
+            $idStokMasuk = StokMasuk::with(['bahans', 'stokkeluars'])
+                ->whereHas('bahans', function ($query) use ($data, $key) {
+                    $query->where('id', $data['idbahan'][$key]);
+                })
+                ->latest('id')
+                ->first();
+
             // Tentukan nilai uang muka
             $uangMuka = !empty($data['uangmuka']) ? str_replace('.', '', $data['uangmuka']) : 0;
 
@@ -257,7 +265,7 @@ class OrderanController extends Controller
             $jenisBahan = JenisBahan::find($data['idbahan'][$key]);
             if ($jenisBahan && $jenisBahan->stok === 'Y') {
                 StokKeluar::create([
-                    'id_stok_masuk' => 100,
+                    'id_stok_masuk' => $idStokMasuk->id,
                     'id_bahan' => $data['idbahan'][$key],
                     'notrx' => $data['notrx'][$key],
                     'jumlah' => $data['jumlah'][$key],

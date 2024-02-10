@@ -6,6 +6,7 @@ use App\Models\StokMasuk;
 use App\Http\Requests\StoreStokMasukRequest;
 use App\Http\Requests\UpdateStokMasukRequest;
 use App\Models\StokKeluar;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StokMasukController extends Controller
@@ -17,12 +18,22 @@ class StokMasukController extends Controller
     {
     }
 
-    public function dataStok()
+    public function dataStok(Request $request)
     {
         $user = Auth::user();
-        $stokMasuk = StokMasuk::with('bahans')->paginate(10);
-        $stokKeluar = StokKeluar::with('bahans')->paginate(10);
 
+
+        // dd($idStokMasuk);
+
+        // $stokMasuk = StokMasuk::with(['bahans', 'stokkeluars'])->paginate(10);
+        $stokMasuk = StokMasuk::selectRaw('MAX(id) as id, id_bahan, SUM(jumlah) as jumlah')
+            ->with(['bahans', 'stokkeluars'])
+            ->groupBy('id_bahan')
+            ->paginate(10);
+
+        // dd($stokMasuk);
+
+        $stokKeluar = StokKeluar::with(['bahans', 'stokmasuks'])->paginate(10);
         return view('stokmasuk.datastok', [
             'title' => 'Data Stok',
             'name_user' => $user->name,

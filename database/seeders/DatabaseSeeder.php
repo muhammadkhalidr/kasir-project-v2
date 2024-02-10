@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(JenisPengeluaranSeeder::class);
         $this->call(KaryawanSeeder::class);
         $this->call(KategoriSeeder::class);
-        $this->call(BahanSeeder::class);
+        // $this->call(BahanSeeder::class);
         $this->call(SatuanSeeder::class);
 
         // Jika Anda juga ingin menjalankan factory atau seeder bawaan Laravel, Anda dapat mengaktifkannya di sini.

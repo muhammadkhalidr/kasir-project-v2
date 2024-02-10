@@ -65,7 +65,7 @@
                                              <td class="col-12 col-md-1">
                                                  <div class="form-group p-0 m-0">
                                                      <input type="text" class="form-control input-default bahan"
-                                                         id="bahan" name="bahan[]" />
+                                                         id="bahan" name="bahan[]" placeholder="Cari Bahan" />
                                                      <input type="hidden" id="idBahanSelected" name="id_bahan[]" />
                                                  </div>
                                              </td>
@@ -73,7 +73,7 @@
                                              <td class="col-12 col-md-1">
                                                  <div class="form-group p-0 m-0">
                                                      <input type="text" class="form-control input-default jenisakun"
-                                                         id="jenisakun" name="jenis[]" />
+                                                         id="jenisakun" name="jenis[]" placeholder="Cari Jenis Akun" />
 
                                                      <input type="hidden" id="idJenis" name="id_jenis[]" />
                                                  </div>
@@ -81,7 +81,7 @@
                                              <td class="col-12 col-md-1">
                                                  <div class="form-group p-0 m-0">
                                                      <input type="text" class="form-control input-default supplier"
-                                                         id="supplier" name="supplier[]" />
+                                                         id="supplier" name="supplier[]" placeholder="Cari Supplier" />
 
                                                      <input type="hidden" id="idSupplier" name="id_supplier[]" />
 
