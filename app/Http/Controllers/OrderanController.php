@@ -123,12 +123,6 @@ class OrderanController extends Controller
         ]);
     }
 
-    public function getBahanByCategory($id_kategori)
-    {
-        $dataBahan = JenisBahan::where('id_kategori', $id_kategori)->get();
-
-        return response()->json($dataBahan);
-    }
     public function searchProduct(Request $request)
     {
         if ($request->ajax()) {
@@ -148,6 +142,14 @@ class OrderanController extends Controller
                 'bahans' => $bahans
             ])->render();
         }
+    }
+
+
+    public function getBahanByCategory($id_kategori)
+    {
+        $dataBahan = JenisBahan::with(['stokkeluars', 'stoks'])->where('id_kategori', $id_kategori)->get();
+
+        return response()->json($dataBahan);
     }
 
     public function cariProdukAjax()
@@ -172,12 +174,31 @@ class OrderanController extends Controller
             $judul = $request->input('judul');
             $produk = Produk::with('bahans')->where("judul", $judul)->first();
 
+            // Check if product exists
+            if (!$produk) {
+                return response()->json(['error' => 'Produk tidak ditemukan']);
+            }
+
+            // Check if bahan status is active
+            if ($produk->bahans->stok === "Y") {
+                // Check stok bahan
+                $idBahan = $produk->id_bahan;
+                $stokMasuk = StokMasuk::where('id_bahan', $idBahan)->sum('jumlah');
+                $stokKeluar = StokKeluar::where('id_bahan', $idBahan)->sum('jumlah');
+                $totalStok = $stokMasuk - $stokKeluar;
+
+                if ($totalStok <= 0) {
+                    return response()->json(['error' => 'Stok kosong']);
+                }
+            }
+
             return response()->json($produk);
         } catch (\Exception $e) {
             Log::error('Error in getDataProduk: ' . $e->getMessage());
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
+
 
     public function cariData(Request $request)
     {
@@ -509,6 +530,11 @@ class OrderanController extends Controller
         $omset = OmsetPenjualan::where('notrx', $notrx);
         if ($omset) {
             $omset->delete();
+        }
+        // Delete data dari Stok Keluar tabel
+        $stokkeluar = StokKeluar::where('notrx', $notrx);
+        if ($stokkeluar) {
+            $stokkeluar->delete();
         }
 
         return redirect('orderan')->with('success', 'Data Berhasil Dihapus!');

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('stok_masuks', function (Blueprint $table) {
             $table->id();
+            $table->string('id_generate');
             $table->integer('id_bahan');
             $table->integer('jumlah');
             $table->string('keterangan');

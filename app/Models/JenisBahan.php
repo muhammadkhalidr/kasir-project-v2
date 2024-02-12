@@ -38,4 +38,9 @@ class JenisBahan extends Model
     {
         return $this->hasMany(StokMasuk::class, 'id_bahan');
     }
+
+    public function stokkeluars()
+    {
+        return $this->hasMany(StokKeluar::class, 'id_bahan');
+    }
 }

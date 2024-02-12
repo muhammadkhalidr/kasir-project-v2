@@ -309,6 +309,34 @@ class PembelianController extends Controller
                 if ($saldo <= 0 || $saldo < $subtotal) {
                     $errors[] = 'Saldo ' . $namaMetode . ' Tidak Cukup!';
                 } else {
+                    // Cari stok masuk dengan id_bahan dan id_generate yang sama
+                    $existingStokMasuk = StokMasuk::where('id_bahan', $data['id_bahan'][$key])
+                        ->first();
+
+                    if ($existingStokMasuk) {
+                        // Update jumlah jika stok masuk dengan id_bahan dan id_generate yang sama sudah ada
+                        $existingStokMasuk->jumlah += $data['jumlah'][$key];
+                        $existingStokMasuk->save();
+                    } else {
+                        // Buat stok masuk baru
+                        $stokMasuk = new StokMasuk;
+                        $stokMasuk->id_generate = $data['id_generate'][$key];
+                        $stokMasuk->id_bahan = $data['id_bahan'][$key];
+                        $stokMasuk->jumlah = $data['jumlah'][$key];
+                        $stokMasuk->keterangan = $data['keterangan'][$key];
+                        $stokMasuk->save();
+                    }
+
+                    // Menambahkan data ke tabel kasmasuk
+                    $kasMasuk = new KasMasuk;
+                    $kasMasuk->id_generate = $data['id_generate'][$key];
+                    $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank');
+                    $kasMasuk->name_kasir = $user->name;
+                    $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
+                    $kasMasuk->bank = $id_bank[0];
+                    $kasMasuk->save();
+
+                    // Menambahkan data ke tabel detailpembelian
                     $detailPembelian = new DetailPembelian;
                     $detailPembelian->id_pembelian_generate = $data['nopembelian'][$key];
                     $detailPembelian->id_generate = $data['id_generate'][$key];
@@ -323,22 +351,6 @@ class PembelianController extends Controller
                     $detailPembelian->subtotal = str_replace('.', '', $data['totalpembelian']);
                     $detailPembelian->id_user = $user->id;
                     $detailPembelian->save();
-
-                    // Menambahkan data ke tabel kasmasuk
-                    $kasMasuk = new KasMasuk;
-                    $kasMasuk->id_generate = $data['id_generate'][$key];
-                    $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank');
-                    $kasMasuk->name_kasir = $user->name;
-                    $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
-                    $kasMasuk->bank = $id_bank[0];
-                    $kasMasuk->save();
-
-                    // Menambahkan data ke tabel stokmasuk
-                    $stokMasuk = new StokMasuk;
-                    $stokMasuk->id_bahan = $data['id_bahan'][$key];
-                    $stokMasuk->jumlah = $data['jumlah'][$key];
-                    $stokMasuk->keterangan = $data['keterangan'][$key];
-                    $stokMasuk->save();
                 }
             } else {
                 // Stok tidak aktif, proses tidak dilanjutkan
@@ -356,6 +368,7 @@ class PembelianController extends Controller
         // Redirect dengan pesan sukses
         return redirect('pembelian')->with('success', 'Data Berhasil Ditambahkan!');
     }
+
 
 
     /**
@@ -398,12 +411,20 @@ class PembelianController extends Controller
     {
         $datas = DetailPembelian::where('id_pembelian_generate', $id_pembelian_generate)->get();
 
-        foreach ($datas as $data) {
-            $kasMasuk = KasMasuk::where('id_generate', $data->id_generate)->get();
-            $data->delete();
+        foreach ($datas as $kas) {
+            $kasMasuk = KasMasuk::where('id_generate', $kas->id_generate)->get();
+            $kas->delete();
 
             foreach ($kasMasuk as $kas) {
                 $kas->delete();
+            }
+        }
+        foreach ($datas as $s) {
+            $stok = StokMasuk::where('id_generate', $s->id_generate)->get();
+            $s->delete();
+
+            foreach ($stok as $s) {
+                $s->delete();
             }
         }
 

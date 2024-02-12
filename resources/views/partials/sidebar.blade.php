@@ -14,7 +14,7 @@
                             <i class="icon-basket menu-icon"></i><span class="nav-text">Data Transaksi</span>
                         </a>
                     </li>
-                    <li class="nav-label">Produk</li>
+                    <hr>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-handbag menu-icon"></i><span class="nav-text">Data Produk</span>
@@ -25,7 +25,6 @@
                             <li><a href="{{ url('supplier') }}">Supplier</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Bahan & Stok</li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-notebook menu-icon"></i><span class="nav-text">Bahan & Stok</span>
@@ -38,7 +37,6 @@
                             <li><a href="{{ url('stokkeluar') }}">Stok Keluar</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Laporan</li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-book-open menu-icon"></i><span class="nav-text">Laporan</span>
@@ -53,7 +51,6 @@
                             <li><a href="{{ url('aktifitas') }}">Log Transaksi</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Keuangan</li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-wallet menu-icon"></i><span class="nav-text">Data Keuangan</span>
@@ -63,7 +60,6 @@
                             <li><a href="{{ url('kas') }}">Data Kas</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Karyawan</li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-people menu-icon"></i><span class="nav-text">Karyawan</span>
@@ -76,13 +72,11 @@
                         </ul>
                     </li>
 
-                    <li class="nav-label">Pelanggan</li>
                     <li>
                         <a href="{{ url('pelanggan') }}" aria-expanded="false">
                             <i class="icon-user-follow menu-icon"></i><span class="nav-text">Data Pelanggan</span>
                         </a>
                     </li>
-                    <li class="nav-label">Pengaturan</li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-settings menu-icon"></i><span class="nav-text">Pengaturan</span>

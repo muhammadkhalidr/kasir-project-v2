@@ -654,7 +654,24 @@
             },
             async: false,
             success: function(response) {
-                result = response;
+                if (response.error) {
+                    // alert(response.error); // Tampilkan pesan error jika ada
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan.!!',
+                        text: response.error,
+                    })
+                    return; // Berhenti dan tidak melanjutkan eksekusi
+                }
+
+                // Cek status bahan
+                if (response.bahans.status === "Y") {
+                    // Lanjutkan dengan memeriksa stok jika status bahan aktif
+                    result = response;
+                } else {
+                    alert("Stok bahan tidak aktif"); // Tampilkan pesan jika status bahan tidak aktif
+                    return; // Berhenti dan tidak melanjutkan eksekusi
+                }
             },
             error: function() {
                 console.error("Error fetching data for " + judul);
@@ -662,6 +679,7 @@
         });
         return result;
     }
+
 
     function masukkanProduk($data, $form) {
         if ($data && $form) {

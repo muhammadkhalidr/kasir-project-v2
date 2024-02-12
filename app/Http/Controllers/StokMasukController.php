@@ -22,22 +22,17 @@ class StokMasukController extends Controller
     {
         $user = Auth::user();
 
-
-        // dd($idStokMasuk);
-
         // $stokMasuk = StokMasuk::with(['bahans', 'stokkeluars'])->paginate(10);
         $stokMasuk = StokMasuk::selectRaw('MAX(id) as id, id_bahan, SUM(jumlah) as jumlah')
             ->with(['bahans', 'stokkeluars'])
             ->groupBy('id_bahan')
             ->paginate(10);
 
-        // dd($stokMasuk);
-
         $stokKeluar = StokKeluar::with(['bahans', 'stokmasuks'])->paginate(10);
         return view('stokmasuk.datastok', [
             'title' => 'Data Stok',
             'name_user' => $user->name,
-            'stokMasuk' => $stokMasuk, // Mengubah 'datas' menjadi 'stokMasuk' untuk konsistensi
+            'stokMasuk' => $stokMasuk,
             'stokKeluar' => $stokKeluar,
         ]);
     }

@@ -28,17 +28,19 @@
                                                             autocomplete="off" readonly>
                                                     </h5>
                                                     <div class="d-flex ">
-                                                        <div class="btn-group" role="group">
+                                                        <div class="btn-sm" role="group">
                                                             <button type="button" data-toggle="modal"
                                                                 data-target="#pelangganModal" title="Cari pelanggan"
-                                                                class="btn btn-primary btn-sm cari flat"
-                                                                id="cariP"><i
-                                                                    class="fa fa-search fa-1x"></i>[F2]</button>
+                                                                class="btn btn-primary btn-sm cari flat mb-1"
+                                                                id="cariP"><i class="fa fa-search fa-1x"></i>Cari
+                                                                Pelanggan[F2]</button>
                                                             <button type="button" data-toggle="modal"
                                                                 data-target="#tambahPelangganModal"
                                                                 title="Cari pelanggan"
-                                                                class="btn btn-info btn-sm cari flat" id="tambahP"><i
-                                                                    class="fa fa-user-plus fa-1x"></i>[F4]</button>
+                                                                class="btn btn-info btn-sm cari flat mt-1"
+                                                                id="tambahP"><i
+                                                                    class="fa fa-user-plus fa-1x"></i>Tambah
+                                                                Pelanggan[F4]</button>
                                                         </div>
                                                     </div>
                                                 </div>
