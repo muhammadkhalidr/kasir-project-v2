@@ -28,6 +28,8 @@ use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StokMasukController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UpdateController;
+use App\Http\Controllers\WarnaTemaController;
 use App\Models\DetailPembelian;
 use App\Models\JenisBahan;
 use App\Models\Satuan;
@@ -267,6 +269,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/tescode', function () {
     return view('tescode');
 });
+
+Route::get('tescode2', [WarnaTemaController::class, 'index']);
 
 Route::get('/cek', [OrderanController::class, 'cek']);
 

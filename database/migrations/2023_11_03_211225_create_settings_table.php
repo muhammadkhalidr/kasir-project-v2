@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('settings', function (Blueprint $table) {
+            $table->id();
             $table->integer('id_setting')->nullable()->autoIncrements();
             $table->string('perusahaan', 50)->nullable();
             $table->string('alamat', 255)->nullable();
@@ -20,6 +21,8 @@ return new class extends Migration
             $table->string('instagram', 50)->nullable();
             $table->string('logo', 255)->nullable();
             $table->string('favicon', 255)->nullable();
+            $table->string('warnatema', 255)->nullable();
+            $table->enum('demo', ['Y', 'N'])->default('Y');
             $table->timestamps();
         });
     }

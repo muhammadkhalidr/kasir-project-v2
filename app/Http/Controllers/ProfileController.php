@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use App\Http\Requests\StoreProfileRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Models\setting;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +67,13 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
+        $demoMode = setting::where('demo', 'Y')->first(); // Ambil pengaturan mode demo
+
+        if ($demoMode) {
+            // Jika mode demo adalah 'Y', tampilkan pesan dan tidak izinkan pembaruan data
+            return redirect()->route('profile.index')->with('error', 'Pembaruan data tidak diizinkan dalam mode demo');
+        }
+
         if ($request->has('passwordLama')) {
             // Logika untuk mengubah password
             $validatedData = $request->validate([
@@ -111,6 +119,7 @@ class ProfileController extends Controller
             return redirect()->route('profile.index')->with('success', 'Data berhasil diperbarui');
         }
     }
+
 
 
     /**

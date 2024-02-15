@@ -1,7 +1,7 @@
-@extends('jbahan.index')
+@extends('produk.index')
 
 @section('judul')
-    <h4>Jenis Bahan</h4>
+    <h4>Data Produk</h4>
 @endsection
 
 @section('content')

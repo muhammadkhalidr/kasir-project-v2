@@ -99,6 +99,7 @@ class JenisBahanController extends Controller
 
         $data->bahan = $request->bahan;
         $data->status = $request->status;
+        $data->stok = $request->stok;
         $data->id_kategori = $request->kategori;
         $data->save();
 

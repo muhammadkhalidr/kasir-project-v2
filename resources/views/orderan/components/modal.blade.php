@@ -208,8 +208,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary simpanTransaksi"
-                                id="submitBtn">Simpan</button>
+                            <button type="button" class="btn btn-primary simpanTransaksi" id="submitBtn"
+                                onclick="simpanOrderan()">Simpan</button>
                             <button type="button" class="btn btn-success" data-toggle="modal"
                                 data-target="#bayarDpModal">Bayar</button>
                         </div>

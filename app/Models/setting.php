@@ -9,6 +9,7 @@ class setting extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id_setting'];
     protected $settings;
     protected $primaryKey = 'id_setting';
 

@@ -29,6 +29,7 @@ class SettingSeeder extends Seeder
             'pesan' => 'Pemesanan Dapat di Akses Melalui Web Resmi Kami, www.khalidr.my.id',
             'logo_lunas' => 'logo-lunas.png',
             'logo_blunas' => 'logo-blunas.png',
+            'warnatema' => '#840808',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);

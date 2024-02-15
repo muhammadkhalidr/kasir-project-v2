@@ -89,6 +89,20 @@
                                     </div>
                                     <button class="btn login-form__btn submit w-100">Login</button>
                                 </form>
+                                <h4 class="text-center">Akun Demo</h4>
+                                <hr>
+                                <h6 class="text-center">Owner</h6>
+                                <ul class="list-unstyled text-center">
+                                    <li>Username : admin</li>
+                                    <li>Password : 12345</li>
+                                </ul>
+                                <hr>
+                                <h6 class="text-center">Kasir</h6>
+                                <ul class="list-unstyled text-center">
+                                    <li>Username : kasir</li>
+                                    <li>Password : 12345</li>
+                                </ul>
+                                <hr>
                             </div>
                         </div>
                     </div>

@@ -13,6 +13,6 @@ class PelangganSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Pelanggan::factory(10)->create();
+        \App\Models\Pelanggan::factory(500)->create();
     }
 }

@@ -192,7 +192,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editJenisBahan">Edit Jenis Bahan</h5>
+                        <h5 class="modal-title" id="editJenisBahan">Edit Bahan</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -214,6 +214,18 @@
 
                                     @foreach ($kategori as $kat)
                                         <option value="{{ $kat->id }}">{{ $kat->kategori }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="stok">Stok</label>
+                                <select name="stok" id="stok" class="form-control">
+                                    @php
+                                        $stok = ['Y' => 'Aktif', 'N' => 'Tidak Aktif'];
+                                    @endphp
+                                    @foreach ($stok as $key => $value)
+                                        <option value="{{ $key }}" {{ $item->stok == $key ? 'selected' : '' }}>
+                                            {{ $value }}</option>
                                     @endforeach
                                 </select>
                             </div>

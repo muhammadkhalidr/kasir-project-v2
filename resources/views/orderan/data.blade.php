@@ -776,25 +776,65 @@
     });
 </script>
 <script>
-    function validateForm() {
-        var namaPemesan = document.getElementById('pemesan').value;
+    // function validateForm() {
+    //     var namaPemesan = document.getElementById('pemesan').value;
 
-        if (namaPemesan.trim() === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Peringatan!!',
-                text: 'Nama pemesan tidak boleh kosong',
-                timer: 2000,
-                timerProgressBar: true,
-                showConfirmButton: false
-            });
-            return false;
+    //     if (namaPemesan.trim() === '') {
+    //         Swal.fire({
+    //             icon: 'warning',
+    //             title: 'Peringatan!!',
+    //             text: 'Nama pemesan tidak boleh kosong',
+    //             timer: 2000,
+    //             timerProgressBar: true,
+    //             showConfirmButton: false
+    //         });
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
+    // var submitButton = document.getElementById('submitBtn');
+    // submitButton.addEventListener('click', function() {
+    //     validateForm()
+    // });
+
+    function simpanOrderan() {
+        // Mendapatkan semua elemen input dalam form
+        var inputs = document.getElementById('formTransaksi').getElementsByTagName('input');
+        var isFormComplete = true;
+
+        // Memeriksa apakah semua input (kecuali uangmuka) telah diisi
+        for (var i = 0; i < inputs.length; i++) {
+            // Skip input dengan nama "uangmuka"
+            if (inputs[i].name === 'uangmuka') continue;
+
+            if (inputs[i].value === '') {
+                isFormComplete = false;
+                break;
+            }
         }
-        return true;
-    }
 
-    var submitButton = document.getElementById('submitBtn');
-    submitButton.addEventListener('click', function() {
-        validateForm()
-    });
+        // Jika form belum lengkap, tampilkan pesan
+        if (!isFormComplete) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Peringatan..!!',
+                text: 'Mohon lengkapi semua kolom sebelum menyimpan transaksi.'
+            });
+            return; // Menghentikan proses selanjutnya
+        }
+
+        // Jika form lengkap, tampilkan konfirmasi
+        Swal.fire({
+            icon: 'warning',
+            title: 'Apakah anda yakin ingin menyimpan transaksi?',
+            showDenyButton: true,
+            confirmButtonText: 'Ya',
+            denyButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('formTransaksi').submit();
+            }
+        });
+    }
 </script>

@@ -75,7 +75,11 @@
                                     <textarea name="footer_invoice" id="" cols="30" rows="10" class="form-control text-center">{{ $item->pesan }}
                                     </textarea>
                                 </div>
-
+                                <div class="form-group">
+                                    <label for="warnatema">Warna Tema</label>
+                                    <input type="color" name="warnatema" class="form-control"
+                                        value="{{ $item->warnatema }}">
+                                </div>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>
                         @endforeach

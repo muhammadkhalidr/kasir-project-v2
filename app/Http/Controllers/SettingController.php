@@ -155,11 +155,11 @@ class SettingController extends Controller
         }
 
         $data->pesan = $request->footer_invoice;
+        $data->warnatema = $request->warnatema;
         $data->save();
 
         return redirect('setting')->with('success', 'Data Berhasil Di-perbarui!');
     }
-
 
     /**
      * Remove the specified resource from storage.

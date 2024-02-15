@@ -90,7 +90,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   --white: #fff;
   --gray: #f7fafc;
   --gray-dark: #333333;
-  --primary: #730101;
+  --primary: #7571f9;
   --primary2: #7571f9;
   --secondary: #9097c4;
   --success: #6fd96f;
@@ -14022,7 +14022,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
 
 .login-form__btn.submit {
   padding: 15px 40px;
-  background: #8e0000;
+  background: var(--primary);
   font-weight: 700;
 }
 
@@ -20434,7 +20434,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 }
 
 [data-nav-headerbg="color_1"] .nav-header {
-  background-color: #840808;
+  background-color: var(--primary);
 }
 
 [data-nav-headerbg="color_2"] .nav-header {
@@ -21579,7 +21579,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 }
 
 .input-group-text {
-  background-color: #8e0000;
+  background-color: var(--primary);
   color: white;
 }
 
