@@ -65,6 +65,7 @@ class OrderanController extends Controller
 
         $dataOrderan = $dataOrderan
             ->select('id_transaksi', 'namabarang', 'keterangan', 'ukuran', 'bahan', 'satuan', 'subtotal', 'sisa', 'status', 'name_kasir', 'id_pelunasan', 'notrx', 'id_pelanggan', 'id_produk', 'id_bahan', 'jumlah', 'harga', 'total', 'created_at')
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
 
@@ -118,7 +119,7 @@ class OrderanController extends Controller
             'jamTransaksi' => $jamTransaksi,
             'dataBahan' => $dataBahan,
             'satuan' => $satuan,
-            'perPageOptions' => [10, 15, 25, 100],
+            'perPageOptions' => [10, 15, 25, 100, 500],
 
         ]);
     }
