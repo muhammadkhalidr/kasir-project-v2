@@ -392,6 +392,7 @@ class OrderanController extends Controller
         $pelunasan = PelunasanOrderan::create([
             'notrx' => $request->input('notrx'),
             'total_bayar' => $jumlahBayar,
+            'keterangan' => $request->input('note'),
             'bank' => $caraBayar === '888' ? '888' : $via,
             'via' => $via,
             'id_bayar' => auth()->user()->id,
@@ -559,6 +560,7 @@ class OrderanController extends Controller
             }
         }
 
+        // dd($via);
         $logo = setting::all();
         $rekening = Rekening::all();
 

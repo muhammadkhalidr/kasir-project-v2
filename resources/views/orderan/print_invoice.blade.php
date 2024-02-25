@@ -13,20 +13,26 @@
     <title>INVOICE #{{ $notrx }}</title>
 
     <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
         body {
             margin: 0;
             padding: 0;
             background: #ffff;
-            size: A4 portrait;
         }
 
         .container {
             width: 100%;
-            max-width: 21cm;
-            /* A4 width */
+            max-width: 29.7cm;
+            /* A4 width in landscape */
             margin: 0 auto;
             padding: 20px;
             box-sizing: border-box;
+            overflow: hidden;
+            /* Potong konten jika melebihi A4 */
         }
 
         .invoice {
@@ -280,7 +286,7 @@
                                 </div>
                             </div>
                             <div class="invoice-price-right">
-                                <small>TOTAL</small> <span class="f-w-600">Rp.
+                                <small>SUB TOTAL</small> <span class="f-w-600">Rp.
                                     {{ number_format($orderanGroup->first()->subtotal, 0, ',', '.') }}</span>
                             </div>
                         </div>
@@ -304,6 +310,24 @@
                     <!-- end invoice-content -->
                     <!-- begin invoice-note -->
                     <div class="invoice-note">
+                        @php
+                            $counter = 1;
+                        @endphp
+
+                        @foreach ($via as $cicil)
+                            @php
+                                $total_bayar_float = floatval($cicil->total_bayar);
+                            @endphp
+                            @if ($total_bayar_float > 0)
+                                <h6>Bayar Ke-{{ $counter }}: {{ formatRupiah($total_bayar_float, true) }} | Via:
+                                    {{ $cicil->bank == 1 ? 'Bank' : 'Tunai' }}<p>Ket: {{ $cicil->keterangan }}</p>
+                                </h6>
+                                @php
+                                    $counter++;
+                                @endphp
+                            @endif
+                        @endforeach
+
                         <h6>
                             @if ($via->first() == null)
                                 PEMBAYARAN : BELUM ADA PEMBAYARAN

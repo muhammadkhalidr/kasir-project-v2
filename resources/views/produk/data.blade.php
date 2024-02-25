@@ -38,18 +38,6 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
-                    <div class="pesan mt-2">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span>
-                                </button> {{ session('success') }}
-                            </div>
-                        @endif
-                    </div>
-
-
                     <div class="row">
                         <div class="col-12">
                             <div class="row">

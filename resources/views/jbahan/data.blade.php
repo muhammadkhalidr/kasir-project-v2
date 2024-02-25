@@ -1,7 +1,7 @@
 @extends('jbahan.index')
 
 @section('judul')
-    <h4>Jenis Bahan</h4>
+    <h4>Data Bahan</h4>
 @endsection
 
 @section('content')
@@ -55,17 +55,6 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
-                    <div class="pesan mt-2">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span>
-                                </button> {{ session('success') }}
-                            </div>
-                        @endif
-                    </div>
-
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead>
@@ -165,7 +154,6 @@
                                 <option value="Y">Ya</option>
                                 <option value="N" selected>Tidak</option>
                             </select>
-                            <span class="text-danger text-italic mt-2">Jika tidak ada stok, pilih tidak</span>
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>

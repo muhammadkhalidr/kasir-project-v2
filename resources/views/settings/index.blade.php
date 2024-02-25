@@ -77,6 +77,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="warnatema">Warna Tema</label>
+                                    <span class="text-italic text-danger">Saat ini belum bisa di gunakan.</span>
                                     <input type="color" name="warnatema" class="form-control"
                                         value="{{ $item->warnatema }}">
                                 </div>

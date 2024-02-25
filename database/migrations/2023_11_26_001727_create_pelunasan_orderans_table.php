@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('notrx');
             $table->string('total_bayar');
-            $table->timestamps();
-
+            $table->text('keterangan')->nullable();
             $table->string('bank')->nullable();
             $table->string('bukti_transfer')->nullable();
             $table->integer('id_bayar')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -221,7 +221,6 @@
         </div>
     </div>
 
-
     @include('orderan.components.modal')
 
     <!-- #/ container -->
@@ -716,7 +715,6 @@
         $('#btnTambahProduk').click(function() {
             var judul = $('#cari_produk').val();
             var data = getDataProduk(judul);
-            $(".form-transaksi").show();
             $("#footer-form").show();
 
             if (data) {
@@ -763,8 +761,6 @@
                         // Sisipkan form baru setelah form terakhir
                         $(".form-transaksi:last").after(newForm);
 
-                        // Hapus form asli setelah form baru ditambahkan
-                        $(".form-transaksi:first").hide();
                     },
                     error: function() {
                         console.error("Error fetching data bahan for id_kategori " +
@@ -788,7 +784,7 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Peringatan!!',
-                    text: 'Minimal ada 1 form transaksi',
+                    text: 'Minimal harus ada 1 form transaksi',
                     timer: 2000,
                     timerProgressBar: true,
                     showConfirmButton: false
@@ -860,4 +856,19 @@
             }
         });
     }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let inputs = document.querySelectorAll(".input-lebar");
+
+        inputs.forEach(function(input) {
+            input.addEventListener("focus", function() {
+                this.style.width = "150%";
+            });
+
+            input.addEventListener("blur", function() {
+                this.style.width = "100%";
+            });
+        });
+    });
 </script>
