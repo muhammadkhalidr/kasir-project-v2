@@ -9,6 +9,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardKeuanganController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\GajiKaryawanController;
@@ -158,6 +159,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Piutang Penjualan
         Route::get('/piutang', [PiutangController::class, 'index']);
         Route::get('print-piutang', [PiutangController::class, 'printPiutang'])->name('print.piutang');
+        Route::get('/piutang-cari', [PiutangController::class, 'cariPiutang'])->name('piutang.cari');
+
 
         // Rincian Pendapatan
         // Belum ada
@@ -213,6 +216,8 @@ Route::group(['middleware' => ['auth']], function () {
         // Untuk Data Stok
         // Route::resource('stok', StokMasukController::class);
         Route::get('datastok', [StokMasukController::class, 'dataStok'])->name('data.stok');
+
+        Route::get('/dashboard-keuangan', [DashboardKeuanganController::class, 'index']);
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------

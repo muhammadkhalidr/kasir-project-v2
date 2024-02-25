@@ -106,6 +106,7 @@
                                             <option value="0"> Pilih Role Pengguna</option>
                                             <option value="2">Admin</option>
                                             <option value="3">Kasir</option>
+                                            <option value="4">Keuangan</option>
                                         </select>
                                     </div>
                                 </div>

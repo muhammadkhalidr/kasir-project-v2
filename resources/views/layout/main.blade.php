@@ -18,8 +18,8 @@
 
     <div class="container-fluid mt-3">
         @yield('judul')
-        <marquee behavior="" direction="" class="label label-dark" id="jam">Selamat Datang di Website Sistem
-            Arsip Keuangan | {{ env('APP_NAME') }}
+        <marquee behavior="" direction="" class="label label-dark" id="jam">Selamat Datang di Website Kasir
+            Percetakan | {{ env('APP_NAME') }}
         </marquee>
         @yield('content')
     </div>

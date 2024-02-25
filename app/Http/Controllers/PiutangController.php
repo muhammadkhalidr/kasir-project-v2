@@ -31,6 +31,40 @@ class PiutangController extends Controller
         ]);
     }
 
+    public function cariPiutang(Request $request)
+    {
+        $user = Auth::user();
+        $data = DetailOrderan::with(['pelanggans', 'pelunasans']);
+        $rekening = Rekening::all();
+        $keterangan = DetailOrderan::select('keterangan', 'notrx')->get();
+
+        // Jika ada parameter 'q' yang dikirim melalui request
+        if ($request->has('q')) {
+            $searchTerm = $request->input('q');
+
+            // Melakukan pencarian berdasarkan 'notrx' pada DetailOrderan
+            // atau 'nama' pada relasi 'pelanggans'
+            $data->where(function ($query) use ($searchTerm) {
+                $query->where('notrx', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('pelanggans', function ($query) use ($searchTerm) {
+                        $query->where('nama', 'like', '%' . $searchTerm . '%');
+                    });
+            });
+        }
+
+        $data = $data->paginate(10);
+
+        return view('piutang.data', [
+            'title' => env('APP_NAME') . ' | ' . 'Data Piutang',
+            'breadcrumb' => 'Piutang',
+            'name_user' => $user->name,
+            'data' => $data,
+            'rekening' => $rekening,
+            'ket' => $keterangan,
+        ]);
+    }
+
+
     public function printPiutang()
     {
         $user = Auth::user();

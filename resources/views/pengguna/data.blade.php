@@ -58,8 +58,25 @@
                                             <th>{{ $data->name }}</th>
                                             <th>{{ $data->email }}</th>
                                             <th>{{ $data->username }}</th>
-                                            <th>{{ $data->level == 1 ? 'Admin' : ($data->level == 3 ? 'Kasir' : 'Owner') }}
+                                            <th>
+                                                @switch($data->level)
+                                                    @case(1)
+                                                        Admin
+                                                    @break
+
+                                                    @case(3)
+                                                        Kasir
+                                                    @break
+
+                                                    @case(4)
+                                                        Keuangan
+                                                    @break
+
+                                                    @default
+                                                        Owner
+                                                @endswitch
                                             </th>
+
                                             <th>
                                                 <form method="POST" action="{{ 'pengguna/' . $data->id }}"
                                                     style="display: inline">

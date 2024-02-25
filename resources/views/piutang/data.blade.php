@@ -1,7 +1,8 @@
 @extends('piutang.index')
 
 @section('judul')
-    <h1>Data Piutang</h1>
+    <h1>
+        Data Piutang</h1>
 @endsection
 
 @section('content')
@@ -11,6 +12,14 @@
                 <div class="card-body">
                     <div class="" style="display:flex; position:relative;float:right;">
                         <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        </div>
+                        <form action="{{ route('piutang.cari') }}" method="GET">
+                            @csrf
+                            <input type="text" class="form-control" name="q" id="searchInput"
+                                placeholder="Search..." value="{{ request()->q }}" />
+                        </form>
+                        <div class="input-group-prepend ml-2">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                         <form method="POST" action="{{ url('orderan.cari') }}" id="searchForm">
@@ -19,7 +28,7 @@
                             <input type="hidden" name="end_date" id="end_date" />
                             <input type="text" class="form-control w-10" name="daterange" />
                         </form>
-                        <button class="btn btn-info" type="button" data-placement="left">
+                        <button class="btn btn-info ml-2" type="button" data-placement="left">
                             <i class="fa fa-file-pdf-o"></i>
                             <a href="{{ route('print.piutang') }}" class="text-white" target="_blank">Print</a>
                         </button>
@@ -51,18 +60,30 @@
                                             <td>{{ $item->notrx }}</td>
                                             <td>{{ $item->pelanggans->nama }}</td>
                                             <td>{{ $item->created_at }}</td>
-                                            <td align="center"><button class="btn btn-sm btn-success text-white"
-                                                    data-toggle="modal" data-target="#detailsModal{{ $item->notrx }}"><i
-                                                        class="fa fa-search"></i></button></td>
+                                            <td>
+                                                <ul>
+                                                    @foreach ($data as $k => $data_item)
+                                                        @if ($data_item->notrx == $item->notrx)
+                                                            <li>{{ $data_item->keterangan }}
+                                                            </li>
+                                                        @endif
+                                                    @endforeach
+                                                </ul>
+                                            </td>
                                             <td>{{ formatRupiah($item->sisa, true) }}</td>
-                                            <td> <button class="btn btn-sm btn-info" title="Pelunasan" data-toggle="modal"
+                                            <td>
+                                                <button class="btn btn-sm btn-info" title="Pelunasan" data-toggle="modal"
                                                     data-target="#pelunasanModal{{ $item->notrx }}">
                                                     <a href="javascript:void(0)" class="text-white">Bayar</a>
-                                                </button></td>
+                                                </button>
+                                            </td>
                                         </tr>
                                     @endif
                                 @endforeach
                             </tbody>
+
+
+
                         </table>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -128,8 +149,8 @@
                                 style="display:none;">
                                 <div class="form-group">
                                     <label for="buktiTransfer{{ $bayar->notrx }}">Bukti Transfer:</label>
-                                    <input type="file" class="form-control-file" id="buktiTransfer{{ $bayar->notrx }}"
-                                        name="buktiTransfer">
+                                    <input type="file" class="form-control-file"
+                                        id="buktiTransfer{{ $bayar->notrx }}" name="buktiTransfer">
                                 </div>
                             </div>
                     </div>

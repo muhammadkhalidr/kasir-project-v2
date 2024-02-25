@@ -230,7 +230,6 @@ class OrderanController extends Controller
         $user = Auth::user();
         $data = $request->all();
         $errors = [];
-
         // Ambil nomor transaksi terbaru dari DetailOrderan
         $latestOrder = DetailOrderan::latest('id')->first();
         $latestTransactionId = ($latestOrder) ? $latestOrder->id_transaksi + 1 : 1;

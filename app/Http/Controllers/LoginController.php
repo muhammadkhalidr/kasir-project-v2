@@ -36,12 +36,24 @@ class LoginController extends Controller
             $request->session()->regenerate();
             $user = Auth::user();
 
-            if ($user->hasRole('admin')) {
-                return redirect()->to('home');
-            } elseif ($user->hasRole('owner')) {
-                return redirect()->to('home');
-            } elseif ($user->hasRole('kasir')) {
-                return redirect()->to('/orderan');
+            // if ($user->hasRole('admin')) {
+            //     return redirect()->to('home');
+            // } elseif ($user->hasRole('owner')) {
+            //     return redirect()->to('home');
+            // } elseif ($user->hasRole('kasir')) {
+            //     return redirect()->to('/orderan');
+            // } elseif ($user->hasRole('keuangan')) {
+            //     return redirect()->to('/dashboard-keuangan');
+            // }
+
+            if ($user->level == 1) {
+                return redirect()->intended('/home');
+            } else if ($user->level == 2) {
+                return redirect()->intended('/home');
+            } else if ($user->level == 3) {
+                return redirect()->intended('/orderan');
+            } else if ($user->level == 4) {
+                return redirect()->intended('/dashboard-keuangan');
             }
 
             return redirect()->intended('/');

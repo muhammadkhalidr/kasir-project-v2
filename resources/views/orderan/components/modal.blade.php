@@ -117,80 +117,92 @@
                             </a>
                         </div>
                     </div>
-
                     <form action="{{ url('orderan') }}" method="POST" id="formTransaksi">
-                        @csrf
-                        <div id="formContainer" class="form-transaksi">
-                            <input type="hidden" class="form-control notrx" name="notrx[]"
-                                value="{{ $notrx }}">
-                            <input type="hidden" value="{{ $name_user }}" name="namakasir">
-                            <div class="row">
-                                <input type="hidden" class="form-control namapemesan" name="namapemesan[]"
-                                    id="pemesan2">
-                                <input type="hidden" class="form-control idpemesan" name="idpelanggan[]">
-                                <input type="hidden" class="form-control id_produk" id="idnya"
-                                    name="idproduk[]">
-                                <input type="hidden" class="form-control id_bahan" id="id_bahan" name="idbahan[]">
-                                <input type="hidden" class="form-control id_kategori">
-                                <div class="col">
-                                    <label for="">Produk</label>
-                                    <input type="text" class="form-control produk" id="produk" name="produk[]"
-                                        required readonly>
-                                </div>
-                                <div class="col">
-                                    <label for="">Keterangan</label>
-                                    <input type="text" class="form-control keterangan" name="keterangan[]"
-                                        required>
-                                </div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>#</th>
+                                <th>Produk</th>
+                                <th>Keterangan</th>
+                                <th>Bahan</th>
+                                <th style="width: 10%">Ukuran</th>
+                                <th style="width: 10%">Qty</th>
+                                <th>Satuan</th>
+                                <th>Harga</th>
+                                <th>Total</th>
+                            </tr>
+                            <tbody>
+                                @csrf
+                                <tr id="formContainer" class="form-transaksi" style="display: none">
+                                    <td>
+                                        <i class="fa fa-lock text-danger"></i>
+                                        <input type="hidden" class="form-control notrx" name="notrx[]"
+                                            value="{{ $notrx }}">
 
-                                <div class="col">
-                                    <label for="">Bahan</label>
-                                    <select name="bahan[]" class="form-control id_bahan" id="bahan">
-                                        <option value="0">Pilih Bahan</option>
-                                        @foreach ($dataBahan as $item)
-                                            <option value="{{ $item->bahan }}">
-                                                {{ $item->bahan }}</option>
-                                        @endforeach
-                                    </select>
+                                        <input type="hidden" value="{{ $name_user }}" name="namakasir">
+                                        <input type="hidden" class="form-control namapemesan" name="namapemesan[]"
+                                            id="pemesan2">
 
-                                </div>
-                                <div class="col">
-                                    <label for="">Ukuran</label>
-                                    <input type="text" class="form-control ukuran" id="ukuran" name="ukuran[]"
-                                        required>
-                                </div>
-                                <div class="col">
-                                    <label for="">Jumlah Barang</label>
-                                    <input type="text" class="form-control jumlah" id="jumlah" name="jumlah[]"
-                                        required>
-                                </div>
-                                <div class="col">
-                                    <label for="">Satuan</label>
-                                    <select name="satuan[]" class="form-control satuan" id="satuan" required>
-                                        <option value="0">Pilih Satuan</option>
-                                        @foreach ($satuan as $item)
-                                            <option value="{{ $item->satuan }}">{{ $item->satuan }} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <label for="">Harga Barang</label>
-                                    <input type="text" class="form-control harga" id="harga" name="harga[]"
-                                        required>
-                                </div>
-                                <div class="col">
-                                    <label for="">Total</label>
-                                    <input type="text" class="form-control total" id="total" name="total[]"
-                                        readonly>
-                                </div>
-                                <div class="col">
-                                    <button type="button" class="btn btn-danger hapusform"><i
-                                            class="fa fa-trash"></i></button>
-                                </div>
-                            </div>
+                                        <input type="hidden" class="form-control idpemesan" name="idpelanggan[]">
+                                        <input type="hidden" class="form-control id_produk" id="idnya"
+                                            name="idproduk[]">
+                                        <input type="hidden" class="form-control id_bahan" id="id_bahan"
+                                            name="idbahan[]">
+                                        <input type="hidden" class="form-control id_kategori">
+                                    </td>
+                                    <td> <input type="text" class="form-control produk" id="produk"
+                                            name="produk[]" required readonly></td>
+                                    <td>
+                                        <input type="text" class="form-control keterangan" name="keterangan[]"
+                                            required>
 
-                        </div>
-                        <div class="modal-footer">
+                                    </td>
+                                    <td>
+                                        <select name="bahan[]" class="form-control id_bahan" id="bahan">
+                                            <option value="0">Pilih Bahan</option>
+                                            @foreach ($dataBahan as $item)
+                                                <option value="{{ $item->bahan }}">
+                                                    {{ $item->bahan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control ukuran" id="ukuran"
+                                            name="ukuran[]" required>
+
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control jumlah" id="jumlah"
+                                            name="jumlah[]" required>
+
+                                    </td>
+                                    <td>
+                                        <select name="satuan[]" class="form-control satuan" id="satuan" required>
+                                            <option value="0">Pilih Satuan</option>
+                                            @foreach ($satuan as $item)
+                                                <option value="{{ $item->satuan }}">{{ $item->satuan }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control harga" id="harga"
+                                            name="harga[]" required>
+
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control total" id="total"
+                                            name="total[]" readonly>
+
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger hapusform"><i
+                                                class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="modal-footer" id="footer-form" style="display: none">
                             <div class="col">
                                 <label for="">Uang Muka</label>
                                 <input type="text" class="form-control uangmuka" name="uangmuka" id="dp">

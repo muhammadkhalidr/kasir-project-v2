@@ -26,6 +26,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'kasir']
         );
 
+        $role_keuangan = Role::updateOrCreate(
+            ['name' => 'keuangan']
+        );
+
         $permissions = [
             'orderan.data',
             'pengeluaran.data',
@@ -38,6 +42,13 @@ class PermissionSeeder extends Seeder
         }
 
         $permission_kasir = Permission::updateOrCreate(
+            [
+                'name' => 'orderan.data',
+                'name' => 'pengeluaran.data',
+                'name' => 'pembelian.data',
+            ]
+        );
+        $permission_keuangan = Permission::updateOrCreate(
             [
                 'name' => 'orderan.data',
                 'name' => 'pengeluaran.data',
@@ -61,8 +72,9 @@ class PermissionSeeder extends Seeder
         $role_admin->syncPermissions($permissions);
         $role_owner->givePermissionTo($permission_pengguna);
         $role_kasir->givePermissionTo($permission_kasir);
+        $role_keuangan->givePermissionTo($permission_keuangan);
 
-        $users = User::whereIn('level', [1, 2, 3])->get();
+        $users = User::whereIn('level', [1, 2, 3, 4])->get();
 
         foreach ($users as $user) {
             if ($user->level == 1) {
@@ -71,6 +83,8 @@ class PermissionSeeder extends Seeder
                 $user->assignRole('owner');
             } elseif ($user->level == 3) {
                 $user->assignRole('kasir');
+            } elseif ($user->level == 4) {
+                $user->assignRole('keuangan');
             }
         }
     }

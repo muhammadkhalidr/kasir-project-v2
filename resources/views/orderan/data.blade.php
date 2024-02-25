@@ -716,6 +716,8 @@
         $('#btnTambahProduk').click(function() {
             var judul = $('#cari_produk').val();
             var data = getDataProduk(judul);
+            $(".form-transaksi").show();
+            $("#footer-form").show();
 
             if (data) {
                 // Duplikat form-transaksi
@@ -738,8 +740,6 @@
 
                 // Hapus label dari form baru
                 newForm.find("label").text("");
-                // Sisipkan form baru setelah form terakhir
-                $(".form-transaksi:last").after(newForm);
 
                 // Set data produk ke dalam inputan di form terbaru
                 masukkanProduk(data, newForm);
@@ -759,6 +759,12 @@
                                 .bahan + '">' +
                                 item.bahan + '</option>');
                         });
+
+                        // Sisipkan form baru setelah form terakhir
+                        $(".form-transaksi:last").after(newForm);
+
+                        // Hapus form asli setelah form baru ditambahkan
+                        $(".form-transaksi:first").hide();
                     },
                     error: function() {
                         console.error("Error fetching data bahan for id_kategori " +
@@ -768,11 +774,28 @@
             }
         });
 
+
         // Tambahkan event handler untuk tombol hapus pada form
         $(document).on("click", ".hapusform", function() {
-            // Hapus form saat tombol hapus diklik
-            $(this).closest(".form-transaksi").remove();
+            // Menghitung jumlah form transaksi yang tersisa
+            var jumlahForm = $(".form-transaksi").length;
+
+            // Pengecekan apakah form yang akan dihapus adalah form terakhir
+            if (jumlahForm > 1) {
+                // Hapus form saat tombol hapus diklik
+                $(this).closest(".form-transaksi").remove();
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan!!',
+                    text: 'Minimal ada 1 form transaksi',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+            }
         });
+
     });
 </script>
 <script>

@@ -26,6 +26,7 @@ class CekUserLogin
             return $next($request);
         return $next($request);
         return $next($request);
+        return $next($request);
 
         return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
     }
