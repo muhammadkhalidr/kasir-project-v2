@@ -248,7 +248,7 @@
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
-                <td class="total1" style="width:12%">Total</td>
+                <td class="total1" style="width:12%">Sub Total</td>
                 <td class="total2" style="width:19%">{{ formatRupiah($total, true) }}</td>
             </tr>
         </table>

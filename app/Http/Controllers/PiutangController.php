@@ -40,17 +40,15 @@ class PiutangController extends Controller
 
         // Jika ada parameter 'q' yang dikirim melalui request
         if ($request->has('q')) {
-            $searchTerm = $request->input('q');
-
-            // Melakukan pencarian berdasarkan 'notrx' pada DetailOrderan
-            // atau 'nama' pada relasi 'pelanggans'
+            $searchTerm = str_replace('-', '', $request->input('q'));
             $data->where(function ($query) use ($searchTerm) {
-                $query->where('notrx', 'like', '%' . $searchTerm . '%')
+                $query->whereRaw("REPLACE(notrx, '-', '') LIKE ?", ['%' . $searchTerm . '%'])
                     ->orWhereHas('pelanggans', function ($query) use ($searchTerm) {
                         $query->where('nama', 'like', '%' . $searchTerm . '%');
                     });
             });
         }
+
 
         $data = $data->paginate(10);
 
@@ -65,14 +63,26 @@ class PiutangController extends Controller
     }
 
 
-    public function printPiutang()
+    public function printPiutang(Request $request)
     {
         $user = Auth::user();
 
         // Fetch data grouped by 'notrx'
-        $datasGrouped = DetailOrderan::where('status', 'Belum Lunas')->with(['pelanggans', 'pelunasans'])->orderBy('notrx')->get()->groupBy('notrx');
+        $datasGrouped = DetailOrderan::where('status', 'Belum Lunas')->with(['pelanggans', 'pelunasans'])->orderBy('notrx');
 
-        // dd($datasGrouped);
+        // Jika ada parameter 'q' yang dikirim melalui request
+        if ($request->has('q')) {
+            $searchTerm = str_replace('-', '', $request->input('q'));
+            $datasGrouped->where(function ($query) use ($searchTerm) {
+                $query->whereRaw("REPLACE(notrx, '-', '') LIKE ?", ['%' . $searchTerm . '%'])
+                    ->orWhereHas('pelanggans', function ($query) use ($searchTerm) {
+                        $query->where('nama', 'like', '%' . $searchTerm . '%');
+                    });
+            });
+        }
+
+
+        $datasGrouped = $datasGrouped->get()->groupBy('notrx');
 
         // Initialize an array to store the first item for each 'notrx'
         $datas = [];
@@ -80,14 +90,11 @@ class PiutangController extends Controller
             $datas[] = $items->first();
         }
 
-        $total = DetailOrderan::where('status', 'Belum Lunas')
-            ->whereIn('id', function ($query) {
-                $query->select(DB::raw('MIN(id)'))
-                    ->from('detail_orderans')
-                    ->where('status', 'Belum Lunas')
-                    ->groupBy('notrx');
-            })
-            ->sum('sisa');
+        // Calculate total for unique 'notrx'
+        $total = 0;
+        foreach ($datas as $data) {
+            $total += $data->sisa;
+        }
 
         $setting = Setting::all()->first();
 
@@ -104,7 +111,6 @@ class PiutangController extends Controller
             //     'info' => $setting
             // ]);
 
-
             $pdf = PDF::loadView('piutang.cetakpiutang', [
                 'title' => 'Cetak Pengeluaran',
                 'datas' => $datas,
@@ -115,7 +121,7 @@ class PiutangController extends Controller
                 'info' => $setting
             ]);
 
-            return $pdf->download('rincian_pitaung.pdf');
+            return $pdf->download('Rincian_piutang .pdf');
         }
     }
 }

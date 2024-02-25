@@ -15,23 +15,29 @@
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
                         </div>
                         <form action="{{ route('piutang.cari') }}" method="GET">
-                            @csrf
                             <input type="text" class="form-control" name="q" id="searchInput"
                                 placeholder="Search..." value="{{ request()->q }}" />
                         </form>
                         <div class="input-group-prepend ml-2">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
-                        <form method="POST" action="{{ url('orderan.cari') }}" id="searchForm">
+                        <form method="POST" action="#" id="searchForm">
                             @csrf
                             <input type="hidden" name="start_date" id="start_date" />
                             <input type="hidden" name="end_date" id="end_date" />
                             <input type="text" class="form-control w-10" name="daterange" />
                         </form>
-                        <button class="btn btn-info ml-2" type="button" data-placement="left">
+                        {{-- <button class="btn btn-info ml-2" type="button" data-placement="left">
                             <i class="fa fa-file-pdf-o"></i>
                             <a href="{{ route('print.piutang') }}" class="text-white" target="_blank">Print</a>
+                        </button> --}}
+                        <button class="btn btn-info ml-2" type="button" data-placement="left">
+                            <i class="fa fa-file-pdf-o"></i>
+                            <a href="{{ route('print.piutang', ['q' => request()->q]) }}" class="text-white"
+                                target="_blank">Print</a>
                         </button>
+                        <button class="btn btn-danger ml-2"><a href="piutang" class="text-white">Clear</a></button>
+
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
