@@ -28,78 +28,68 @@
                             onclick="window.location='{{ url('admin-baru') }}'">
                             <i class="fa fa-plus-circle"></i> Tambah Pengguna
                         </button>
-
-                        <div class="pesan mt-2">
-                            @if (session('msg'))
-                                <div class="alert alert-primary alert-dismissible fade show">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span>
-                                    </button> {{ session('msg') }}
-                                </div>
-                            @endif
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered zero-configuration">
-                                <thead>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered zero-configuration">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Username</th>
+                                    <th>Level</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($penggunas as $data)
                                     <tr>
-                                        <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                        <th>Username</th>
-                                        <th>Level</th>
-                                        <th>Aksi</th>
+                                        <th><span class="label label-info">{{ $loop->iteration }}</span>
+                                        </th>
+                                        <th>{{ $data->name }}</th>
+                                        <th>{{ $data->email }}</th>
+                                        <th>{{ $data->username }}</th>
+                                        <th>
+                                            @switch($data->level)
+                                                @case(1)
+                                                    Admin
+                                                @break
+
+                                                @case(3)
+                                                    Kasir
+                                                @break
+
+                                                @case(4)
+                                                    Keuangan
+                                                @break
+
+                                                @default
+                                                    Owner
+                                            @endswitch
+                                        </th>
+
+                                        <th>
+                                            <form method="POST" action="{{ 'pengguna/' . $data->id }}"
+                                                style="display: inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" title="Hapus Data" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                                    <i class="fa fa-trash"></i> Hapus Data
+                                                </button>
+                                            </form>
+                                        </th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($penggunas as $data)
-                                        <tr>
-                                            <th><span class="label label-info">{{ $loop->iteration }}</span>
-                                            </th>
-                                            <th>{{ $data->name }}</th>
-                                            <th>{{ $data->email }}</th>
-                                            <th>{{ $data->username }}</th>
-                                            <th>
-                                                @switch($data->level)
-                                                    @case(1)
-                                                        Admin
-                                                    @break
-
-                                                    @case(3)
-                                                        Kasir
-                                                    @break
-
-                                                    @case(4)
-                                                        Keuangan
-                                                    @break
-
-                                                    @default
-                                                        Owner
-                                                @endswitch
-                                            </th>
-
-                                            <th>
-                                                <form method="POST" action="{{ 'pengguna/' . $data->id }}"
-                                                    style="display: inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" title="Hapus Data"
-                                                        class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                                        <i class="fa fa-trash"></i> Hapus Data
-                                                    </button>
-                                                </form>
-                                            </th>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- #/ container -->
+</div>
+<!-- #/ container -->
 </div>
 <!--**********************************
                 Content body end

@@ -25,7 +25,7 @@ class PenggunaController extends Controller
         // return view('errors.403');
 
         $user = Auth::user();
-        $datas = User::where('level', '>=', 2)
+        $datas = User::where('level', '>=', 1)
             ->where('level', '<=', 4)
             ->get();
         return view('pengguna.data', [

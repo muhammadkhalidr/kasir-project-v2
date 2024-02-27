@@ -6,11 +6,19 @@ use App\Models\JenisPengeluaran;
 use App\Http\Requests\StoreJenisPengeluaranRequest;
 use App\Http\Requests\UpdateJenisPengeluaranRequest;
 use App\Models\JenisBahan;
+use App\Models\setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class JenisPengeluaranController extends Controller
 {
+
+    protected $demoMode;
+
+    public function __construct()
+    {
+        $this->demoMode = setting::where('demo', 'Y')->exists();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -91,6 +99,9 @@ class JenisPengeluaranController extends Controller
      */
     public function update(UpdateJenisPengeluaranRequest $request, $id)
     {
+        if ($this->demoMode) {
+            return redirect()->back()->with(['error' => 'Dalam Mode Demo Tidak Bisa Edit Data']);
+        }
         $data = JenisPengeluaran::findOrFail($id);
 
         $data->id_jenis = $request->id_jenis;
@@ -106,6 +117,9 @@ class JenisPengeluaranController extends Controller
      */
     public function destroy($id)
     {
+        if ($this->demoMode) {
+            return redirect()->back()->with(['error' => 'Dalam Mode Demo Tidak Bisa Hapus Data']);
+        }
         $data = JenisPengeluaran::findOrFail($id);
 
         // dd($data);

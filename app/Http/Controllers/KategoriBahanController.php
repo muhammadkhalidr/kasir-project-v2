@@ -6,11 +6,20 @@ use App\Models\KategoriBahan;
 use App\Http\Requests\StoreKategoriBahanRequest;
 use App\Http\Requests\UpdateKategoriBahanRequest;
 use App\Models\JenisPengeluaran;
+use App\Models\setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Monolog\Handler\IFTTTHandler;
 
 class KategoriBahanController extends Controller
 {
+
+    protected $demoMode;
+
+    public function __construct()
+    {
+        $this->demoMode = setting::where('demo', 'Y')->exists();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -95,6 +104,10 @@ class KategoriBahanController extends Controller
     public function update(UpdateKategoriBahanRequest $request, $id)
     {
 
+        if ($this->demoMode) {
+            return redirect()->back()->with('error', 'Dalam Mode Demo Tidak Bisa Edit Data');
+        }
+
         $kategori = KategoriBahan::findOrFail($id);
         $kategori->kategori = $request->kategori;
         $kategori->status = $request->status;
@@ -107,6 +120,9 @@ class KategoriBahanController extends Controller
      */
     public function destroy($id)
     {
+        if ($this->demoMode) {
+            return redirect()->back()->with('error', 'Dalam Mode Demo Tidak Bisa Hapus Data');
+        }
         $data = KategoriBahan::findOrFail($id);
         $data->delete();
 

@@ -67,7 +67,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $demoMode = setting::where('demo', 'Y')->first(); // Ambil pengaturan mode demo
+        $demoMode = setting::where('demo', 'Y')->first();
 
         if ($demoMode) {
             // Jika mode demo adalah 'Y', tampilkan pesan dan tidak izinkan pembaruan data

@@ -156,6 +156,7 @@ class SettingController extends Controller
 
         $data->pesan = $request->footer_invoice;
         $data->warnatema = $request->warnatema;
+        $data->demo = $request->mode;
         $data->save();
 
         return redirect('setting')->with('success', 'Data Berhasil Di-perbarui!');

@@ -273,13 +273,20 @@ class OrderanController extends Controller
                 'name_kasir' => $data['namakasir']
             ]);
 
-            // Buat dan simpan objek PelunasanOrderan
-            PelunasanOrderan::create([
+            OmsetPenjualan::create([
                 'notrx' => $data['notrx'][$key],
-                'total_bayar' => str_replace('.', '', $data['uangmuka']),
-                'bank' => $data['bayarDp'],
-                'via' => $data['bayarDp'],
-                'id_bayar' => $idPelanggan,
+                'id_produk' => $data['idproduk'][$key],
+                'produk' => $data['produk'][$key],
+                'jumlah' => $data['jumlah'][$key],
+                'total' => str_replace('.', '', $data['total'][$key]),
+
+                PelunasanOrderan::create([
+                    'notrx' => $data['notrx'][$key],
+                    'total_bayar' => str_replace('.', '', $data['uangmuka']),
+                    'bank' => $data['bayarDp'],
+                    'via' => $data['bayarDp'],
+                    'id_bayar' => $data['idpelanggan'][$key],
+                ])
             ]);
 
             // Jika stok Y, tambahkan data ke tabel StokKeluar
@@ -506,6 +513,13 @@ class OrderanController extends Controller
      */
     public function destroy($notrx)
     {
+
+        $demoMode = setting::where('demo', 'Y')->first();
+
+        if ($demoMode) {
+            // Jika mode demo adalah 'Y', tampilkan pesan dan tidak izinkan pembaruan data
+            return redirect()->url('orderan')->with('error', 'Pembaruan data tidak diizinkan dalam mode demo');
+        }
         // Delete data dari DetailOrderan tabel
         $orderan = DetailOrderan::where('notrx', $notrx);
 

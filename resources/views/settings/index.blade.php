@@ -81,6 +81,21 @@
                                     <input type="color" name="warnatema" class="form-control"
                                         value="{{ $item->warnatema }}">
                                 </div>
+                                @if (auth()->user()->level == 5)
+                                    <div class="form-group mt-4">
+                                        <label for="" class="form-label">Mode</label>
+                                        <select name="mode" class="form-control">
+                                            @php
+                                                $demos = ['Y' => 'DEMO', 'N' => 'LIVE'];
+                                            @endphp
+                                            @foreach ($demos as $key => $value)
+                                                <option value="{{ $key }}"
+                                                    {{ $item->demo == $key ? 'selected' : '' }}>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>
                         @endforeach

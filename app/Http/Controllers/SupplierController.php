@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Supplier;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
+use App\Models\setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SupplierController extends Controller
 {
+
+    protected $demoMode;
+
+    public function __construct()
+    {
+        $this->demoMode = setting::where('demo', 'Y')->exists();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -94,6 +102,10 @@ class SupplierController extends Controller
      */
     public function update(UpdateSupplierRequest $request, $id)
     {
+
+        if ($this->demoMode) {
+            return redirect()->back()->with(['error' => 'Dalam Mode Demo Tidak Bisa Edit Data']);
+        }
         $data = Supplier::findOrFail($id);
 
         $data->nama = $request->perusahaan;
@@ -115,6 +127,9 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
+        if ($this->demoMode) {
+            return redirect()->back()->with(['error' => 'Dalam Mode Demo Tidak Bisa Hapus Data']);
+        }
         $data = Supplier::findOrFail($id);
         $data->delete();
         return redirect()->back()->with(['success' => 'Data Berhasil Di Hapus']);

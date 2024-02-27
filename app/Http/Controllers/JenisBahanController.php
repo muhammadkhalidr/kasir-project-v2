@@ -6,11 +6,19 @@ use App\Models\JenisBahan;
 use App\Http\Requests\StoreJenisBahanRequest;
 use App\Http\Requests\UpdateJenisBahanRequest;
 use App\Models\KategoriBahan;
+use App\Models\setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class JenisBahanController extends Controller
 {
+
+    protected $demoMode;
+
+    public function __construct()
+    {
+        $this->demoMode = setting::where('demo', 'Y')->exists();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -95,6 +103,10 @@ class JenisBahanController extends Controller
     public function update(UpdateJenisBahanRequest $request, $id)
     {
 
+        if ($this->demoMode) {
+            return redirect()->back()->with('error', 'Dalam Mode Demo Tidak Bisa Edit Data');
+        }
+
         $data = JenisBahan::findOrFail($id);
 
         $data->bahan = $request->bahan;
@@ -111,6 +123,9 @@ class JenisBahanController extends Controller
      */
     public function destroy($id)
     {
+        if ($this->demoMode) {
+            return redirect()->back()->with('error', 'Dalam Mode Demo Tidak Bisa Hapus Data');
+        }
         $data = JenisBahan::findOrFail($id);
         $data->delete();
 

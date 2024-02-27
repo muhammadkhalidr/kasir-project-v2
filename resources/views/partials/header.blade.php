@@ -109,15 +109,9 @@
                                             <a href="{{ url('profile') }}"><i class="icon-user"></i>
                                                 <span>Profile</span></a>
                                             <hr class="my-2">
-                                            @if (auth()->check())
-                                                @if (auth()->user()->level == 1)
-                                                    <a href="{{ url('setting') }}"><i class="fa fa-cogs"></i>
-                                                        <span>Setting</span></a>
-                                                @endif
-                                                @if (auth()->user()->level == 2)
-                                                    <a href="{{ url('setting') }}"><i class="fa fa-cogs"></i>
-                                                        <span>Setting</span></a>
-                                                @endif
+                                            @if (auth()->check() && (auth()->user()->level == 1 || auth()->user()->level == 2 || auth()->user()->level == 5))
+                                                <a href="{{ url('setting') }}"><i class="fa fa-cogs"></i>
+                                                    <span>Setting</span></a>
                                             @endif
                                         </li>
                                         <hr class="my-2">
@@ -135,3 +129,64 @@
         <!--**********************************
                 Header end ti-comment-alt
             ***********************************-->
+
+        @if ($logo->first()->demo == 'Y')
+            <div class="cards" style="background-color: #7571f9; overflow: hidden;">
+                <div class="text-white demo-text" id="demoMode">
+                    <i class="fa fa-bell"></i> Saat ini anda dalam mode demo
+                </div>
+            </div>
+        @endif
+
+        @push('scripts')
+            <script>
+                // Animation to replace marquee
+                let position = 0;
+                const text = document.getElementById("demoMode");
+                const cardWidth = document.querySelector(".cards").offsetWidth;
+
+                function animateDemoText() {
+                    position -= 1;
+                    if (position < -text.offsetWidth) {
+                        position = cardWidth;
+                    }
+                    text.style.left = position + "px";
+                    requestAnimationFrame(animateDemoText);
+                }
+
+                animateDemoText();
+            </script>
+        @endpush
+
+        <style>
+            .cards {
+                position: relative;
+                width: 100%;
+                height: 40px;
+                /* Sesuaikan dengan tinggi teks Anda */
+                line-height: 40px;
+                /* Sesuaikan dengan tinggi teks Anda */
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .demo-text {
+                position: absolute;
+                left: 100%;
+                /* Memulai teks di luar layar */
+                animation: moveText 50s linear infinite;
+                padding-left: 10px;
+                /* Jarak ikon */
+            }
+
+            @keyframes moveText {
+                from {
+                    left: 100%;
+                }
+
+                to {
+                    left: -100%;
+                    /* Sesuaikan dengan kebutuhan Anda */
+                }
+            }
+        </style>

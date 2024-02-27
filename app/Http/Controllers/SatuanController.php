@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Satuan;
 use App\Http\Requests\StoreSatuanRequest;
 use App\Http\Requests\UpdateSatuanRequest;
+use App\Models\setting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,13 @@ use Illuminate\Http\Request;
 
 class SatuanController extends Controller
 {
+
+    protected $demoMode;
+
+    public function __construct()
+    {
+        $this->demoMode = setting::where('demo', 'Y')->exists();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -85,6 +93,10 @@ class SatuanController extends Controller
      */
     public function update(UpdateSatuanRequest $request, $id)
     {
+
+        if ($this->demoMode) {
+            return redirect('satuan')->with('error', 'Dalam Mode Demo Tidak Bisa Edit Data');
+        }
         $data = Satuan::findOrFail($id);
         $data->satuan = $request->satuan;
         $data->save();
@@ -97,6 +109,10 @@ class SatuanController extends Controller
      */
     public function destroy($id)
     {
+
+        if ($this->demoMode) {
+            return redirect('satuan')->with('error', 'Dalam Mode Demo Tidak Bisa Hapus Data');
+        }
         $data = Satuan::findOrFail($id);
         $data->delete();
         return redirect('satuan')->with('success', 'Data Berhasil Dihapus!');

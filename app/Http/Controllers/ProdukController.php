@@ -7,13 +7,18 @@ use App\Http\Requests\StoreProdukRequest;
 use App\Http\Requests\UpdateProdukRequest;
 use App\Models\JenisBahan;
 use App\Models\KategoriBahan;
-use GuzzleHttp\Handler\Proxy;
+use App\Models\setting;
 use Illuminate\Support\Facades\Auth;
-
-use function PHPUnit\Framework\returnSelf;
 
 class ProdukController extends Controller
 {
+    protected $demoMode;
+
+    public function __construct()
+    {
+        $this->demoMode = setting::where('demo', 'Y')->exists();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -24,8 +29,6 @@ class ProdukController extends Controller
         $kategori = KategoriBahan::where('status', 'Y')->get();
         $bahan = JenisBahan::all();
 
-        // dd($data);
-
         return view('produk.data', [
             'title' => 'Produk',
             'name_user' => $user->name,
@@ -33,14 +36,6 @@ class ProdukController extends Controller
             'kategori' => $kategori,
             'bahan' => $bahan,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -60,26 +55,8 @@ class ProdukController extends Controller
         $data->harga_jual = str_replace('.', '', $request->hargajual);
         $data->harga_beli = str_replace('.', '', $request->hargabeli);
 
-        // dd($data);
-
         $data->save();
         return redirect()->back()->with('success', 'Produk Berhasil di Tambahkan!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Produk $produk)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Produk $produk)
-    {
-        //
     }
 
     /**
@@ -87,6 +64,10 @@ class ProdukController extends Controller
      */
     public function update(UpdateProdukRequest $request, $id)
     {
+        if ($this->demoMode) {
+            // Jika mode demo adalah 'Y', tampilkan pesan dan tidak izinkan pembaruan data
+            return redirect()->back()->with('error', 'Dalam Mode Demo Tidak Bisa Edit Data');
+        }
 
         $data = Produk::findOrFail($id);
 
@@ -100,8 +81,6 @@ class ProdukController extends Controller
         $data->harga_jual = str_replace('.', '', $request->hargajual);
         $data->harga_beli = str_replace('.', '', $request->hargabeli);
 
-        // dd($data);
-
         $data->save();
         return redirect()->back()->with('success', 'Produk Berhasil di Update!');
     }
@@ -111,6 +90,11 @@ class ProdukController extends Controller
      */
     public function destroy($id)
     {
+        if ($this->demoMode) {
+            // Jika mode demo adalah 'Y', tampilkan pesan dan tidak izinkan pembaruan data
+            return redirect()->back()->with('error', 'Dalam Mode Demo Tidak Bisa Hapus Data');
+        }
+
         $data = Produk::findOrFail($id);
         $data->delete();
 

@@ -590,8 +590,9 @@
             },
             error: function(error) {
                 console.error('Error:', error);
-                Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
+                Swal.fire('Gagal!', 'Dalam Mode Demo Tidak Bisa Hapus Transaksi', 'error');
             }
+
         });
     }
 </script>

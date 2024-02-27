@@ -15,6 +15,14 @@ class UserData extends Seeder
     {
         $user = [
             [
+                'name' => 'superadmin',
+                'username' => 'superadmin',
+                'password' => bcrypt('12345'),
+                'level' => 5,
+                'email' => 'superadmin@gmail.com',
+                'foto' => 'profile.png',
+            ],
+            [
                 'name' => 'admin',
                 'username' => 'admin',
                 'password' => bcrypt('12345'),
