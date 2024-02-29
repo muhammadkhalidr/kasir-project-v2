@@ -24,10 +24,12 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Data Penguna</h4>
-                        <button type="button" class="btn btn-primary"
-                            onclick="window.location='{{ url('admin-baru') }}'">
-                            <i class="fa fa-plus-circle"></i> Tambah Pengguna
-                        </button>
+                        @if (auth()->user()->level == 1)
+                            <button type="button" class="btn btn-primary"
+                                onclick="window.location='{{ url('admin-baru') }}'">
+                                <i class="fa fa-plus-circle"></i> Tambah Pengguna
+                            </button>
+                        @endif
                     </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered zero-configuration">
@@ -69,6 +71,12 @@
                                         </th>
 
                                         <th>
+                                            <form action="{{ 'pengguna/' . $data->id }}" method="get">
+                                                <button onclick="window.location='{{ url('pengguna/' . $data->id) }}'"
+                                                    class="btn btn-sm btn-info" title="Edit Data">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </form>
                                             <form method="POST" action="{{ 'pengguna/' . $data->id }}"
                                                 style="display: inline">
                                                 @csrf

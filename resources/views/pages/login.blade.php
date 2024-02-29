@@ -116,7 +116,7 @@
                                 <hr>
                                 <h6 class="text-center">Owner</h6>
                                 <ul class="list-unstyled text-center">
-                                    <li>Username : admin</li>
+                                    <li>Username : owner</li>
                                     <li>Password : 12345</li>
                                 </ul>
                                 <hr>

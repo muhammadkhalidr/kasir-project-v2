@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Pengguna;
 use App\Http\Requests\StorePenggunaRequest;
 use App\Http\Requests\UpdatePenggunaRequest;
+use App\Models\setting;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class PenggunaController extends Controller
 {
+
+    protected $demoMode;
+
+    public function __construct()
+    {
+        $this->demoMode = setting::where('demo', 'Y')->exists();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +34,7 @@ class PenggunaController extends Controller
         // return view('errors.403');
 
         $user = Auth::user();
-        $datas = User::where('level', '>=', 1)
+        $datas = User::where('level', '>=', 2)
             ->where('level', '<=', 4)
             ->get();
         return view('pengguna.data', [
@@ -72,7 +81,7 @@ class PenggunaController extends Controller
     {
         $penggunas = User::findOrFail($id);
 
-        return view('pengguna.edit', ['title' => 'Edit Pengguna', 'breadcrumb' => 'Edit Pengguna'])->with([
+        return view('pengguna.edit', ['title' => 'Edit Pengguna', 'breadcrumb' => 'Edit Pengguna', 'name_user' => Auth::user()->name])->with([
             'nama' => $penggunas->name,
             'email' => $penggunas->email,
             'username' => $penggunas->username,
@@ -84,14 +93,18 @@ class PenggunaController extends Controller
      */
     public function update(UpdatePenggunaRequest $request, $id)
     {
+
+        if ($this->demoMode) {
+            return redirect()->back()->with('error', 'Tidak bisa edit data dalam mode demo');
+        }
         $data = User::findOrFail($id);
 
         $data->name = $request->nama;
-        $data->email = $request->txtemail;
+        $data->email = $request->email;
         $data->username = $request->username;
         $data->save();
 
-        return redirect('pengguna')->with('msg', 'Data Berhasil Di-update!');
+        return redirect('pengguna')->with('success', 'Data Berhasil Di-update!');
     }
 
     /**
@@ -99,6 +112,11 @@ class PenggunaController extends Controller
      */
     public function destroy($id)
     {
+
+        if ($this->demoMode) {
+            return redirect()->back()->with('error', 'Tidak bisa hapus data dalam mode demo');
+        }
+
         $datas = User::findOrFail($id);
         $datas->delete();
 

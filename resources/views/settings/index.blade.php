@@ -10,13 +10,6 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="pesan mt2">
-                            @if (session('msg'))
-                                <div class="alert alert-success">
-                                    {{ session('msg') }}
-                                </div>
-                            @endif
-                        </div>
                         @foreach ($data as $item)
                             <form action="{{ route('setting.update', $item->id_setting) }}" method="POST">
                                 @csrf
@@ -52,7 +45,7 @@
                                     </div>
                                 </div>
                                 @if (auth()->check())
-                                    @if (auth()->user()->level == 2)
+                                    @if (auth()->user()->level == 1)
                                         <hr>
                                         <h4 class="text-center"><i class="bi bi-clock"></i> Jam Transaksi</h4>
                                         <hr>
@@ -81,7 +74,7 @@
                                     <input type="color" name="warnatema" class="form-control"
                                         value="{{ $item->warnatema }}">
                                 </div>
-                                @if (auth()->user()->level == 5)
+                                @if (auth()->user()->level == 1)
                                     <div class="form-group mt-4">
                                         <label for="" class="form-label">Mode</label>
                                         <select name="mode" class="form-control">

@@ -39,14 +39,18 @@ class DashboardController extends Controller
             $pengeluaranData[] = $pengeluaranBulanan->get($i)->total ?? 0;
         }
 
-        $totalOrderan = DetailOrderan::all();
-        $orderanHariIni = DetailOrderan::whereDate('created_at', Carbon::today())->count();
+        $totalOrderan = DetailOrderan::distinct('notrx')->count('notrx');
+        $orderanHariIni = DetailOrderan::whereDate('created_at', Carbon::today())
+            ->distinct('notrx')
+            ->count('notrx');
+
+
 
         $konsumen = Pelanggan::all()->count();
 
         return view('layout.home', [
             'title' => 'Dashboard | Home',
-            'totalOrderan' => $totalOrderan->count(),
+            'totalOrderan' => $totalOrderan,
             'name_user' => $user->name,
             'pendapatanData' => $pendapatanData,
             'orderanHariIni' => $orderanHariIni,

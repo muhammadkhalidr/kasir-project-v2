@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <h2 class="card-title mb-4"> <i class="fa fa-arrow-left"
                                 onclick="window.location='{{ url('pengguna') }}'" style="cursor: pointer"></i> Data
-                            Admin</h2>
+                            Admins</h2>
                         <div class="form-validation">
                             <form class="form-valide" action="{{ url('pengguna') }}" method="POST">
                                 @csrf
