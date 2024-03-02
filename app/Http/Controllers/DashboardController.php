@@ -44,8 +44,6 @@ class DashboardController extends Controller
             ->distinct('notrx')
             ->count('notrx');
 
-
-
         $konsumen = Pelanggan::all()->count();
 
         return view('layout.home', [

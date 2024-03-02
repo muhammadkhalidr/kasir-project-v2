@@ -17,6 +17,17 @@
                     <hr>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Pembukuan</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('jurnal') }}">Jurnal Umum</a></li>
+                            <li><a href="{{ url('neraca') }}">Neraca</a></li>
+                            <li><a href="{{ url('laba-rugi') }}">Laba Rugi</a></li>
+                            <li><a href="{{ url('buku-besar') }}">Buku Besar</a></li>
+                        </ul>
+                    </li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-handbag menu-icon"></i><span class="nav-text">Data Produk</span>
                         </a>
                         <ul aria-expanded="false">
@@ -150,6 +161,18 @@
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Pembukuan</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('jurnal') }}">Jurnal Umum</a></li>
+                            <li><a href="{{ url('neraca') }}">Neraca</a></li>
+                            <li><a href="{{ url('laba-rugi') }}">Laba Rugi</a></li>
+                            <li><a href="{{ url('buku-besar') }}">Buku Besar</a></li>
+                            <li><a href="{{ url('jenis-akun') }}">Jenis Akun</a></li>
+                        </ul>
+                    </li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-wallet menu-icon"></i><span class="nav-text">Data Keuangan</span>
                         </a>
                         <ul aria-expanded="false">
@@ -189,6 +212,19 @@
                         </a>
                     </li>
                     <hr>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Pembukuan</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('jurnal') }}">Jurnal Umum</a></li>
+                            <li><a href="{{ url('neraca') }}">Neraca</a></li>
+                            <li><a href="{{ url('laba-rugi') }}">Laba Rugi</a></li>
+                            <li><a href="{{ url('buku-besar') }}">Buku Besar</a></li>
+                            <li><a href="{{ url('jenis-akun') }}">Jenis Akun</a></li>
+
+                        </ul>
+                    </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-handbag menu-icon"></i><span class="nav-text">Data Produk</span>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AkunController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LayoutController;
@@ -218,6 +219,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('datastok', [StokMasukController::class, 'dataStok'])->name('data.stok');
 
         Route::get('/dashboard-keuangan', [DashboardKeuanganController::class, 'index']);
+
+        // Jenis Akun {Pembukuan}
+        Route::resource('jenis-akun', AkunController::class);
+        Route::delete('hapus-jenis-akun/{id}', [AkunController::class, 'destroy'])->name('akun.hapus');
+        Route::put('edit-jenis-akun/{id}', [AkunController::class, 'update'])->name('akun.update');
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------
