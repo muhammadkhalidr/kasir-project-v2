@@ -53,7 +53,7 @@ class LoginController extends Controller
             } else if ($user->level == 3) {
                 return redirect()->intended('/orderan');
             } else if ($user->level == 4) {
-                return redirect()->intended('/dashboard-keuangan');
+                return redirect('/dashboard-keuangan');
             }
 
             return redirect()->intended('/');

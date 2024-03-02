@@ -15,7 +15,7 @@ class UserData extends Seeder
     {
         $user = [
             [
-                'name' => 'Superadmin',
+                'name' => 'Akun Developer',
                 'username' => 'superadmin',
                 'password' => bcrypt('12345'),
                 'level' => 1,

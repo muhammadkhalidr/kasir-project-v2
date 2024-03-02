@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Jenis Akun</h4>
-                            @if (auth()->user()->level == 1)
+                            @if (auth()->user()->level == 1 || auth()->user()->level == 2)
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
                                     data-target="#modalTambahAkun">
                                     Tambah Akun
@@ -30,7 +30,7 @@
                             @endif
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -43,26 +43,18 @@
                                 <tbody>
                                     @foreach ($datas as $item)
                                         <tr>
-                                            <th><span class="label label-info">{{ $loop->iteration }}</span>
-                                            </th>
-                                            <th>{{ $item->keterangan }}</th>
-                                            <th>{{ $item->nama_reff }}</th>
-                                            <th>
-                                                @switch($item->aktif)
-                                                    @case('Y')
-                                                        Aktif
-                                                    @break
-
-                                                    @case('N')
-                                                        Tidak Aktif
-                                                    @break
-
-                                                    @default
-                                                        Tidak Aktif
-                                                @endswitch
-                                            </th>
-
-                                            <th>
+                                            <td><span class="label label-info">{{ $loop->iteration }}</span>
+                                            </td>
+                                            <td>{{ $item->keterangan }}</td>
+                                            <td>{{ $item->nama_reff }}</td>
+                                            <td>
+                                                @if ($item->aktif == 'Y')
+                                                    <span class="badge badge-success">Aktif</span>
+                                                @else
+                                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                                @endif
+                                            </td>
+                                            <td>
                                                 <button type="button" class="btn btn-primary btn-sm"
                                                     data-toggle="modal" data-target="#modalEditAkun{{ $item->id }}">
                                                     <i class="fa fa-edit"></i>
@@ -77,7 +69,7 @@
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
-                                            </th>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

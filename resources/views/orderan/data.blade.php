@@ -531,18 +531,9 @@
 
             if (dpInput.value && bayarDpSelect.value === "") {
                 submitButton.disabled = true;
-                $('#pesanMetode').append(
-                    '<div class="alert alert-danger text-center" role="alert">Silakan pilih metode pembayaran dulu.</div>'
-                );
-
-
-                // Swal.fire({
-                //     icon: 'warning',
-                //     title: 'Oops...',
-                //     text: 'Silakan pilih metode pembayaran dulu.',
-                // });
-
-
+                toastr.error("Silakan pilih metode pembayaran dulu.", {
+                    positionClass: "toast-bottom-right"
+                });
             } else {
                 submitButton.disabled = false;
                 $('#pesanMetode').empty();
@@ -782,14 +773,15 @@
                 // Hapus form saat tombol hapus diklik
                 $(this).closest(".form-transaksi").remove();
             } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan!!',
-                    text: 'Minimal harus ada 1 form transaksi',
-                    timer: 2000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                });
+                // Swal.fire({
+                //     icon: 'warning',
+                //     title: 'Peringatan!!',
+                //     text: 'Minimal harus ada 1 form transaksi',
+                //     timer: 2000,
+                //     timerProgressBar: true,
+                //     showConfirmButton: false
+                // });
+                toastr.warning('Minimal harus ada 1 form transaksi');
             }
         });
 

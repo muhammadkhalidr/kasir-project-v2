@@ -101,17 +101,7 @@ class PiutangController extends Controller
         if (empty($datas)) {
             return redirect()->back()->with('error', 'Data Tidak Ditemukan!');
         } else {
-            // return view('piutang.cetakpiutang', [
-            //     'title' => 'Cetak Pengeluaran',
-            //     'datas' => $datas,
-            //     'datasGrouped' => $datasGrouped,
-            //     'name_user' => $user->name,
-            //     'breadcrumb' => 'Piutang',
-            //     'total' => $total,
-            //     'info' => $setting
-            // ]);
-
-            $pdf = PDF::loadView('piutang.cetakpiutang', [
+            return view('piutang.cetakpiutang', [
                 'title' => 'Cetak Pengeluaran',
                 'datas' => $datas,
                 'datasGrouped' => $datasGrouped,
@@ -121,7 +111,17 @@ class PiutangController extends Controller
                 'info' => $setting
             ]);
 
-            return $pdf->download('Rincian_piutang .pdf');
+            // $pdf = PDF::loadView('piutang.cetakpiutang', [
+            //     'title' => 'Cetak Pengeluaran',
+            //     'datas' => $datas,
+            //     'datasGrouped' => $datasGrouped,
+            //     'name_user' => $user->name,
+            //     'breadcrumb' => 'Piutang',
+            //     'total' => $total,
+            //     'info' => $setting
+            // ]);
+
+            // return $pdf->download('Rincian_piutang .pdf');
         }
     }
 }
