@@ -362,7 +362,7 @@ class PembelianController extends Controller
 
         if (!empty($errors)) {
             // Redirect dengan pesan kesalahan
-            return redirect('pembelian')->with('error', implode($errors));
+            return redirect('pembelian')->with('warning', implode($errors));
         }
 
         // Redirect dengan pesan sukses

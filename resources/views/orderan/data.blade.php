@@ -571,13 +571,12 @@
                 _method: 'DELETE'
             },
             success: function(response) {
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: response.success,
-                    icon: 'success',
-                }).then(() => {
-                    location.reload();
+                toastr.info('Proses ...', {
+                    positionClass: "toast-bottom-right"
                 });
+                setInterval(function() {
+                    location.reload();
+                }, 1000);
             },
             error: function(error) {
                 console.error('Error:', error);
