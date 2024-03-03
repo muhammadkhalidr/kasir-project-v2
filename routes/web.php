@@ -18,6 +18,7 @@ use App\Http\Controllers\GajiKaryawanV2Controller;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\JenisBahanController;
 use App\Http\Controllers\JenisPengeluaranController;
+use App\Http\Controllers\JurnalController;
 use App\Http\Controllers\KasbonController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\KategoriBahanController;
@@ -224,6 +225,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('jenis-akun', AkunController::class);
         Route::delete('hapus-jenis-akun/{id}', [AkunController::class, 'destroy'])->name('akun.hapus');
         Route::put('edit-jenis-akun/{id}', [AkunController::class, 'update'])->name('akun.update');
+
+        Route::get('jurnal-umum', [JurnalController::class, 'index']);
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------

@@ -217,7 +217,7 @@
                             <i class="icon-notebook menu-icon"></i><span class="nav-text">Pembukuan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ url('jurnal') }}">Jurnal Umum</a></li>
+                            <li><a href="{{ url('jurnal-umum') }}">Jurnal Umum</a></li>
                             <li><a href="{{ url('neraca') }}">Neraca</a></li>
                             <li><a href="{{ url('laba-rugi') }}">Laba Rugi</a></li>
                             <li><a href="{{ url('buku-besar') }}">Buku Besar</a></li>

@@ -28,56 +28,60 @@
                                     Tambah Akun
                                 </button>
                             @endif
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama</th>
-                                        <th>Akun</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $no = 1;
-                                    @endphp
-                                    @foreach ($datas as $index => $item)
+                            <div class="table-responsive mt-2">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
                                         <tr>
-                                            <td><span class="label label-info">{{ $index + $datas->firstItem() }}</span>
-                                            </td>
-                                            <td>{{ $item->keterangan }}</td>
-                                            <td>{{ $item->nama_reff }}</td>
-                                            <td>
-                                                @if ($item->aktif == 'Y')
-                                                    <span class="badge badge-success">Aktif</span>
-                                                @else
-                                                    <span class="badge badge-danger">Tidak Aktif</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary btn-sm"
-                                                    data-toggle="modal" data-target="#modalEditAkun{{ $item->id }}">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                                <form method="POST" action="{{ route('akun.hapus', $item->id) }}"
-                                                    style="display: inline" id="hapusAkunTransaksi{{ $item->id }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" title="Hapus Data"
-                                                        class="btn btn-sm btn-danger"
-                                                        onclick="hapusAkunTransaksi({{ $item->id }})">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
+                                            <th>No</th>
+                                            <th>Nama</th>
+                                            <th>Akun</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($datas as $index => $item)
+                                            <tr>
+                                                <td><span
+                                                        class="label label-info">{{ $index + $datas->firstItem() }}</span>
+                                                </td>
+                                                <td>{{ $item->keterangan }}</td>
+                                                <td>{{ $item->nama_reff }}</td>
+                                                <td>
+                                                    @if ($item->aktif == 'Y')
+                                                        <span class="badge badge-success">Aktif</span>
+                                                    @else
+                                                        <span class="badge badge-danger">Tidak Aktif</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                        data-toggle="modal"
+                                                        data-target="#modalEditAkun{{ $item->id }}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    <form method="POST" action="{{ route('akun.hapus', $item->id) }}"
+                                                        style="display: inline"
+                                                        id="hapusAkunTransaksi{{ $item->id }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" title="Hapus Data"
+                                                            class="btn btn-sm btn-danger"
+                                                            onclick="hapusAkunTransaksi({{ $item->id }})">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
+
                         <div class="d-flex justify-content-end p-4">
                             {{ $datas->links() }}
                         </div>
