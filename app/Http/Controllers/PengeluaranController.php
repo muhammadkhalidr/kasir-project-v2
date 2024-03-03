@@ -237,7 +237,7 @@ class PengeluaranController extends Controller
             $bon->delete();
         }
 
-        return redirect('pengeluaran')->with('msg', 'Data Berhasil Dihapus!');
+        return redirect('pengeluaran')->with('success', 'Data Berhasil Dihapus!');
     }
 
     public function printInvoice($id_pengeluaran)

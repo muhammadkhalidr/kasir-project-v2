@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('akuns', function (Blueprint $table) {
             $table->id('id');
-            $table->integer('no_reff');
+            $table->integer('id_akun');
             $table->integer('id_user');
             $table->string('nama_reff');
             $table->string('keterangan');

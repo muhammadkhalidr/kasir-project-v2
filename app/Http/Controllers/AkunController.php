@@ -30,7 +30,7 @@ class AkunController extends Controller
             'title' => 'Jenis Akun',
             'name_user' => $user->name,
             'breadcrumb' => 'Jenis Akun',
-            'datas' => $data->get(),
+            'datas' => $data->paginate(10),
         ]);
     }
 
@@ -50,7 +50,7 @@ class AkunController extends Controller
         // $user = Auth::user();
         $data = new Akun;
 
-        $data->no_reff = $request->no_reff;
+        $data->id_akun = $request->no_reff;
         $data->id_user = $request->user()->id;
         $data->nama_reff = $request->akun;
         $data->keterangan = $request->ket;
@@ -88,7 +88,7 @@ class AkunController extends Controller
 
         $data = Akun::findOrFail($id);
 
-        $data->no_reff = $request->no_reff;
+        $data->id_akun = $request->no_reff;
         $data->id_user = $request->user()->id;
         $data->nama_reff = $request->akun;
         $data->keterangan = $request->ket;

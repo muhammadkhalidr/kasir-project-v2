@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JenisPengeluaran;
 use App\Http\Requests\StoreJenisPengeluaranRequest;
 use App\Http\Requests\UpdateJenisPengeluaranRequest;
+use App\Models\Akun;
 use App\Models\JenisBahan;
 use App\Models\setting;
 use Illuminate\Http\Request;
@@ -25,16 +26,19 @@ class JenisPengeluaranController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $akuns = Akun::all();
         $idJenis = JenisPengeluaran::latest('id_jenis')->first();
         $perPage = $request->input('dataOptions', 10);
 
         $query = JenisPengeluaran::query();
-        $jenis = $query->get();
+        $jenis = $query->with(['akuns'])->get();
 
         // Terapkan filter pencarian jika ada
         if ($request->has('q')) {
             $query->where('nama_jenis', 'like', '%' . $request->input('q') . '%');
         }
+
+        // dd($jenis);
 
         // Ambil data dengan filter pencarian yang telah diterapkan
         $jenispengeluarans = $query->paginate($perPage);
@@ -44,6 +48,7 @@ class JenisPengeluaranController extends Controller
             'breadcrumb' => 'Jenis Pengeluaran',
             'name_user' => $user->name,
             'datas' => $jenispengeluarans,
+            'akuns' => $akuns,
             'idJenis' => $idJenis->id_jenis + 1,
             'perPageOptions' => [10, 15, 25, 100],
         ]);
@@ -72,6 +77,7 @@ class JenisPengeluaranController extends Controller
 
         $jenis->id_jenis = $request->id_jenis;
         $jenis->nama_jenis = $request->jenis;
+        $jenis->id_akun = $request->akun;
         $jenis->aktif = $request->status;
         $jenis->save();
 
@@ -106,6 +112,7 @@ class JenisPengeluaranController extends Controller
 
         $data->id_jenis = $request->id_jenis;
         $data->nama_jenis = $request->jenis;
+        $data->id_akun = $request->akun;
         $data->aktif = $request->status;
         $data->save();
 

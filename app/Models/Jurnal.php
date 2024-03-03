@@ -13,10 +13,10 @@ class Jurnal extends Model
     protected $table = 'jurnals';
 
     // Non-aktifkan Timestamp
-    public $timestamps = true;
+    public $timestamps = false;
 
     // kolom tabel untuk Mass Assingment
-    protected $guarded = ['id_transaksi'];
+    protected $fillable = ['keterangan', 'waktu_transaksi', 'nominal', 'tipe', 'id_akun'];
 
     // kolom akan disembunyikan dalam array
     protected $hidden = [''];

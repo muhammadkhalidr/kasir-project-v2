@@ -1,7 +1,7 @@
 @extends('logtransaksi.index')
 
 @section('judul')
-    <h4>Jenis Pengeluaran</h4>
+    <h4>Jenis Transaksi</h4>
 @endsection
 
 @section('content')
@@ -71,8 +71,8 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>ID</th>
                                     <th>Jenis</th>
+                                    <th>Akun</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -84,10 +84,12 @@
                                 @foreach ($datas as $index => $item)
                                     <tr>
                                         <td>{{ $index + $datas->firstItem() }}</td>
-                                        <td>{{ $item->id_jenis }}</td>
                                         <td>{{ $item->nama_jenis }}</td>
+                                        <td>{{ $item->akuns->first()->id_akun ?? '' }} |
+                                            {{ $item->akuns->first()->nama_reff ?? '' }}
+                                        </td>
                                         <td>
-                                            @if ($item->aktif == 1)
+                                            @if ($item->aktif == 'Y')
                                                 <span class="badge badge-success">Aktif</span>
                                             @else
                                                 <span class="badge badge-danger">Tidak Aktif</span>
@@ -99,11 +101,11 @@
                                                 <i class="fa fa-edit"></i>
                                             </button>
                                             <form action="{{ url('jenis-pengeluaran/' . $item->id) }}" method="POST"
-                                                id="hapusJenisP" style="display: inline">
+                                                id="hapusAkunTransaksi{{ $item->id }}" style="display: inline">
                                                 @method('DELETE')
                                                 @csrf
-                                                <button type="submit" title="Hapus Data" class="btn btn-sm btn-danger"
-                                                    onclick="return confirm('Yakin?')">
+                                                <button type="button" title="Hapus Data" class="btn btn-sm btn-danger"
+                                                    onclick="hapusAkunTransaksi({{ $item->id }})">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
@@ -151,14 +153,22 @@
                                 value="{{ $idJenis }}" readonly>
                         </div>
                         <div class="form-group">
+                            <label for="akun">Akun</label>
+                            <select name="akun" id="akun" class="form-control">
+                                @foreach ($akuns as $item)
+                                    <option value="{{ $item->id_akun }}">{{ $item->nama_reff }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="jenis">Jenis</label>
                             <input type="text" class="form-control" id="jenis" name="jenis">
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>
                             <select name="status" id="status" class="form-control">
-                                <option value="1">Aktif</option>
-                                <option value="2">Tidak Aktif</option>
+                                <option value="Y">Aktif</option>
+                                <option value="N">Tidak Aktif</option>
                             </select>
                         </div>
 
@@ -179,7 +189,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editJenisPLabel">Edit Jenis Transaksi</h5>
+                        <h5 class="modal-title" id="editJenisPLabel">Edit {{ $item->nama_jenis }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -199,10 +209,24 @@
                                     value="{{ $item->nama_jenis }}">
                             </div>
                             <div class="form-group">
+                                <label for="akun">Akun</label>
+                                <select name="akun" id="akun" class="form-control">
+                                    <option value="{{ $item->id_akun }}">{{ $item->akuns->first()->nama_reff }}</option>
+                                    @foreach ($akuns as $item)
+                                        <option value="{{ $item->id_akun }}">{{ $item->nama_reff }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="status">Status</label>
                                 <select name="status" id="status" class="form-control">
-                                    <option value="1">Aktif</option>
-                                    <option value="2">Tidak Aktif</option>
+                                    @php
+                                        $status = ['Y' => 'Aktif', 'N' => 'Tidak Aktif'];
+                                    @endphp
+                                    @foreach ($status as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ $item->status == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                     </div>
@@ -218,19 +242,19 @@
 @endsection
 @section('js')
     <script>
-        function hapusJenisP() {
+        function hapusAkunTransaksi(id) {
             Swal.fire({
-                title: 'Yakin ingin menghapus data ini?',
-                text: 'Data yang dihapus tidak dapat dikembalikan!',
+                title: 'Hapus Akun ?',
+                text: "Data yang di hapus tidak dapat dikembalikan",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
                 confirmButtonText: 'Hapus',
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('hapusJenisP').submit();
+                    document.getElementById('hapusAkunTransaksi' + id).submit();
                 }
             });
         }

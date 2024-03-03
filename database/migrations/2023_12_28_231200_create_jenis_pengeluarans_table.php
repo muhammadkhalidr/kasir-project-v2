@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('id_jenis');
             $table->string('nama_jenis');
-            $table->integer('aktif');
+            $table->enum('aktif', ['Y', 'N']);
+            $table->integer('id_akun');
             $table->timestamps();
         });
     }

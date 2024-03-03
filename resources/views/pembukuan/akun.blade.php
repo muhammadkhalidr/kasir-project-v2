@@ -41,9 +41,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($datas as $item)
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($datas as $index => $item)
                                         <tr>
-                                            <td><span class="label label-info">{{ $loop->iteration }}</span>
+                                            <td><span class="label label-info">{{ $index + $datas->firstItem() }}</span>
                                             </td>
                                             <td>{{ $item->keterangan }}</td>
                                             <td>{{ $item->nama_reff }}</td>
@@ -75,6 +78,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex justify-content-end p-4">
+                            {{ $datas->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,7 +103,7 @@
                         @csrf
                         @method('POST')
                         <div class="form-group">
-                            <label for="">No Reff</label>
+                            <label for="">ID Akun</label>
                             <input type="text" name="no_reff" id="" class="form-control" required>
                         </div>
                         <div class="form-group">
@@ -142,9 +148,9 @@
                             @csrf
                             @method('PUT')
                             <div class="form-group">
-                                <label for="">No Reff</label>
+                                <label for="">ID Akun</label>
                                 <input type="text" name="no_reff" id="" class="form-control"
-                                    value="{{ $item->no_reff }}" required>
+                                    value="{{ $item->id_akun }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="">Nama Akun</label>

@@ -27,8 +27,8 @@ class JenisPengeluaran extends Model
         return $this->hasMany(Pembelian::class, 'id_jenis');
     }
 
-    // public function kasbons()
-    // {
-    //     return $this->hasMany(Kasbon::class, 'id_jenis');
-    // }
+    public function akuns()
+    {
+        return $this->hasMany(Akun::class, 'id_akun', 'id_akun');
+    }
 }

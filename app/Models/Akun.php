@@ -21,6 +21,11 @@ class Akun extends Model
         return $this->hasMany(Jurnal::class, 'id_akun');
     }
 
+    public function jenisP()
+    {
+        return $this->hasMany(JenisPengeluaran::class, 'id_akun', 'id_akun');
+    }
+
     // Non-aktifkan Timestamp
     public $timestamps = true;
 }
