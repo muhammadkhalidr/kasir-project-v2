@@ -199,7 +199,7 @@
     @elseif (auth()->user()->level == 1)
         <div class="nk-sidebar">
             <div class="nk-nav-scroll">
-                <div class="text-center mt-2" style="background-color: red;color:white;padding:5px">
+                <div class="text-center mt-2" style="background-color: #7571f9;color:white;padding:5px">
                     <span>Developer Access</span>
                 </div>
                 <ul class="metismenu" id="menu">
@@ -299,8 +299,15 @@
                             <li><a href="{{ url('setting') }}">Aplikasi</a></li>
                             <li><a href="{{ url('rekening') }}">Rekening</a></li>
                             <li><a href="{{ url('jenis-pengeluaran') }}">Jenis Pengeluaran</a></li>
-                            <li><a href="{{ url('menu') }}">Menu Admin</a></li>
+                            <li><a href="{{ url('reset') }}">Reset Data</a></li>
                         </ul>
+                    </li>
+                    <hr>
+                    <li>
+                        <a href="{{ url('backup') }}" aria-expanded="false">
+                            <i class="fa fa-server menu-icon"></i><span class="nav-text text-info">Backup
+                                Database</span>
+                        </a>
                     </li>
                 </ul>
                 <hr>

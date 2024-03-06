@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AkunController;
+use App\Http\Controllers\BackupController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LayoutController;
@@ -230,6 +231,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/jurnal/detail/{month}', [JurnalController::class, 'showByMonth'])->name('jurnal.detail');
         Route::put('jurnal-umum/edit/{id_transaksi}', [JurnalController::class, 'update'])->name('jurnal.edit');
         Route::delete('jurnal-umum/delete/{id_transaksi}', [JurnalController::class, 'destroy'])->name('jurnal.delete');
+
+        // Backup Database
+        Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
+        Route::get('/backup/download', [BackupController::class, 'download'])->name('backup.download');
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------
