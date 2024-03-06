@@ -12,8 +12,7 @@ class Jurnal extends Model
     // nama table tidak mengikuti konvensi laravel
     protected $table = 'jurnals';
 
-    // Non-aktifkan Timestamp
-    public $timestamps = false;
+    protected $primaryKey = 'id_transaksi';
 
     // kolom tabel untuk Mass Assingment
     protected $fillable = ['keterangan', 'waktu_transaksi', 'nominal', 'tipe', 'id_akun'];
@@ -22,8 +21,8 @@ class Jurnal extends Model
     protected $hidden = [''];
 
     // Relasi N-1 antara akun dengan jurnal
-    public function akun()
+    public function akuns()
     {
-        return $this->belongsTo(Akun::class, 'id_akun');
+        return $this->hasMany(Akun::class, 'id_akun', 'no_reff');
     }
 }

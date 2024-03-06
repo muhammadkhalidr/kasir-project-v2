@@ -18,7 +18,7 @@ class Akun extends Model
     // relasi 1-N dengan Jurnal
     public function jurnal()
     {
-        return $this->hasMany(Jurnal::class, 'id_akun');
+        return $this->belongsTo(Jurnal::class, 'no_reff', 'id_akun');
     }
 
     public function jenisP()

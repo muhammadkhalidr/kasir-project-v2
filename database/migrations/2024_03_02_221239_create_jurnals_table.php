@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('jurnals', function (Blueprint $table) {
             $table->id('id_transaksi');
-            $table->integer('id_user');
-            $table->integer('no_reff');
-            $table->string('reff');
-            $table->timestamp('tgl_transaksi');
-            $table->enum('tipe', ['debit', 'kredit']);
-            $table->integer('nominal');
-            $table->string('keterangan');
+            $table->integer('id_user')->nullable();
+            $table->integer('no_reff')->nullable();
+            $table->enum('tipe', ['debit', 'kredit'])->nullable();
+            $table->integer('nominal')->nullable();
+            $table->string('keterangan')->nullable();
+            $table->timestamps();
         });
     }
 

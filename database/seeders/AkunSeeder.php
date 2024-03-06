@@ -21,12 +21,15 @@ class AkunSeeder extends Seeder
             ['nama_reff' => 'Tanah', 'id_akun' => '160', 'keterangan' => 'Tanah', 'aktif' => 'Y', 'id_user' => '1'],
             ['nama_reff' => 'Utang Usaha', 'id_akun' => '210', 'keterangan' => 'Utang Usaha', 'aktif' => 'Y', 'id_user' => '1'],
             ['nama_reff' => 'Utang Bank', 'id_akun' => '230', 'keterangan' => 'Utang Bank', 'aktif' => 'Y', 'id_user' => '1'],
-            ['nama_reff' => 'Modal Saham', 'id_akun' => '310', 'keterangan' => 'Modal Saham', 'aktif' => 'Y', 'id_user' => '1'],
+            ['nama_reff' => 'Persediaan', 'id_akun' => '310', 'keterangan' => 'Persediaan Bahan', 'aktif' => 'Y', 'id_user' => '1'],
             ['nama_reff' => 'Pendapatan', 'id_akun' => '510', 'keterangan' => 'Pendapatan', 'aktif' => 'Y', 'id_user' => '1'],
             ['nama_reff' => 'Gaji & Upah', 'id_akun' => '410', 'keterangan' => 'Gaji', 'aktif' => 'Y', 'id_user' => '1'],
             ['nama_reff' => 'Utilities (Listrik, Air, & Gas)', 'id_akun' => '420', 'keterangan' => 'Listrik, Air, Gas', 'aktif' => 'Y', 'id_user' => '1'],
             ['nama_reff' => 'Bunga Bank', 'id_akun' => '430', 'keterangan' => 'Bunga Bank', 'aktif' => 'Y', 'id_user' => '1'],
             ['nama_reff' => 'Dividen', 'id_akun' => '440', 'keterangan' => 'Dividen', 'aktif' => 'Y', 'id_user' => '1'],
+            ['nama_reff' => 'Pendapatan', 'id_akun' => '450', 'keterangan' => 'Pendapatan', 'aktif' => 'Y', 'id_user' => '1'],
+            ['nama_reff' => 'Pendapatan Jasa/Usaha', 'id_akun' => '451', 'keterangan' => 'Pendapatan Jasa/Usaha', 'aktif' => 'Y', 'id_user' => '1'],
+            ['nama_reff' => 'Beban Karyawan', 'id_akun' => '460', 'keterangan' => 'Beban Karyawan', 'aktif' => 'Y', 'id_user' => '1'],
         ];
 
         DB::table('akuns')->insert($akun);

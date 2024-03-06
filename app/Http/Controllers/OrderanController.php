@@ -6,6 +6,7 @@ use App\Models\Orderan;
 use App\Http\Requests\UpdateOrderanRequest;
 use App\Models\DetailOrderan;
 use App\Models\JenisBahan;
+use App\Models\Jurnal;
 use App\Models\KasMasuk;
 use App\Models\OmsetPenjualan;
 use App\Models\Pelanggan;
@@ -325,6 +326,24 @@ class OrderanController extends Controller
             }
         }
 
+        // Buat dan simpan objek Jurnal 
+        $jurnal = new Jurnal;
+        $jurnal->no_reff = '110';
+        $jurnal->id_user = $user->id;
+        $jurnal->tipe = 'debit';
+        $jurnal->nominal = str_replace('.', '', $data['subtotal']);
+        $jurnal->keterangan = 'Kas Penjualan dari invoice# ' . $data['notrx'][0];
+        $jurnal->save();
+
+        $jurnal2 = new Jurnal;
+        $jurnal2->no_reff = '451';
+        $jurnal2->id_user = $user->id;
+        $jurnal2->tipe = 'kredit';
+        $jurnal2->nominal = str_replace('.', '', $data['subtotal']);
+        $jurnal2->keterangan = 'Pendapatan dari invoice# ' . $data['notrx'][0];
+        $jurnal2->save();
+
+        // Redirect ke halaman orderan
         return redirect('orderan')->with('success', 'Data Berhasil Ditambahkan!');
     }
 

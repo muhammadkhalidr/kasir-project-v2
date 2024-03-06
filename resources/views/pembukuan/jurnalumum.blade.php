@@ -38,17 +38,31 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($datas as $item)
+                                @foreach ($datas as $index => $group)
                                     <tr>
                                         <td scope="col">{{ $loop->iteration }}</td>
-                                        <td scope="col">{{ $item->formatted_date }}
+                                        <td scope="col">
+                                            <a
+                                                href="{{ route('jurnal.detail', $group['formatted_date']) }}">{{ $group['formatted_date'] }}</a>
                                         </td>
-                                        <td class="text-right"><button class="btn btn-sm btn-success">Detail</button>
+                                        <td class="text-right">
+                                            <button class="btn btn-sm btn-success"> <a
+                                                    href="{{ route('jurnal.detail', $group['formatted_date']) }}"
+                                                    class="text-white">Detail</a></button>
                                         </td>
                                     </tr>
                                 @endforeach
+
+                                @if (count($datas) == 0)
+                                    <tr>
+                                        <td colspan="10" class="text-center">
+                                            <p>Belum ada data jurnal</p>
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -56,37 +70,43 @@
     </div>
 </div>
 
-{{-- Modal Tambah Akun --}}
+{{-- Modal Tambah Jurnal --}}
 <div class="modal fade" id="modalTambahAkun" tabindex="-1" aria-labelledby="modalTambahAkunLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTambahAkunLabel">Tambah Akun</h5>
+                <h5 class="modal-title" id="modalTambahAkunLabel">Tambah Jurnal</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ url('jenis-akun') }}" method="POST">
-                    @csrf
+                <form action="{{ url('jurnal-umum') }}" method="POST">
                     @method('POST')
+                    @csrf
                     <div class="form-group">
-                        <label for="">ID Akun</label>
-                        <input type="text" name="no_reff" id="" class="form-control" required>
+                        <input type="date" name="tgl" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="akun">Akun</label>
+                        <select name="akun" id="akun" class="form-control" required>
+                            @foreach ($akuns as $akun)
+                                <option value="{{ $akun->id_akun }}">
+                                    {{ $akun->nama_reff }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="">Nama Akun</label>
-                        <input type="text" name="akun" id="" class="form-control" required>
+                        <label for="nominal">Nominal</label>
+                        <input type="text" class="form-control" id="saldo" name="saldo" required>
                     </div>
                     <div class="form-group">
-                        <label for="">Keterangan</label>
-                        <input type="text" name="ket" id="" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Status</label>
-                        <select name="aktif" id="" class="form-control">
-                            <option value="Y">Aktif</option>
-                            <option value="N">Tidak Aktif</option>
+                        <label for="jsaldo">Jeni Saldo</label>
+                        <select name="jsaldo" id="jsaldo" class="form-control" required>
+                            <option value="kredit">Kredit</option>
+                            <option value="debit">Debit</option>
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -97,57 +117,9 @@
         </div>
     </div>
 </div>
-{{-- End Modal Tambah AKun --}}
+{{-- End Modal Tambah Jurnal --}}
 
-{{-- Modal Edit Akun --}}
-{{-- @foreach ($datas as $item)
-    <div class="modal fade" id="modalEditAkun{{ $item->id }}" tabindex="-1" aria-labelledby="modalEditAkunLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalEditAkunLabel{{ $item->id }}">Edit Akun</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('akun.update', ['id' => $item->id]) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="form-group">
-                            <label for="">ID Akun</label>
-                            <input type="text" name="no_reff" id="" class="form-control"
-                                value="{{ $item->id_akun }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Nama Akun</label>
-                            <input type="text" name="akun" id="" class="form-control"
-                                value="{{ $item->nama_reff }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Keterangan</label>
-                            <input type="text" name="ket" id="" class="form-control"
-                                value="{{ $item->keterangan }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Status</label>
-                            <select name="aktif" id="" class="form-control">
-                                <option value="Y">Aktif</option>
-                                <option value="N">Tidak Aktif</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
 
-                </div>
-            </div>
-        </div>
-    </div>
-@endforeach --}}
-{{-- End Modal Edit AKun --}}
 <!-- #/ container -->
 <!--**********************************
                 Content body end

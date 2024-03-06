@@ -226,7 +226,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('hapus-jenis-akun/{id}', [AkunController::class, 'destroy'])->name('akun.hapus');
         Route::put('edit-jenis-akun/{id}', [AkunController::class, 'update'])->name('akun.update');
 
-        Route::get('jurnal-umum', [JurnalController::class, 'index']);
+        Route::resource('jurnal-umum', JurnalController::class);
+        Route::get('/jurnal/detail/{month}', [JurnalController::class, 'showByMonth'])->name('jurnal.detail');
+        Route::put('jurnal-umum/edit/{id_transaksi}', [JurnalController::class, 'update'])->name('jurnal.edit');
+        Route::delete('jurnal-umum/delete/{id_transaksi}', [JurnalController::class, 'destroy'])->name('jurnal.delete');
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------

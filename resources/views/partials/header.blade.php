@@ -13,7 +13,8 @@
 
     <!-- Favicon icon -->
     @foreach ($logo as $item)
-        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/settings/{{ $item->favicon }}">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="{{ asset('/') }}assets/images/settings/{{ $item->favicon }}">
     @endforeach
     <!-- Custom Stylesheet -->
     {{-- select2 --}}
@@ -42,7 +43,8 @@
     <div id="preloader">
         <div class="loader">
             @foreach ($logo as $item)
-                <img src="assets/images/settings/{{ $item->favicon }}" alt="" class="logo-loader">
+                <img src="{{ asset('/') }}assets/images/settings/{{ $item->favicon }}" alt=""
+                    class="logo-loader">
             @endforeach
             <h6 class="text-center">Loading...</h6>
         </div>
@@ -64,11 +66,14 @@
             <div class="brand-logo">
                 <a href="{{ asset('/') }}">
                     @foreach ($logo as $item)
-                        <b class="logo-abbr"><img src="assets/images/settings/{{ $item->logo }}" alt=""> </b>
-                        <span class="logo-compact"><img src="assets/images/settings/{{ $item->logo }}"
+                        <b class="logo-abbr"><img src="{{ asset('/') }}assets/images/settings/{{ $item->logo }}"
+                                alt=""> </b>
+                        <span class="logo-compact"><img
+                                src="{{ asset('/') }}assets/images/settings/{{ $item->logo }}"
                                 alt=""></span>
                         <span class="brand-title">
-                            <img src="assets/images/settings/{{ $item->logo }}" alt="" width="120">
+                            <img src="{{ asset('/') }}assets/images/settings/{{ $item->logo }}" alt=""
+                                width="120">
                         </span>
                     @endforeach
                 </a>
