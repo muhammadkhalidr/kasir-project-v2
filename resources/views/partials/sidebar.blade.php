@@ -199,6 +199,9 @@
     @elseif (auth()->user()->level == 1)
         <div class="nk-sidebar">
             <div class="nk-nav-scroll">
+                <div class="text-center mt-2" style="background-color: red;color:white;padding:5px">
+                    <span>Developer Access</span>
+                </div>
                 <ul class="metismenu" id="menu">
                     <li class="nav-label">Data Master</li>
                     <li>
@@ -300,6 +303,8 @@
                         </ul>
                     </li>
                 </ul>
+                <hr>
+                <div class="text-center"><span>Versi 1.0</span></div>
             </div>
         </div>
     @endif
