@@ -29,6 +29,7 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekeningController;
+use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StokMasukController;
@@ -39,6 +40,7 @@ use App\Models\DetailPembelian;
 use App\Models\JenisBahan;
 use App\Models\Satuan;
 use App\Models\StokMasuk;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -239,6 +241,14 @@ Route::group(['middleware' => ['auth']], function () {
         // Backup Database
         Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
         Route::get('/backup/download', [BackupController::class, 'download'])->name('backup.download');
+
+
+
+
+
+        // Reset Data
+        Route::get('reset', [ResetController::class, 'index'])->name('reset.index');
+        Route::post('/reset/{table}', [ResetController::class, 'resetTable'])->name('resetTable');
     });
 
     // End Route Super Admin-----------------------------------------------------------------------------------------------------------------------------

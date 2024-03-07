@@ -56,10 +56,18 @@
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-doc menu-icon"></i><span class="nav-text">Pengeluaran</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('pengeluaran') }}">Data Pengeluaran</a></li>
+                            <li><a href="{{ url('jenis-pengeluaran') }}">Jenis Pengeluaran</a></li>
+                        </ul>
+                    </li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-book-open menu-icon"></i><span class="nav-text">Laporan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ url('pengeluaran') }}">Pengeluaran</a></li>
                             {{-- <li><a href="{{ url('hutang') }}">Hutang</a></li> --}}
                             <li><a href="{{ url('pendapatan') }}">Rincian Pendapatan</a></li>
                             <li><a href="{{ url('piutang') }}">Rincian Piutang</a></li>
@@ -101,8 +109,6 @@
                             <li><a href="{{ url('pengguna') }}">Pengguna</a></li>
                             <li><a href="{{ url('setting') }}">Aplikasi</a></li>
                             <li><a href="{{ url('rekening') }}">Rekening</a></li>
-                            <li><a href="{{ url('jenis-pengeluaran') }}">Jenis Pengeluaran</a></li>
-                            <li><a href="{{ url('menu') }}">Menu Admin</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -268,10 +274,18 @@
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-doc menu-icon"></i><span class="nav-text">Pengeluaran</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('pengeluaran') }}">Data Pengeluaran</a></li>
+                            <li><a href="{{ url('jenis-pengeluaran') }}">Jenis Pengeluaran</a></li>
+                        </ul>
+                    </li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-book-open menu-icon"></i><span class="nav-text">Laporan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ url('pengeluaran') }}">Pengeluaran</a></li>
                             {{-- <li><a href="{{ url('hutang') }}">Hutang</a></li> --}}
                             <li><a href="{{ url('pendapatan') }}">Rincian Pendapatan</a></li>
                             <li><a href="{{ url('piutang') }}">Rincian Piutang</a></li>
@@ -313,7 +327,6 @@
                             <li><a href="{{ url('pengguna') }}">Pengguna</a></li>
                             <li><a href="{{ url('setting') }}">Aplikasi</a></li>
                             <li><a href="{{ url('rekening') }}">Rekening</a></li>
-                            <li><a href="{{ url('jenis-pengeluaran') }}">Jenis Pengeluaran</a></li>
                             <li><a href="{{ url('reset') }}">Reset Data</a></li>
                         </ul>
                     </li>
