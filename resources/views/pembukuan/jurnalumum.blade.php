@@ -22,11 +22,11 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Jenis Akun</h4>
+                        <h4 class="card-title">Jurnal Umum</h4>
                         @if (auth()->user()->level == 1 || auth()->user()->level == 2)
                             <button type="button" class="btn btn-primary d-flex justify-content-end"
                                 data-toggle="modal" data-target="#modalTambahAkun">
-                                Tambah Akun
+                                Tambah Jurnal
                             </button>
                         @endif
                         <table class="table align-items-center table-flush mt-5" id="jurnal-umum">

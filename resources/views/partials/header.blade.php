@@ -108,8 +108,14 @@
                                 <div class="dropdown-content-body">
                                     <ul>
                                         <li>
-                                            <span>{{ $name_user }}</span>
+                                            @if (auth()->check() && auth()->user()->level == 1)
+                                                <span class="badge-dot badge-primary">{{ $name_user }}</span>
+                                            @else
+                                                <span>{{ $name_user }}</span>
+                                            @endif
                                         </li>
+
+
                                         <li>
                                             <a href="{{ url('profile') }}"><i class="icon-user"></i>
                                                 <span>Profile</span></a>

@@ -26,7 +26,7 @@
                                     <select class="form-control" name="jenispengeluaran[]" id="jenispengeluaran">
                                         <option value="">Pilih Jenis</option>
                                         @foreach ($dataJenis as $item)
-                                            <option value="{{ $item->id_jenis }}">{{ $item->nama_jenis }}</option>
+                                            <option value="{{ $item->id_akun }}">{{ $item->nama_jenis }}</option>
                                         @endforeach
                                     </select>
                                 </div>

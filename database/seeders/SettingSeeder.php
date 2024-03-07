@@ -30,6 +30,7 @@ class SettingSeeder extends Seeder
             'logo_lunas' => 'logo-lunas.png',
             'logo_blunas' => 'logo-blunas.png',
             'warnatema' => '#7571f9',
+            'demo' => 'N',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);

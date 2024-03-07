@@ -29,14 +29,14 @@
                                 </button>
                             @endif
                             <div class="table-responsive mt-2">
-                                <table class="table table-striped table-bordered">
-                                    <thead>
+                                <table class="table table-bordered">
+                                    <thead class="thead-primary">
                                         <tr>
-                                            <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Akun</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
+                                            <th scope="col">No</th>
+                                            <th scope="col">Nama</th>
+                                            <th scope="col">Akun</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -45,7 +45,7 @@
                                         @endphp
                                         @foreach ($datas as $index => $item)
                                             <tr>
-                                                <td><span
+                                                <td scope="row"><span
                                                         class="label label-info">{{ $index + $datas->firstItem() }}</span>
                                                 </td>
                                                 <td>{{ $item->keterangan }}</td>

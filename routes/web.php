@@ -24,6 +24,7 @@ use App\Http\Controllers\KasbonController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\KategoriBahanController;
 use App\Http\Controllers\LogTranasksiController;
+use App\Http\Controllers\NeracaController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\ProdukController;
@@ -227,11 +228,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('hapus-jenis-akun/{id}', [AkunController::class, 'destroy'])->name('akun.hapus');
         Route::put('edit-jenis-akun/{id}', [AkunController::class, 'update'])->name('akun.update');
 
+        // Jurnal Umum
         Route::resource('jurnal-umum', JurnalController::class);
         Route::get('/jurnal/detail/{month}', [JurnalController::class, 'showByMonth'])->name('jurnal.detail');
         Route::put('jurnal-umum/edit/{id_transaksi}', [JurnalController::class, 'update'])->name('jurnal.edit');
         Route::delete('jurnal-umum/delete/{id_transaksi}', [JurnalController::class, 'destroy'])->name('jurnal.delete');
 
+        // Neraca
+        Route::resource('neraca', NeracaController::class);
         // Backup Database
         Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
         Route::get('/backup/download', [BackupController::class, 'download'])->name('backup.download');

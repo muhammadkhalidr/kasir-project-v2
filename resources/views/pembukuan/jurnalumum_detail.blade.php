@@ -175,7 +175,7 @@
 <script type="text/javascript">
     function hapusJurnal(id) {
         Swal.fire({
-            title: 'Hapus Akun ?',
+            title: 'Hapus Jurnal ?',
             text: "Data yang di hapus tidak dapat dikembalikan",
             icon: 'warning',
             showCancelButton: true,

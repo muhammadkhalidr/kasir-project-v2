@@ -16,20 +16,8 @@ class JenisPengeluaranSeeder extends Seeder
         $jenisP = [
             [
                 'id_jenis' => '101',
-                'nama_jenis' => 'Pendapatan',
-                'id_akun' => '110',
-                'aktif' => 'Y',
-            ],
-            [
-                'id_jenis' => '102',
-                'nama_jenis' => 'Piutang',
-                'id_akun' => '120',
-                'aktif' => 'Y',
-            ],
-            [
-                'id_jenis' => '103',
-                'nama_jenis' => 'Dividen',
-                'id_akun' => '440',
+                'nama_jenis' => 'Kasbon Karyawan',
+                'id_akun' => '460',
                 'aktif' => 'Y',
             ],
         ];

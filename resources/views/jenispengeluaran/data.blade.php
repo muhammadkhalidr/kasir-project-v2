@@ -153,16 +153,16 @@
                                 value="{{ $idJenis }}" readonly>
                         </div>
                         <div class="form-group">
+                            <label for="jenis">Jenis</label>
+                            <input type="text" class="form-control" id="jenis" name="jenis">
+                        </div>
+                        <div class="form-group">
                             <label for="akun">Akun</label>
                             <select name="akun" id="akun" class="form-control">
                                 @foreach ($akuns as $item)
                                     <option value="{{ $item->id_akun }}">{{ $item->nama_reff }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="jenis">Jenis</label>
-                            <input type="text" class="form-control" id="jenis" name="jenis">
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>

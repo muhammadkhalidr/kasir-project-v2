@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('nama_reff');
             $table->string('keterangan');
             $table->enum('aktif', ['Y', 'N']);
+            $table->integer('aktiva');
+            $table->integer('pasiva');
+            $table->integer('laba_rugi');
+            $table->integer('kewajiban');
+            $table->integer('beban');
             $table->timestamps();
         });
     }

@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePengeluaranRequest;
 use App\Models\DetailPengeluaran;
 use App\Models\GajiKaryawanV2;
 use App\Models\JenisPengeluaran;
+use App\Models\Jurnal;
 use App\Models\Karyawan;
 use App\Models\Kasbon;
 use App\Models\KasMasuk;
@@ -113,7 +114,7 @@ class PengeluaranController extends Controller
         // $validate = $request->validated();
         $user = Auth::user();
         $pengeluaranTerakhir = Pengeluaran::where('id_pengeluaran', $request->txtid)->latest('id_pengeluaran')->first();
-
+        $jenisPengeluaran = JenisPengeluaran::find($request->jenispengeluaran);
         if ($pengeluaranTerakhir) {
             $idBaru = $pengeluaranTerakhir->id_generate;
         } else {
@@ -129,6 +130,7 @@ class PengeluaranController extends Controller
         }
 
         $data = $request->all();
+        // dd($data);
         foreach ($data['nopengeluaran'] as $key => $value) {
 
             $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
@@ -191,9 +193,29 @@ class PengeluaranController extends Controller
         $kasMasuk->bank = $data['metode'];
         $kasMasuk->save();
 
+        // Buat Data Jurnal
+        $jurnal1 = new Jurnal;
+        $jurnal1->no_reff = $data['jenispengeluaran'][$key]; // Use the correct attribute
+        $jurnal1->id_user = $user->id;
+        $jurnal1->tipe = 'debit';
+        $jurnal1->nominal = str_replace('.', '', $data['total'][$key]);
+        $jurnal1->keterangan = 'Pengeluaran dari No# ' . $value;
+        $jurnal1->save();
+
+        $jurnal2 = new Jurnal;
+        if ($data['metode'] === '888') {
+            $jurnal2->no_reff = '110'; // ID Akun untuk kas
+        } else {
+            $jurnal2->no_reff = '111'; // ID Akun untuk bank
+        }
+        $jurnal2->id_user = $user->id;
+        $jurnal2->tipe = 'kredit';
+        $jurnal2->nominal = str_replace('.', '', $data['total'][$key]);
+        $jurnal2->keterangan = 'Pengeluaran dari No# ' . $value;
+        $jurnal2->save();
+
         return redirect('pengeluaran')->with('success', 'Data Berhasil Ditambahkan!');
     }
-
 
 
     /**

@@ -130,7 +130,7 @@
                                                                 <td class="text-right">
                                                                     {{ formatRupiah($pengeluaran->total, true) }}
                                                                 </td>
-                                                                <td>{{ $pengeluaran->jenisp->nama_jenis ?? 'Kosong' }}
+                                                                <td>{{ $pengeluaran->jenisp->nama_jenis ?? '-' }}
                                                                 </td>
                                                                 <td class="text-right">
                                                                     {{ $pengeluaran->formatted_date }}</td>

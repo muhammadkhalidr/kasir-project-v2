@@ -248,7 +248,7 @@ class OrderanController extends Controller
 
             // Tentukan nilai uang muka
             $uangMuka = !empty($data['uangmuka']) ? str_replace('.', '', $data['uangmuka']) : 0;
-
+            $caraBayar = $data['bayarDp'];
             // Tentukan nilai id pelanggan
             $idPelanggan = !empty($value) ? $value : 0;
 
@@ -326,22 +326,58 @@ class OrderanController extends Controller
             }
         }
 
-        // Buat dan simpan objek Jurnal 
-        $jurnal = new Jurnal;
-        $jurnal->no_reff = '110';
-        $jurnal->id_user = $user->id;
-        $jurnal->tipe = 'debit';
-        $jurnal->nominal = str_replace('.', '', $data['subtotal']);
-        $jurnal->keterangan = 'Kas Penjualan dari invoice# ' . $data['notrx'][0];
-        $jurnal->save();
 
-        $jurnal2 = new Jurnal;
-        $jurnal2->no_reff = '451';
-        $jurnal2->id_user = $user->id;
-        $jurnal2->tipe = 'kredit';
-        $jurnal2->nominal = str_replace('.', '', $data['subtotal']);
-        $jurnal2->keterangan = 'Pendapatan dari invoice# ' . $data['notrx'][0];
-        $jurnal2->save();
+        // Simpan ke Jurnal
+        // Cek apakah ada uang muka
+        if (!empty($uangMuka)) {
+            // Jika ada uang muka, masukkan ke tabel jurnal nominal
+            $jurnalUangMuka = new Jurnal;
+            if ($caraBayar === '888') {
+                $jurnalUangMuka->no_reff = '110'; // ID Akun untuk kas
+            } else {
+                $jurnalUangMuka->no_reff = '111'; // ID Akun untuk bank
+            }
+            $jurnalUangMuka->id_user = $user->id;
+            $jurnalUangMuka->tipe = 'debit';
+            $jurnalUangMuka->nominal = $uangMuka;
+            $jurnalUangMuka->keterangan = 'Uang Muka dari invoice# ' . $data['notrx'][0];
+            $jurnalUangMuka->save();
+
+            $jurnal2 = new Jurnal;
+            $jurnal2->no_reff = '451';
+            $jurnal2->id_user = $user->id;
+            $jurnal2->tipe = 'kredit';
+            $jurnal2->nominal = $uangMuka;
+            $jurnal2->keterangan = 'Pendapatan dari invoice# ' . $data['notrx'][0];
+            $jurnal2->save();
+        } else {
+            // Jika tidak ada uang muka, cek status pembayaran
+            if ($status === 'Lunas') {
+                // Jika lunas, masukkan ke tabel jurnal
+                $jurnal = new Jurnal;
+                if ($caraBayar === '888') {
+                    $jurnal->no_reff = '110'; // ID Akun untuk kas
+                } else {
+                    $jurnal->no_reff = '111'; // ID Akun untuk bank
+                }
+                $jurnal->id_user = $user->id;
+                $jurnal->tipe = 'debit';
+                $jurnal->nominal = str_replace('.', '', $data['subtotal']);
+                $jurnal->keterangan = 'Kas Penjualan dari invoice# ' . $data['notrx'][0];
+                $jurnal->save();
+
+                $jurnal2 = new Jurnal;
+                $jurnal2->no_reff = '451';
+                $jurnal2->id_user = $user->id;
+                $jurnal2->tipe = 'kredit';
+                $jurnal2->nominal = str_replace('.', '', $data['subtotal']);
+                $jurnal2->keterangan = 'Pendapatan dari invoice# ' . $data['notrx'][0];
+                $jurnal2->save();
+            } else {
+                // Jika belum lunas, tidak melakukan apa-apa atau berikan pesan kesalahan jika diperlukan
+                $errors = 'Status belum lunas, tidak bisa melakukan jurnal.';
+            }
+        }
 
         // Redirect ke halaman orderan
         return redirect('orderan')->with('success', 'Data Berhasil Ditambahkan!');
@@ -396,7 +432,7 @@ class OrderanController extends Controller
     {
 
         $latestPelunasan = PelunasanOrderan::latest('id')->first();
-
+        $user = Auth::user();
         if ($latestPelunasan) {
             $id_pelunasan = $latestPelunasan->toArray();
             $id = $id_pelunasan['id'] + 1;
@@ -442,6 +478,24 @@ class OrderanController extends Controller
                 'status' => $totalBayar == $jumlahBayar ? 'Lunas' : 'Belum Lunas',
                 'id_pelunasan' => $id,
             ]);
+
+        $noreff = $caraBayar == '888' ? '110' : '111';
+
+        $jurnal = new Jurnal;
+        $jurnal->no_reff = $noreff;
+        $jurnal->id_user = $user->id;
+        $jurnal->tipe = 'debit';
+        $jurnal->nominal = str_replace('.', '', $jumlahBayar);
+        $jurnal->keterangan = 'Kas Penjualan dari invoice# ' . $request->input('notrx');
+        $jurnal->save();
+
+        $jurnal2 = new Jurnal;
+        $jurnal2->no_reff = '451';
+        $jurnal2->id_user = $user->id;
+        $jurnal2->tipe = 'kredit';
+        $jurnal2->nominal = str_replace('.', '', $jumlahBayar);
+        $jurnal2->keterangan = 'Pelunasan dari invoice# ' . $request->input('notrx');
+        $jurnal2->save();
 
         // Cek apakah pembayaran menggunakan tunai
         if ($caraBayar === 'tunai') {
