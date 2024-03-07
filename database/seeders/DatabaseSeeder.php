@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BahanSeeder::class);
         $this->call(SatuanSeeder::class);
         $this->call(AkunSeeder::class);
+        $this->call(ProdukSeeder::class);
 
         // Jika Anda juga ingin menjalankan factory atau seeder bawaan Laravel, Anda dapat mengaktifkannya di sini.
         // \App\Models\User::factory(10)->create();

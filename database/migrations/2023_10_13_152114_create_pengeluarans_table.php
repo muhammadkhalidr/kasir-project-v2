@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('jumlah')->nullable();
             $table->integer('harga')->nullable();
             $table->bigInteger('total')->nullable();
+            $table->integer('subtotal')->nullable();
             $table->integer('id_karyawan')->nullable();
             $table->integer('id_jenis');
             $table->foreignId('id_bank');

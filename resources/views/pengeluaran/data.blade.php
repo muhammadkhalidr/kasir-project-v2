@@ -130,7 +130,7 @@
                                                                 <td class="text-right">
                                                                     {{ formatRupiah($pengeluaran->total, true) }}
                                                                 </td>
-                                                                <td>{{ $pengeluaran->jenisp->nama_jenis ?? '-' }}
+                                                                <td>{{ $pengeluaran->jenisp->nama_jenis ?? 'Kosong' }}
                                                                 </td>
                                                                 <td class="text-right">
                                                                     {{ $pengeluaran->formatted_date }}</td>
@@ -289,26 +289,7 @@
         });
     });
 </script>
-{{-- <script>
-    // Fungsi untuk menangani perubahan pada dropdown Jenis Pengeluaran
-    function handleJenisPengeluaranChange() {
-        var jenisPengeluaran = document.getElementById("jenispengeluaran").value;
-        var karyawanInput = document.getElementById("karyawan");
 
-        // Jika Jenis Pengeluaran bukan kasbon karyawan, sembunyikan input Karyawan
-        if (jenisPengeluaran !== "Kasbon Karyawan") {
-            karyawanInput.style.display = "none"; // Sembunyikan input Karyawan
-        } else {
-            karyawanInput.style.display = "block"; // Tampilkan kembali input Karyawan
-        }
-    }
-
-    // Tambahkan event listener untuk memanggil fungsi saat dropdown Jenis Pengeluaran berubah
-    document.getElementById("jenispengeluaran").addEventListener("change", handleJenisPengeluaranChange);
-
-    // Fungsi untuk menampilkan atau menyembunyikan input Karyawan berdasarkan nilai awal
-    handleJenisPengeluaranChange();
-</script> --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Initial check on page load
@@ -323,11 +304,16 @@
             // Get the selected option value
             var selectedJenis = document.getElementById("jenispengeluaran").value;
 
+            // Split the selected value into two parts
+            var parts = selectedJenis.split(" || ");
+            var id_akun = parts[0];
+            var id_jenis = parts[1];
+
             // Get the "Karyawan" select element
             var karyawanSelect = document.getElementById("karyawanSelect");
 
-            // Check if the selected value is not equal to 101
-            if (selectedJenis !== "101") {
+            // Check if the selected id_jenis is not equal to 101
+            if (id_jenis !== "101") {
                 // Hide the "Karyawan" div and disable the select element
                 document.getElementById("karyawan").style.display = "none";
                 karyawanSelect.disabled = true;
@@ -337,6 +323,10 @@
                 karyawanSelect.disabled = false;
             }
         }
+
+        // Hide the "Karyawan" div and disable the select element on page load
+        document.getElementById("karyawan").style.display = "none";
+        document.getElementById("karyawanSelect").disabled = true;
     });
 </script>
 <script>

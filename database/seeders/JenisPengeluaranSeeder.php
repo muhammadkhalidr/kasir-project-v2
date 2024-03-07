@@ -20,6 +20,12 @@ class JenisPengeluaranSeeder extends Seeder
                 'id_akun' => '460',
                 'aktif' => 'Y',
             ],
+            [
+                'id_jenis' => '102',
+                'nama_jenis' => 'Uang Makan',
+                'id_akun' => '460',
+                'aktif' => 'Y',
+            ],
         ];
 
         foreach ($jenisP as $key => $value) {

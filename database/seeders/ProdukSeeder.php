@@ -15,17 +15,19 @@ class ProdukSeeder extends Seeder
     {
         $produk = [
             [
-                'produk' => 'Outdoor',
+                'id_kategori' => 1,
+                'id_bahan' => 1,
+                'barcode' => '4566856947464',
+                'judul' => 'Spanduk',
+                'harga_beli' => 0,
+                'harga_jual' => 0,
+                'harga_jual' => 0,
+                'ukuran' => '1x1',
+                'public' => 1,
+                'jumlah' => 1,
                 'status' => 'Y',
             ],
-            [
-                'kategori' => 'Indoor',
-                'status' => 'Y',
-            ],
-            [
-                'kategori' => 'Offset',
-                'status' => 'Y',
-            ],
+
         ];
 
         foreach ($produk as $key => $value) {

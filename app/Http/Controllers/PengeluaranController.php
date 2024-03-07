@@ -114,7 +114,7 @@ class PengeluaranController extends Controller
         // $validate = $request->validated();
         $user = Auth::user();
         $pengeluaranTerakhir = Pengeluaran::where('id_pengeluaran', $request->txtid)->latest('id_pengeluaran')->first();
-        $jenisPengeluaran = JenisPengeluaran::find($request->jenispengeluaran);
+
         if ($pengeluaranTerakhir) {
             $idBaru = $pengeluaranTerakhir->id_generate;
         } else {
@@ -136,6 +136,10 @@ class PengeluaranController extends Controller
             $karyawanId = isset($data['karyawan'][$key]) ? $data['karyawan'][$key] : null;
 
             $metodePembayaran = $data['metode'];
+
+            // Pisah id_akun dan id_jenis
+            $jenisPengeluaran = $data['jenispengeluaran'][$key];
+            list($id_akun, $id_jenis) = explode(" || ", $jenisPengeluaran);
 
             // Cek saldo kas masuk
             if ($metodePembayaran == '1') {
@@ -166,10 +170,12 @@ class PengeluaranController extends Controller
                 'jumlah' => $data['jumlah'][$key],
                 'harga' => str_replace('.', '', $data['harga'][$key]),
                 'total' => str_replace('.', '', $data['total'][$key]),
-                'id_jenis' => $data['jenispengeluaran'][$key],
+                'subtotal' => str_replace('.', '', $data['subtotal']),
+                'id_jenis' => $id_jenis,
                 'id_karyawan' => $karyawanId,
                 'id_bank' => $data['metode'],
             ]);
+
 
             // Buat data kas bon
             $kasBon = new Kasbon;
@@ -195,12 +201,13 @@ class PengeluaranController extends Controller
 
         // Buat Data Jurnal
         $jurnal1 = new Jurnal;
-        $jurnal1->no_reff = $data['jenispengeluaran'][$key]; // Use the correct attribute
+        $jurnal1->no_reff = $id_akun;
         $jurnal1->id_user = $user->id;
         $jurnal1->tipe = 'debit';
-        $jurnal1->nominal = str_replace('.', '', $data['total'][$key]);
+        $jurnal1->nominal = str_replace('.', '', $data['subtotal']);
         $jurnal1->keterangan = 'Pengeluaran dari No# ' . $value;
         $jurnal1->save();
+
 
         $jurnal2 = new Jurnal;
         if ($data['metode'] === '888') {
@@ -210,7 +217,7 @@ class PengeluaranController extends Controller
         }
         $jurnal2->id_user = $user->id;
         $jurnal2->tipe = 'kredit';
-        $jurnal2->nominal = str_replace('.', '', $data['total'][$key]);
+        $jurnal2->nominal = str_replace('.', '', $data['subtotal']);
         $jurnal2->keterangan = 'Pengeluaran dari No# ' . $value;
         $jurnal2->save();
 

@@ -206,7 +206,7 @@
         <table style="width:100%;margin-top:5px" cellpadding="0" cellspacing="0">
             <tr class="heading">
                 <td style="width:10%!important">Keterangan</td>
-                {{-- <td align="center" style="width:5%!important">Jenis</td> --}}
+                <td align="center" style="width:5%!important">Jenis</td>
                 <td align="center" style="width:5%!important">Jumlah</td>
                 <td style="width:5%!important;text-align:right">Nominal</td>
                 <td align="center" style="width:5%!important">Tanggal</td>
@@ -214,7 +214,7 @@
             @foreach ($datas as $item)
                 <tr class="item">
                     <td class="border">{{ $item->keterangan }}</td>
-                    {{-- <td class="border">{{ $item->jenisp->nama_jenis }}</td> --}}
+                    <td class="border">{{ $item->jenisp->nama_jenis }}</td>
                     <td align="center" class="border">{{ $item->jumlah }}</td>
                     <td class="border" align="right">{{ formatRupiah($item->total, true) }}</td>
                     <td class="border" align="center">{{ $item->created_at }}</td>

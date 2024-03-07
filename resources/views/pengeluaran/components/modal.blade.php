@@ -21,12 +21,14 @@
                                     <input type="text" class="form-control nomorp" name="nopengeluaran[]"
                                         value="{{ $nomorP }}">
                                 </div>
+
                                 <div class="col">
                                     <label for="">Jenis Pengeluaran</label>
                                     <select class="form-control" name="jenispengeluaran[]" id="jenispengeluaran">
                                         <option value="">Pilih Jenis</option>
                                         @foreach ($dataJenis as $item)
-                                            <option value="{{ $item->id_akun }}">{{ $item->nama_jenis }}</option>
+                                            <option value="{{ $item->id_akun }} || {{ $item->id_jenis }}">
+                                                {{ $item->nama_jenis }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -77,10 +79,11 @@
 
                         <div class="modal fade" id="bayarPengeluaran" data-backdrop="static" data-keyboard="false"
                             tabindex="-1" aria-labelledby="bayarPengeluaranLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="bayarPengeluaranLabel">Pilih Metode Pembayaran</h5>
+                                        <h5 class="modal-title" id="bayarPengeluaranLabel">Pilih Metode Pembayaran
+                                        </h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -88,7 +91,7 @@
                                     <div class="modal-body">
                                         <div class="form-group row">
                                             <div class="col">
-                                                <select name="metode" class="form-control">
+                                                <select name="metode" class="form-control" required>
                                                     <option value="">Pilih Metode</option>
                                                     @foreach ($bank as $via)
                                                         <option value="{{ $via->id }}">Kas Bank
@@ -101,14 +104,11 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger"
-                                            data-dismiss="modal">Batal</button>
                                         <button type="submit" class="btn btn-primary">Simpan</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
 
 
                         {{-- Modal Bayar Pembelian --}}
