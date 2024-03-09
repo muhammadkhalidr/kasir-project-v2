@@ -23,7 +23,7 @@
                             <li><a href="{{ url('jurnal') }}">Jurnal Umum</a></li>
                             <li><a href="{{ url('neraca') }}">Neraca</a></li>
                             <li><a href="{{ url('laba-rugi') }}">Laba Rugi</a></li>
-                            <li><a href="{{ url('buku-besar') }}">Buku Besar</a></li>
+                            <li><a href="{{ url('neraca-saldo') }}">Neraca Saldo</a></li>
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
@@ -178,7 +178,7 @@
                             <li><a href="{{ url('jurnal') }}">Jurnal Umum</a></li>
                             <li><a href="{{ url('neraca') }}">Neraca</a></li>
                             <li><a href="{{ url('laba-rugi') }}">Laba Rugi</a></li>
-                            <li><a href="{{ url('buku-besar') }}">Buku Besar</a></li>
+                            <li><a href="{{ url('neraca-saldo') }}">Neraca Saldo</a></li>
                             <li><a href="{{ url('jenis-akun') }}">Jenis Akun</a></li>
                         </ul>
                     </li>
@@ -239,7 +239,7 @@
                             <li><a href="{{ url('jurnal-umum') }}">Jurnal Umum</a></li>
                             <li><a href="{{ url('neraca') }}">Neraca</a></li>
                             <li><a href="{{ url('laba-rugi') }}">Laba Rugi</a></li>
-                            <li><a href="{{ url('buku-besar') }}">Buku Besar</a></li>
+                            <li><a href="{{ url('neraca-saldo') }}">Neraca Saldo</a></li>
                             <li><a href="{{ url('jenis-akun') }}">Jenis Akun</a></li>
 
                         </ul>

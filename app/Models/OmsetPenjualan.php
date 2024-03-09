@@ -11,4 +11,9 @@ class OmsetPenjualan extends Model
 
     protected $guarded = ['id'];
     protected $table = 'omset_penjualans';
+
+    public function produks()
+    {
+        return $this->belongsTo(Produk::class, 'id_produk',);
+    }
 }

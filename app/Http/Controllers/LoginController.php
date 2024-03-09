@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\setting;
+use App\Models\Setting;
 
 class LoginController extends Controller
 {
     public function index()
     {
-        $logo = setting::all();
+        $logo = Setting::all();
 
         return view('pages.login', [
             'logo' => $logo,

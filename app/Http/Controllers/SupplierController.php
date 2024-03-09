@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Supplier;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +16,7 @@ class SupplierController extends Controller
 
     public function __construct()
     {
-        $this->demoMode = setting::where('demo', 'Y')->exists();
+        $this->demoMode = Setting::where('demo', 'Y')->exists();
     }
     /**
      * Display a listing of the resource.

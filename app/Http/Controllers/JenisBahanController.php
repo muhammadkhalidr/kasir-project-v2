@@ -6,7 +6,7 @@ use App\Models\JenisBahan;
 use App\Http\Requests\StoreJenisBahanRequest;
 use App\Http\Requests\UpdateJenisBahanRequest;
 use App\Models\KategoriBahan;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +17,7 @@ class JenisBahanController extends Controller
 
     public function __construct()
     {
-        $this->demoMode = setting::where('demo', 'Y')->exists();
+        $this->demoMode = Setting::where('demo', 'Y')->exists();
     }
     /**
      * Display a listing of the resource.

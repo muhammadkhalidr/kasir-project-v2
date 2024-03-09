@@ -6,7 +6,7 @@ use App\Models\KategoriBahan;
 use App\Http\Requests\StoreKategoriBahanRequest;
 use App\Http\Requests\UpdateKategoriBahanRequest;
 use App\Models\JenisPengeluaran;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Monolog\Handler\IFTTTHandler;
@@ -18,7 +18,7 @@ class KategoriBahanController extends Controller
 
     public function __construct()
     {
-        $this->demoMode = setting::where('demo', 'Y')->exists();
+        $this->demoMode = Setting::where('demo', 'Y')->exists();
     }
     /**
      * Display a listing of the resource.

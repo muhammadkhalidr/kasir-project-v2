@@ -31,4 +31,9 @@ class JenisPengeluaran extends Model
     {
         return $this->hasMany(Akun::class, 'id_akun', 'id_akun');
     }
+
+    public function jurnals()
+    {
+        return $this->belongsTo(Jurnal::class, 'id_akun', 'id_akun');
+    }
 }

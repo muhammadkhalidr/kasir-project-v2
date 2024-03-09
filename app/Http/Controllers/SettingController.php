@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\setting;
+use App\Models\Setting;
 use App\Http\Requests\StoresettingRequest;
 use App\Http\Requests\UpdatesettingRequest;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +17,7 @@ class SettingController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $datas = setting::all();
+        $datas = Setting::all();
 
         return view('settings.index', [
             'title' => env('APP_NAME') . ' | ' . 'Settings',
@@ -55,12 +55,13 @@ class SettingController extends Controller
      */
     public function editLogo(Request $request)
     {
-        $data = setting::first();
+        $data = Setting::first();
         $logoUpdated = false;
         $faviconUpdated = false;
         $logoLoginUpdated = false;
         $logoLunasUpdated = false;
         $logoBlunasUpdated = false;
+        $qrcodeUpdated = false;
 
         if ($request->hasFile('logo')) {
             $foto_file = $request->file('logo');
@@ -106,8 +107,16 @@ class SettingController extends Controller
             $data->logo_blunas = $blunas_name; // Update the field to 'blunas_logo'
             $logoBlunasUpdated = true;
         }
+        if ($request->hasFile('qrcode')) {
+            $qrcode = $request->file('qrcode');
+            $qrcode_name = $qrcode->hashName();
+            $qrcode->move(public_path('assets/images/qrcode'), $qrcode_name);
 
-        if ($logoUpdated || $faviconUpdated || $logoLoginUpdated || $logoLunasUpdated || $logoBlunasUpdated) {
+            $data->qrcode = $qrcode_name; // Update the field to 'blunas_logo'
+            $qrcodeUpdated = true;
+        }
+
+        if ($logoUpdated || $faviconUpdated || $logoLoginUpdated || $logoLunasUpdated || $logoBlunasUpdated || $qrcodeUpdated) {
             $data->save();
 
             if ($logoUpdated) {
@@ -120,22 +129,23 @@ class SettingController extends Controller
                 return redirect('setting')->with('success', 'Logo Lunas Berhasil Diperbarui!');
             } elseif ($logoBlunasUpdated) {
                 return redirect('setting')->with('success', 'Logo Blunas Berhasil Diperbarui!');
+            } elseif ($qrcodeUpdated) {
+                return redirect('setting')->with('success', 'QR Code Berhasil Diperbarui!');
             }
         }
 
         return redirect('setting')->with('error', 'Tidak ada file yang dipilih.');
     }
 
-
-
-
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id_setting)
     {
-        $data = setting::findOrFail($id_setting);
+
+
+
+        $data = Setting::findOrFail($id_setting);
 
         $data->perusahaan = $request->nama_perusahaan;
         $data->email = $request->email;

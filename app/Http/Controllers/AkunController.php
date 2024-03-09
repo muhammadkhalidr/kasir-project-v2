@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Akun;
 use App\Http\Requests\StoreAkunRequest;
 use App\Http\Requests\UpdateAkunRequest;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 
 class AkunController extends Controller
@@ -15,7 +15,7 @@ class AkunController extends Controller
 
     public function __construct()
     {
-        $this->demoMode = setting::where('demo', 'Y')->exists();
+        $this->demoMode = Setting::where('demo', 'Y')->exists();
     }
 
     /**

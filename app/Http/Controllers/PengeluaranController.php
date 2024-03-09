@@ -14,7 +14,7 @@ use App\Models\Kasbon;
 use App\Models\KasMasuk;
 use App\Models\Pengguna;
 use App\Models\Rekening;
-use App\Models\setting;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -195,7 +195,7 @@ class PengeluaranController extends Controller
         $kasMasuk->id_generate = $idBaru;
         $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($data['metode'] === 'tunai' ? ' (Tunai) ' : ' - Metode Bank ');
         $kasMasuk->name_kasir = $user->name;
-        $kasMasuk->pengeluaran = str_replace('.', '', $data['total'][$key]);
+        $kasMasuk->pengeluaran = str_replace('.', '', $data['subtotal']);
         $kasMasuk->bank = $data['metode'];
         $kasMasuk->save();
 
@@ -309,7 +309,7 @@ class PengeluaranController extends Controller
         $datas = Pengeluaran::with(['jenisp', 'kasMasuk', 'karyawans', 'rekening'])
             ->get();
         $total = Pengeluaran::select('total')->sum('total');
-        $setting = setting::all()->first();
+        $setting = Setting::all()->first();
 
         if ($datas->isEmpty()) {
             return redirect()->back()->with('error', 'Data Tidak Ditemukan!');

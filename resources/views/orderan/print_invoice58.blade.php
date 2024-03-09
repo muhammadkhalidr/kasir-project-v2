@@ -397,7 +397,7 @@
                                     <tr>
                                         <td colspan="3" class="p-2">
                                             <div class="qrcode" style="width:100px; height:100px;">
-                                                <img src="{{ asset('/') }}assets/images/qrcode/qrcode.jpg"
+                                                <img src="{{ asset('/') }}assets/images/qrcode/{{ $logo->first()->qrcode }}"
                                                     alt="" style="width:100px; height:100px;" />
                                             </div>
                                         </td>

@@ -7,7 +7,7 @@ use App\Http\Requests\StoreProdukRequest;
 use App\Http\Requests\UpdateProdukRequest;
 use App\Models\JenisBahan;
 use App\Models\KategoriBahan;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
@@ -16,7 +16,7 @@ class ProdukController extends Controller
 
     public function __construct()
     {
-        $this->demoMode = setting::where('demo', 'Y')->exists();
+        $this->demoMode = Setting::where('demo', 'Y')->exists();
     }
 
     /**

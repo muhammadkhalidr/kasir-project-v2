@@ -23,6 +23,7 @@ use App\Http\Controllers\JurnalController;
 use App\Http\Controllers\KasbonController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\KategoriBahanController;
+use App\Http\Controllers\LabaRugiController;
 use App\Http\Controllers\LogTranasksiController;
 use App\Http\Controllers\NeracaController;
 use App\Http\Controllers\PelangganController;
@@ -109,6 +110,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Untuk Dashboard
         Route::get('/home', [DashboardController::class, 'index']);
+        Route::get('/home/filter/{tahun}', [DashboardController::class, 'filterByYear'])->name('penjualan.filter');
+        Route::get('/home/filter/bulan/{tahun}/{bulan}', [DashboardController::class, 'filterByMonth'])->name('penjualan.filter.month');
+
 
         // Untuk Pembelian
         Route::resource('/pembelian', PembelianController::class);
@@ -238,6 +242,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Neraca
         Route::resource('neraca', NeracaController::class);
+
+        // Laba-Rugi
+        Route::resource('laba-rugi', LabaRugiController::class);
+
         // Backup Database
         Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
         Route::get('/backup/download', [BackupController::class, 'download'])->name('backup.download');

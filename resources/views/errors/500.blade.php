@@ -38,9 +38,9 @@
                         <div class="card mb-0">
                             <div class="card-body text-center">
                                 <h1 class="error-text text-primary">500</h1>
-                                <h4 class="mt-4"><i class="fa fa-radiation-alt text-danger"></i> Server Error
+                                <h4 class="mt-4"><i class="fa fa-radiation-alt text-danger"></i> Internal Server Error
                                 </h4>
-                                <p>Silakan hubungi admin</p>
+                                <p>Silakan Hubungi <b>Admin</b> / <b>Penyedia Hosting</b></p>
                                 <form class="mt-5 mb-5">
 
                                     <div class="text-center mb-4 mt-4"><a href="{{ url('/home') }}"

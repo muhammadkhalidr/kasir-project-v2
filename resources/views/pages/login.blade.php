@@ -5,14 +5,24 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Login - {{ env('APP_NAME') }}</title>
     <meta name="description" content="Aplikasi Kasir Percetakan untuk Meningkatkan Efisiensi Bisnis Anda">
-    <meta name="keywords" content="kasir, percetakan, aplikasi kasir, manajemen bisnis, cetak, faktur">
+    <meta name="keywords"
+        content="aplikasi kasir percetakan, percetakan, aplikasi kasir, manajemen bisnis, cetak, faktur, pos kasir, pos percetakan, khalid r">
     <meta name="author" content="khalid r">
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef" />
     <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
-    <title>Login - {{ env('APP_NAME') }}</title>
+
+    <!-- Open Graph untuk berbagi di media sosial -->
+    <meta property="og:title" content="Aplikasi Kasir Percetakan | Khalid R">
+    <meta property="og:description" content="Aplikasi Kasir Percetakan untuk Meningkatkan Efisiensi Bisnis Anda">
+    <meta property="og:url" content="https://www.khalidr.site">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/images/settings/login-logo.png">
+    <meta property="og:site_name" content="Khalid R - Kasir Percetakan" />
+
     <script type="application/ld+json">
         {
           "@context": "http://schema.org",
@@ -32,12 +42,6 @@
         }
         </script>
 
-    <!-- Open Graph untuk berbagi di media sosial -->
-    <meta property="og:title" content="Aplikasi Kasir Percetakan | Khalid R">
-    <meta property="og:description" content="Aplikasi Kasir Percetakan untuk Meningkatkan Efisiensi Bisnis Anda">
-    <meta property="og:url" content="https://www.khalidr.site">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="assets/images/settings/login-logo.png">
     <!-- Favicon icon -->
     @foreach ($logo as $item)
         <link rel="icon" type="image/png" sizes="16x16" href="assets/images/settings/{{ $item->favicon }}">

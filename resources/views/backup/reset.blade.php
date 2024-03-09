@@ -58,10 +58,17 @@
                                                         action="{{ route('resetTable', ['table' => $table['name']]) }}"
                                                         method="POST" id="resetForm_{{ $table['name'] }}">
                                                         @csrf
-                                                        <button type="button" title="Hapus Data"
-                                                            class="btn btn-sm btn-danger  @if ($table['count'] > 0) btn-light @endif"
-                                                            onclick="resetDatabase('{{ $table['name'] }}')">
-                                                            <i class="fa fa-trash"></i> Reset Database
+                                                        @if ($table['count'] > 0)
+                                                            <button type="button" title="Hapus Data"
+                                                                class="btn btn-sm btn-danger  @if ($table['count'] > 0) btn-light @endif"
+                                                                onclick="resetDatabase('{{ $table['name'] }}')">
+                                                                <i class="fa fa-trash"></i> Reset Database
+                                                            </button>
+                                                        @endif
+                                                        <button type="button" title="Input Data"
+                                                            class="btn btn-sm btn-warning  @if ($table['count'] > 0) btn-light @endif"
+                                                            onclick="return alert('dalam tahap pengembangan')">
+                                                            <i class=""></i> Input Data
                                                         </button>
                                                     </form>
                                                 </div>

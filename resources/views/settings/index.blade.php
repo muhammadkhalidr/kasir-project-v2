@@ -98,35 +98,119 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col">
                 <div class="card">
                     <div class="card-body">
                         <form action="{{ url('setting') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="logo">Logo</label>
-                                <input type="file" name="logo" class="form-control" id="logo"
-                                    value="{{ $item->logo }}">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="inputGroupFileAddon03">
+                                            <img class="imglogo" data-id="2" id="imglogo2"
+                                                src="assets/images/settings/{{ $item->logo }}" height="20"
+                                                alt="" />
+                                        </button>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="logo" name="logo">
+                                        <label class="custom-file-label" for="logo">Pilih Logo Perusahaan</label>
+                                    </div>
+                                </div>
+                                <small id="logoHelp" class="form-text text-muted">size 72x72 px</small>
                             </div>
                             <div class="form-group">
                                 <label for="favicon">Favicon</label>
-                                <input type="file" name="favicon" class="form-control" id="favicon"
-                                    value="{{ $item->favicon }}">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="inputGroupFileAddon03">
+                                            <img class="imglogo" data-id="2" id="imglogo2"
+                                                src="assets/images/settings/{{ $item->favicon }}" height="20"
+                                                alt="" />
+                                        </button>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="favicon" name="favicon">
+                                        <label class="custom-file-label" for="favicon">Pilih Favicon</label>
+                                    </div>
+                                </div>
+                                <small id="logoHelp" class="form-text text-muted">size 72x72 px</small>
                             </div>
                             <div class="form-group">
                                 <label for="logo_login">Logo Login</label>
-                                <input type="file" name="logo_login" class="form-control" id="logo_login"
-                                    value="{{ $item->logo_login }}">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="inputGroupFileAddon03">
+                                            <img class="imglogo" data-id="2" id="imglogo2"
+                                                src="assets/images/settings/{{ $item->login_logo }}" height="20"
+                                                alt="" />
+                                        </button>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="logo_login"
+                                            name="logo_login">
+                                        <label class="custom-file-label" for="logo_login">Pilih Logo lOGIN</label>
+                                    </div>
+                                </div>
+                                <small id="logoHelp" class="form-text text-muted">size 1200x700 px</small>
                             </div>
                             <div class="form-group">
                                 <label for="lunas">Logo Lunas</label>
-                                <input type="file" name="lunas" class="form-control" id="lunas"
-                                    value="{{ $item->logo_lunas }}">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="inputGroupFileAddon03">
+                                            <img class="imglogo" data-id="2" id="imglogo2"
+                                                src="assets/images/settings/{{ $item->logo_lunas }}" height="20"
+                                                alt="" />
+                                        </button>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="lunas" name="lunas">
+                                        <label class="custom-file-label" for="lunas">Pilih Logo Belum Lunas</label>
+                                    </div>
+                                </div>
+                                <small id="logoHelp" class="form-text text-muted">size 500x300 px</small>
                             </div>
                             <div class="form-group">
                                 <label for="blunas">Logo Belum Lunas</label>
-                                <input type="file" name="blunas" class="form-control" id="blunas"
-                                    value="{{ $item->logo_blunas }}">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="inputGroupFileAddon03">
+                                            <img class="imglogo" data-id="2" id="imglogo2"
+                                                src="assets/images/settings/{{ $item->logo_blunas }}" height="20"
+                                                alt="" />
+                                        </button>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="blunas" name="blunas">
+                                        <label class="custom-file-label" for="blunas">Pilih Logo Belum Lunas</label>
+                                    </div>
+                                </div>
+                                <small id="logoHelp" class="form-text text-muted">size 500x300 px</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="qrcode">QR Code</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="inputGroupFileAddon03">
+                                            <img class="imglogo" data-id="2" id="imglogo2"
+                                                src="assets/images/qrcode/{{ $item->qrcode }}" height="20"
+                                                alt="" />
+                                        </button>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="qrcode" name="qrcode">
+                                        <label class="custom-file-label" for="qrcode">Pilih QR Code</label>
+                                    </div>
+                                </div>
+                                <small id="logoHelp" class="form-text text-muted">size 700x700 px</small>
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </form>
@@ -134,7 +218,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            {{-- <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
                         @foreach ($data as $item)
@@ -166,7 +250,7 @@
                         @endforeach
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 @endsection

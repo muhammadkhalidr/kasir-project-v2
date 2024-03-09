@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Satuan;
 use App\Http\Requests\StoreSatuanRequest;
 use App\Http\Requests\UpdateSatuanRequest;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -18,7 +18,7 @@ class SatuanController extends Controller
 
     public function __construct()
     {
-        $this->demoMode = setting::where('demo', 'Y')->exists();
+        $this->demoMode = Setting::where('demo', 'Y')->exists();
     }
     /**
      * Display a listing of the resource.

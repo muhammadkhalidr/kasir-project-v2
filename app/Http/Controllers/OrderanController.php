@@ -14,7 +14,7 @@ use App\Models\PelunasanOrderan;
 use App\Models\Produk;
 use App\Models\Rekening;
 use App\Models\Satuan;
-use App\Models\setting;
+use App\Models\Setting;
 use App\Models\StokKeluar;
 use App\Models\StokMasuk;
 use Carbon\Carbon;
@@ -587,7 +587,7 @@ class OrderanController extends Controller
     public function destroy($notrx)
     {
 
-        $demoMode = setting::where('demo', 'Y')->first();
+        $demoMode = Setting::where('demo', 'Y')->first();
 
         if ($demoMode) {
             // Jika mode demo adalah 'Y', tampilkan pesan dan tidak izinkan pembaruan data
@@ -634,7 +634,7 @@ class OrderanController extends Controller
         $user = Auth::user();
         $orderans = DetailOrderan::where('notrx', $notrx)->select('*', 'created_at')->get()->groupBy('notrx');
         $data = DetailOrderan::all();
-        $setting = setting::all();
+        $setting = Setting::all();
         $via = PelunasanOrderan::with('rekenings')->where('notrx', $notrx)->get();
         $dataOrderan = DetailOrderan::with('pelanggans')->select('status', 'sisa')->where('notrx', $notrx)->get();
         foreach ($dataOrderan as $datas) {
@@ -648,7 +648,7 @@ class OrderanController extends Controller
         }
 
         // dd($via);
-        $logo = setting::all();
+        $logo = Setting::all();
         $rekening = Rekening::all();
 
         $formatTgl = $orderans->map(function ($orderanGroup) {
@@ -686,9 +686,9 @@ class OrderanController extends Controller
     {
         $user = Auth::user();
         $orderans = DetailOrderan::with('pelanggans')->where('notrx', $notrx)->select('*', 'created_at')->get()->groupBy('notrx');
-        $setting = setting::all();
+        $setting = Setting::all();
         $via = PelunasanOrderan::select('bank', 'via')->where('notrx', $notrx)->get();
-        $logo = setting::all();
+        $logo = Setting::all();
         $rekening = Rekening::all();
         $dataOrderan = DetailOrderan::with('pelanggans')->select('status', 'sisa')->where('notrx', $notrx)->get();
 

@@ -7,7 +7,7 @@ use App\Http\Requests\StoreJenisPengeluaranRequest;
 use App\Http\Requests\UpdateJenisPengeluaranRequest;
 use App\Models\Akun;
 use App\Models\JenisBahan;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +18,7 @@ class JenisPengeluaranController extends Controller
 
     public function __construct()
     {
-        $this->demoMode = setting::where('demo', 'Y')->exists();
+        $this->demoMode = Setting::where('demo', 'Y')->exists();
     }
     /**
      * Display a listing of the resource.

@@ -26,5 +26,8 @@ class Produk extends Model
         return $this->hasMany(DetailOrderan::class, 'id_produk');
     }
 
-    
+    public function omsets()
+    {
+        return $this->hasMany(OmsetPenjualan::class, 'id_produk');
+    }
 }

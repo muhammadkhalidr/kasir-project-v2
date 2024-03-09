@@ -15,6 +15,7 @@ class ResetController extends Controller
             'failed_jobs',
             'model_has_permissions',
             'model_has_roles',
+            'migrations',
             'password_reset_tokens',
             'personal_access_tokens',
             'permissions',

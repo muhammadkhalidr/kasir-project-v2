@@ -69,7 +69,7 @@
                                     <tr>
                                         <td>{{ $tetap->nama_reff }}</td>
                                         <td class="text-right"></td>
-                                        <td class="text-right"></td>
+                                        <td class="text-right">{{ formatRupiah($tetap->kas, true) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -77,7 +77,7 @@
                                 <tr>
                                     <th>Jumlah Aset Tetap</th>
                                     <th class="text-right"></th>
-                                    <th class="text-right"></th>
+                                    <th class="text-right">{{ formatRupiah($total_aset_tetap, true) }}</th>
                                 </tr>
                             </thead>
                             <thead class="thead-primary">
@@ -92,35 +92,14 @@
                                     <tr>
                                         <td>{{ $pasiva->nama_reff }}</td>
                                         <td class="text-right"></td>
-                                        <td class="text-right"></td>
+                                        <td class="text-right">{{ formatRupiah($pasiva->kas, true) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <thead class="thead">
                                 <tr>
                                     <th>Total Kewajiban</th>
-                                    <th class="text-right"></th>
-                                    <th>&nbsp;</th>
-                                </tr>
-                            </thead>
-                            <thead class="thead-primary">
-                                <tr>
-                                    <th>Modal</th>
-                                    <th>&nbsp;</th>
-                                    <th class="text-right text-white"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td class="text-right"></td>
-                                    <td class="text-right"></td>
-                                </tr>
-                            </tbody>
-                            <thead class="thead">
-                                <tr>
-                                    <th>Total Modal</th>
-                                    <th class="text-right"></th>
+                                    <th class="text-right">{{ formatRupiah($total_pasiva_lancar, true) }}</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
@@ -144,7 +123,7 @@
                                 <tr>
                                     <th>Total Pendapatan</th>
                                     <th>&nbsp;</th>
-                                    <th class="text-right"></th>
+                                    <th class="text-right">{{ formatRupiah($total_pendapatan_aset, true) }}</th>
                                 </tr>
                             </thead>
 
@@ -156,16 +135,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td class="text-right"></td>
-                                    <td class="text-right"></td>
-                                </tr>
+                                @foreach ($beban_lancar as $beban)
+                                    <tr>
+                                        <td>{{ $beban->nama_reff }}</td>
+                                        <td class="text-right"></td>
+                                        <td class="text-right">{{ formatRupiah($beban->kas, true) }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <thead class="thead">
                                 <tr>
                                     <th>Total Beban</th>
-                                    <th class="text-right"></th>
+                                    <th class="text-right">{{ formatRupiah($total_beban_lancar, true) }}</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>

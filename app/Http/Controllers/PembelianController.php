@@ -8,11 +8,12 @@ use App\Http\Requests\UpdatePembelianRequest;
 use App\Models\DetailPembelian;
 use App\Models\JenisBahan;
 use App\Models\JenisPengeluaran;
+use App\Models\Jurnal;
 use App\Models\KasMasuk;
 use App\Models\Pengeluaran;
 use App\Models\Rekening;
 use App\Models\Satuan;
-use App\Models\setting;
+use App\Models\Setting;
 use App\Models\StokMasuk;
 use App\Models\Supplier;
 use Carbon\Carbon;
@@ -177,7 +178,7 @@ class PembelianController extends Controller
 
     public function cariJenisPengeluaranAjax()
     {
-        $jenisPengeluaran = JenisPengeluaran::select('id', 'nama_jenis')->where("aktif", "1")->get();
+        $jenisPengeluaran = JenisPengeluaran::select('id', 'nama_jenis')->where("aktif", "Y")->get();
         $data = [];
 
         foreach ($jenisPengeluaran as $item) {
@@ -326,16 +327,6 @@ class PembelianController extends Controller
                         $stokMasuk->keterangan = $data['keterangan'][$key];
                         $stokMasuk->save();
                     }
-
-                    // Menambahkan data ke tabel kasmasuk
-                    $kasMasuk = new KasMasuk;
-                    $kasMasuk->id_generate = $data['id_generate'][$key];
-                    $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank');
-                    $kasMasuk->name_kasir = $user->name;
-                    $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
-                    $kasMasuk->bank = $id_bank[0];
-                    $kasMasuk->save();
-
                     // Menambahkan data ke tabel detailpembelian
                     $detailPembelian = new DetailPembelian;
                     $detailPembelian->id_pembelian_generate = $data['nopembelian'][$key];
@@ -351,6 +342,15 @@ class PembelianController extends Controller
                     $detailPembelian->subtotal = str_replace('.', '', $data['totalpembelian']);
                     $detailPembelian->id_user = $user->id;
                     $detailPembelian->save();
+
+                    // Menambahkan data ke tabel kasmasuk
+                    $kasMasuk = new KasMasuk;
+                    $kasMasuk->id_generate = $data['id_generate'][$key];
+                    $kasMasuk->keterangan = "Pengeluaran Dari - No #" . $value . ($caraBayar === 'tunai' ? ' (Tunai) ' : ' - Metode Bank');
+                    $kasMasuk->name_kasir = $user->name;
+                    $kasMasuk->pengeluaran = str_replace('.', '', $data['totalpembelian']);
+                    $kasMasuk->bank = $id_bank[0];
+                    $kasMasuk->save();
                 }
             } else {
                 // Stok tidak aktif, proses tidak dilanjutkan
@@ -364,6 +364,27 @@ class PembelianController extends Controller
             // Redirect dengan pesan kesalahan
             return redirect('pembelian')->with('warning', implode($errors));
         }
+
+        // Buat Data Jurnal
+        $jurnal1 = new Jurnal();
+        $jurnal1->no_reff = 310;
+        $jurnal1->id_user = $user->id;
+        $jurnal1->tipe = 'debit';
+        $jurnal1->nominal = str_replace('.', '', $data['totalpembelian']);
+        $jurnal1->keterangan = 'Pembelian dari No# ' . $value;
+        $jurnal1->save();
+
+        $jurnal2 = new Jurnal;
+        if ($caraBayar === '888') {
+            $jurnal2->no_reff = '110'; // ID Akun untuk kas
+        } else {
+            $jurnal2->no_reff = '111'; // ID Akun untuk bank
+        }
+        $jurnal2->id_user = $user->id;
+        $jurnal2->tipe = 'kredit';
+        $jurnal2->nominal = str_replace('.', '', $data['totalpembelian']);
+        $jurnal2->keterangan = 'Pembelian dari No# ' . $value;
+        $jurnal2->save();
 
         // Redirect dengan pesan sukses
         return redirect('pembelian')->with('success', 'Data Berhasil Ditambahkan!');

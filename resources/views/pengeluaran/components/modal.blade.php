@@ -24,7 +24,8 @@
 
                                 <div class="col">
                                     <label for="">Jenis Pengeluaran</label>
-                                    <select class="form-control" name="jenispengeluaran[]" id="jenispengeluaran">
+                                    <select class="form-control" name="jenispengeluaran[]" id="jenispengeluaran"
+                                        required>
                                         <option value="">Pilih Jenis</option>
                                         @foreach ($dataJenis as $item)
                                             <option value="{{ $item->id_akun }} || {{ $item->id_jenis }}">

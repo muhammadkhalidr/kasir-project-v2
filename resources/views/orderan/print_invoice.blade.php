@@ -312,6 +312,7 @@
                     <div class="invoice-note">
                         @php
                             $counter = 1;
+                            $cekBayar = false;
                         @endphp
 
                         @foreach ($via as $cicil)
@@ -324,18 +325,16 @@
                                 </h6>
                                 @php
                                     $counter++;
+                                    $cekBayar = true;
                                 @endphp
                             @endif
                         @endforeach
 
-                        <h6>
-                            @if ($via->first() == null)
-                                PEMBAYARAN : BELUM ADA PEMBAYARAN
-                            @else
-                                PEMBAYARAN : {{ $via->first()->bank == '1' ? 'BANK' : 'TUNAI' }}
-                            @endif
-                        </h6>
+                        @if (!$cekBayar)
+                            <h6>Belum ada pembayaran.</h6>
+                        @endif
                     </div>
+
                     <!-- end invoice-note -->
                     <!-- begin invoice-footer -->
                     <div class="invoice-footer">

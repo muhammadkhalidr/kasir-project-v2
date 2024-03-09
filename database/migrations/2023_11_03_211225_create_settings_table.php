@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('logo', 255)->nullable();
             $table->string('favicon', 255)->nullable();
             $table->string('warnatema', 255)->nullable();
-            $table->enum('demo', ['Y', 'N'])->default('Y');
+            $table->text('qrcode')->nullable();
+            $table->enum('demo', ['Y', 'N'])->default('N');
             $table->timestamps();
         });
     }

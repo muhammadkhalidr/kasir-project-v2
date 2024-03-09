@@ -251,14 +251,14 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
-                                            <tr>
+                                            {{-- <tr>
                                                 <td colspan="3" class="text-left"><strong>Total Pembelian</strong>
                                                 </td>
                                                 <td class="text-right">
                                                     <strong>{{ formatRupiah($totalPembelian->sum(), true) }}</strong>
                                                 </td>
                                                 <td></td>
-                                            </tr>
+                                            </tr> --}}
                                             @if ($groupedPembelians->count() == 0)
                                                 <tr>
                                                     <td colspan="10" class="text-center">

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use App\Http\Requests\StoreProfileRequest;
 use App\Http\Requests\UpdateProfileRequest;
-use App\Models\setting;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -67,7 +67,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $demoMode = setting::where('demo', 'Y')->first();
+        $demoMode = Setting::where('demo', 'Y')->first();
 
         if ($demoMode) {
             // Jika mode demo adalah 'Y', tampilkan pesan dan tidak izinkan pembaruan data

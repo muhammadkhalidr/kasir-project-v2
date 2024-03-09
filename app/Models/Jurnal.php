@@ -25,4 +25,9 @@ class Jurnal extends Model
     {
         return $this->hasMany(Akun::class, 'id_akun', 'no_reff');
     }
+
+    public function jenisP()
+    {
+        return $this->hasMany(JenisPengeluaran::class, 'id_akun', 'no_reff');
+    }
 }
