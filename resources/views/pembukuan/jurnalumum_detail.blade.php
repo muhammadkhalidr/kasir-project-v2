@@ -73,6 +73,13 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            @if (count($datas) == 0)
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        <p>Belum ada data jurnal</p>
+                                    </td>
+                                </tr>
+                            @endif
                             <tfoot>
                                 <tr>
                                     <th class="w-5">Jumlah Total</th>

@@ -26,8 +26,12 @@ class NeracaController extends Controller
         $total_aset_tetap = Jurnal::where('tipe', 'debit')->sum('nominal');
         $total_pendapatan_aset = Jurnal::where('tipe', 'kredit')->sum('nominal');
 
+        $total_aset = 0;
         foreach ($aktiva_lancar as $lancar) {
-            $lancar->kas = Jurnal::where('no_reff', $lancar->id_akun)->sum('nominal');
+            $lancar->kas = Jurnal::where('no_reff', $lancar->id_akun)
+                ->where('tipe', 'debit')
+                ->sum('nominal');
+            $total_aset += $lancar->kas;
         }
 
         foreach ($aktiva_pendapatan as $pendapatan) {
@@ -36,7 +40,8 @@ class NeracaController extends Controller
 
         $total_aset_tetap = 0; // Inisialisasi total aset tetap
         foreach ($aktiva_tetap as $tetap) {
-            $tetap->kas = Jurnal::where('no_reff', $tetap->id_akun)->sum('nominal');
+            $tetap->kas = Jurnal::where('no_reff', $tetap->id_akun)
+                ->sum('nominal');
             $total_aset_tetap += $tetap->kas; // Menambahkan nilai $tetap->kas ke total
         }
 
@@ -50,7 +55,8 @@ class NeracaController extends Controller
         $pasiva_lancar = Akun::where('pasiva', 1)->get();
         $total_pasiva_lancar = 0;
         foreach ($pasiva_lancar as $lancar) {
-            $lancar->kas = Jurnal::where('no_reff', $lancar->id_akun)->sum('nominal');
+            $lancar->kas = Jurnal::where('no_reff', $lancar->id_akun)
+                ->sum('nominal');
             $total_pasiva_lancar += $lancar->kas;
         }
 

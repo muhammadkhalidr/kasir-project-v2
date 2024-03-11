@@ -26,18 +26,7 @@ class AkunSeeder extends Seeder
                 'kewajiban' => '0',
                 'beban' => '0'
             ],
-            [
-                'nama_reff' => 'Bank',
-                'id_akun' => '111',
-                'keterangan' => 'Kas Bank',
-                'aktif' => 'Y',
-                'id_user' => '1',
-                'aktiva' => '1',
-                'pasiva' => '0',
-                'laba_rugi' => '0',
-                'kewajiban' => '0',
-                'beban' => '0'
-            ],
+
             [
                 'nama_reff' => 'Piutang Usaha',
                 'id_akun' => '120',
@@ -163,18 +152,6 @@ class AkunSeeder extends Seeder
         ];
         $laba_rugi = [
             [
-                'nama_reff' => 'Pendapatan',
-                'id_akun' => '410',
-                'keterangan' => 'Pendapatan',
-                'aktif' => 'Y',
-                'id_user' => '1',
-                'aktiva' => '0',
-                'pasiva' => '0',
-                'laba_rugi' => '1',
-                'kewajiban' => '0',
-                'beban' => '0'
-            ],
-            [
                 'nama_reff' => 'Beban Gaji & Upah',
                 'id_akun' => '420',
                 'keterangan' => 'Beban Gaji & Upah',
@@ -245,6 +222,42 @@ class AkunSeeder extends Seeder
                 'laba_rugi' => '0',
                 'kewajiban' => '0',
                 'beban' => '1'
+            ],
+            [
+                'nama_reff' => 'Beban Sewa',
+                'id_akun' => '470',
+                'keterangan' => 'Beban Sewa',
+                'aktif' => 'Y',
+                'id_user' => '1',
+                'aktiva' => '0',
+                'pasiva' => '0',
+                'laba_rugi' => '0',
+                'kewajiban' => '0',
+                'beban' => '1'
+            ],
+            [
+                'nama_reff' => 'Prive',
+                'id_akun' => '480',
+                'keterangan' => 'Prive',
+                'aktif' => 'Y',
+                'id_user' => '1',
+                'aktiva' => '0',
+                'pasiva' => '0',
+                'laba_rugi' => '0',
+                'kewajiban' => '1',
+                'beban' => '0'
+            ],
+            [
+                'nama_reff' => 'Modal',
+                'id_akun' => '481',
+                'keterangan' => 'Modal',
+                'aktif' => 'Y',
+                'id_user' => '1',
+                'aktiva' => '0',
+                'pasiva' => '0',
+                'laba_rugi' => '0',
+                'kewajiban' => '1',
+                'beban' => '0'
             ],
         ];
 

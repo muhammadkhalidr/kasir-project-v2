@@ -332,11 +332,7 @@ class OrderanController extends Controller
         if (!empty($uangMuka)) {
             // Jika ada uang muka, masukkan ke tabel jurnal nominal
             $jurnalUangMuka = new Jurnal;
-            if ($caraBayar === '888') {
-                $jurnalUangMuka->no_reff = '110'; // ID Akun untuk kas
-            } else {
-                $jurnalUangMuka->no_reff = '111'; // ID Akun untuk bank
-            }
+            $jurnalUangMuka->no_reff = '110';
             $jurnalUangMuka->id_user = $user->id;
             $jurnalUangMuka->tipe = 'debit';
             $jurnalUangMuka->nominal = $uangMuka;
@@ -355,11 +351,7 @@ class OrderanController extends Controller
             if ($status === 'Lunas') {
                 // Jika lunas, masukkan ke tabel jurnal
                 $jurnal = new Jurnal;
-                if ($caraBayar === '888') {
-                    $jurnal->no_reff = '110'; // ID Akun untuk kas
-                } else {
-                    $jurnal->no_reff = '111'; // ID Akun untuk bank
-                }
+                $jurnal->no_reff = '110';
                 $jurnal->id_user = $user->id;
                 $jurnal->tipe = 'debit';
                 $jurnal->nominal = str_replace('.', '', $data['subtotal']);
@@ -479,10 +471,10 @@ class OrderanController extends Controller
                 'id_pelunasan' => $id,
             ]);
 
-        $noreff = $caraBayar == '888' ? '110' : '111';
+        // $noreff = $caraBayar == '888' ? '110' : '111';
 
         $jurnal = new Jurnal;
-        $jurnal->no_reff = $noreff;
+        $jurnal->no_reff = '110';
         $jurnal->id_user = $user->id;
         $jurnal->tipe = 'debit';
         $jurnal->nominal = str_replace('.', '', $jumlahBayar);
@@ -494,7 +486,7 @@ class OrderanController extends Controller
         $jurnal2->id_user = $user->id;
         $jurnal2->tipe = 'kredit';
         $jurnal2->nominal = str_replace('.', '', $jumlahBayar);
-        $jurnal2->keterangan = 'Pelunasan dari invoice# ' . $request->input('notrx');
+        $jurnal2->keterangan = 'Pendapatan dari invoice# ' . $request->input('notrx');
         $jurnal2->save();
 
         // Cek apakah pembayaran menggunakan tunai

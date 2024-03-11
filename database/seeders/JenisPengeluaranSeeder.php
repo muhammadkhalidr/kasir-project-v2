@@ -26,6 +26,24 @@ class JenisPengeluaranSeeder extends Seeder
                 'id_akun' => '460',
                 'aktif' => 'Y',
             ],
+            [
+                'id_jenis' => '103',
+                'nama_jenis' => 'Token Listrik',
+                'id_akun' => '430',
+                'aktif' => 'Y',
+            ],
+            [
+                'id_jenis' => '104',
+                'nama_jenis' => 'Air PDAM',
+                'id_akun' => '430',
+                'aktif' => 'Y',
+            ],
+            [
+                'id_jenis' => '105',
+                'nama_jenis' => 'Ambil Modal',
+                'id_akun' => '480',
+                'aktif' => 'Y',
+            ],
         ];
 
         foreach ($jenisP as $key => $value) {

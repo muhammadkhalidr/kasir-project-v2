@@ -210,11 +210,7 @@ class PengeluaranController extends Controller
 
 
         $jurnal2 = new Jurnal;
-        if ($data['metode'] === '888') {
-            $jurnal2->no_reff = '110'; // ID Akun untuk kas
-        } else {
-            $jurnal2->no_reff = '111'; // ID Akun untuk bank
-        }
+        $jurnal2->no_reff = '110';
         $jurnal2->id_user = $user->id;
         $jurnal2->tipe = 'kredit';
         $jurnal2->nominal = str_replace('.', '', $data['subtotal']);

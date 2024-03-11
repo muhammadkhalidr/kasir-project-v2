@@ -47,7 +47,6 @@ class AkunController extends Controller
      */
     public function store(StoreAkunRequest $request)
     {
-        // $user = Auth::user();
         $data = new Akun;
 
         $data->id_akun = $request->no_reff;
@@ -55,10 +54,37 @@ class AkunController extends Controller
         $data->nama_reff = $request->akun;
         $data->keterangan = $request->ket;
         $data->aktif = $request->aktif;
+
+        // Mendapatkan nilai jenis yang dipilih dari form
+        $jenis = $request->jenis;
+
+        // Menentukan kolom berdasarkan nilai jenis yang dipilih
+        switch ($jenis) {
+            case 1:
+                $data->aktiva = 1;
+                break;
+            case 2:
+                $data->pasiva = 1;
+                break;
+            case 3:
+                $data->kewajiban = 1;
+                break;
+            case 4:
+                $data->pasiva = 1;
+                break;
+            case 5:
+                $data->beban = 1;
+                break;
+            default:
+
+                break;
+        }
+
         $data->save();
 
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan.!');
     }
+
 
     /**
      * Display the specified resource.

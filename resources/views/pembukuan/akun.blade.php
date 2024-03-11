@@ -119,6 +119,17 @@
                             <input type="text" name="ket" id="" class="form-control" required>
                         </div>
                         <div class="form-group">
+                            <label for="">Jenis</label>
+                            <select name="jenis" id="" class="form-control">
+                                <option value="1">Harta</option>
+                                <option value="2">Hutang</option>
+                                <option value="3">Modal</option>
+                                <option value="4">Pendapatan</option>
+                                <option value="5">Beban</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="">Status</label>
                             <select name="aktif" id="" class="form-control">
                                 <option value="Y">Aktif</option>

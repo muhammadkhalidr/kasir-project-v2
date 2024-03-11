@@ -126,6 +126,11 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                @if (count($piutang) == 0)
+                                    <tr>
+                                        <td>Belum ada data piutang</td>
+                                    </tr>
+                                @endif
                             </table>
                         </div>
                     </div>

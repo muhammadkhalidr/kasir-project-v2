@@ -26,6 +26,7 @@ use App\Http\Controllers\KategoriBahanController;
 use App\Http\Controllers\LabaRugiController;
 use App\Http\Controllers\LogTranasksiController;
 use App\Http\Controllers\NeracaController;
+use App\Http\Controllers\NeracaSaldoController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\ProdukController;
@@ -245,6 +246,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Laba-Rugi
         Route::resource('laba-rugi', LabaRugiController::class);
+
+        // Neraca Saldo
+        Route::resource('/neraca-saldo', NeracaSaldoController::class);
 
         // Backup Database
         Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');

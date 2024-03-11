@@ -13,7 +13,7 @@ class Akun extends Model
     protected $table = 'akuns';
 
     // kolom tabel untuk Mass Assingment
-    protected $fillable = ['no_reff', 'id_user', 'nama_reff', 'keterangan', 'aktif'];
+    protected $guarded = ['id'];
 
     // relasi 1-N dengan Jurnal
     public function jurnal()

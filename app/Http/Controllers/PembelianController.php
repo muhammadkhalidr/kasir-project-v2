@@ -375,11 +375,7 @@ class PembelianController extends Controller
         $jurnal1->save();
 
         $jurnal2 = new Jurnal;
-        if ($caraBayar === '888') {
-            $jurnal2->no_reff = '110'; // ID Akun untuk kas
-        } else {
-            $jurnal2->no_reff = '111'; // ID Akun untuk bank
-        }
+        $jurnal2->no_reff = '110'; // ID Akun untuk kas
         $jurnal2->id_user = $user->id;
         $jurnal2->tipe = 'kredit';
         $jurnal2->nominal = str_replace('.', '', $data['totalpembelian']);

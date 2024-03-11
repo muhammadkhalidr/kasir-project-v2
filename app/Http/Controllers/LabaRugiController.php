@@ -42,8 +42,24 @@ class LabaRugiController extends Controller
             $total_beban += $b->kas;
         }
 
+        // Hitung Total Biaya
+        $biayas = Akun::where('aktiva', 1)->where('id_akun', 310)->get();
+        $total_biayas = 0;
+        foreach ($biayas as $biaya) {
+            $biaya->kas = Jurnal::where('no_reff', 310)->sum('nominal');
+            $total_biayas += $biaya->kas;
+        }
+
+        // Hitung Prive
+        $prive = Akun::where('kewajiban', 1)->where('id_akun', 480)->get();
+        $total_prive = 0;
+        foreach ($prive as $p) {
+            $p->kas = Jurnal::where('no_reff', 480)->sum('nominal');
+            $total_prive += $p->kas;
+        }
+
         // Hitung Laba Bersih
-        $laba_bersih = $laba_kotor - $total_beban;
+        $laba_bersih = $laba_kotor - $total_beban - $total_biayas - $total_prive;
 
         $dataPersediaan = Jurnal::with('jenisP')->where('no_reff', 310)->get();
 
@@ -56,8 +72,11 @@ class LabaRugiController extends Controller
                 'aktiva_pendapatan' => $aktiva_pendapatan,
                 'laba_kotor' => $laba_kotor,
                 'beban' => $beban,
+                'biayas' => $biayas,
+                'prive' => $prive,
                 'dataPersediaan' => $dataPersediaan,
                 'total_beban' => $total_beban,
+                'total_biayas' => $total_biayas,
                 'laba_bersih' => $laba_bersih
             ]
         );

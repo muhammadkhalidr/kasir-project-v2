@@ -59,6 +59,31 @@
                             </thead>
                             <thead class="thead-primary">
                                 <tr>
+                                    <th>Biaya</th>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <thead class="thead">
+                                @foreach ($biayas as $biaya)
+                                    <tr>
+                                        <th>{{ $biaya->nama_reff }}</th>
+                                        <th class="text-right"></th>
+                                        <th class="text-right">{{ formatRupiah($biaya->kas, true) }}</th>
+                                    </tr>
+                                @endforeach
+                            </thead>
+                            <thead class="thead">
+                                @foreach ($prive as $p)
+                                    <tr>
+                                        <th>{{ $p->nama_reff }}</th>
+                                        <th class="text-right"></th>
+                                        <th class="text-right">{{ formatRupiah($p->kas, true) }}</th>
+                                    </tr>
+                                @endforeach
+                            </thead>
+                            <thead class="thead-primary">
+                                <tr>
                                     <th>Beban</th>
                                     <th>&nbsp;</th>
                                     <th>&nbsp;</th>

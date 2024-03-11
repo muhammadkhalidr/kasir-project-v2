@@ -27,7 +27,7 @@ class DashboardController extends Controller
             ->paginate(8);
 
         // Mengambil notrx dengan subtotal paling tertinggi
-        $piutangTerbesar = $piutang->first()->notrx;
+        $piutangTerbesar = $piutang->first()->notrx ?? 0;
 
         // Mengambil data penjualan
         $penjualanTerbesar = OmsetPenjualan::select(
@@ -162,7 +162,7 @@ class DashboardController extends Controller
             ->paginate(8);
 
         // Mengambil notrx dengan subtotal paling tertinggi
-        $piutangTerbesar = $piutang->first()->notrx;
+        $piutangTerbesar = $piutang->first()->notrx ?? 0;
 
         $pendapatanBulanan = KasMasuk::where('bank', '!=', 'kaskecil')
             ->select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(pemasukan) as total'))
