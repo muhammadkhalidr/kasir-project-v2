@@ -32,6 +32,7 @@ use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\ResetController;
+use App\Http\Controllers\RincianPendapatanController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StokMasukController;
@@ -174,7 +175,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
         // Rincian Pendapatan
-        // Belum ada
+        Route::resource('pendapatan', RincianPendapatanController::class);
 
         // Kas
         Route::get('/kas', [KasController::class, 'index']);
@@ -243,13 +244,14 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Neraca
         Route::resource('neraca', NeracaController::class);
+        Route::get('cetak-neraca', [NeracaController::class, 'cetakNeraca'])->name('cetak-neraca');
 
         // Laba-Rugi
         Route::resource('laba-rugi', LabaRugiController::class);
+        Route::get('/keuangan/cetak-laba-rugi', [LabaRugiController::class, 'cetakLabaRugi'])->name('cetak-laba-rugi');
 
         // Neraca Saldo
         Route::resource('/neraca-saldo', NeracaSaldoController::class);
-
         // Backup Database
         Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
         Route::get('/backup/download', [BackupController::class, 'download'])->name('backup.download');

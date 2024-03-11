@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Aneka Kreasi - Invoice</title>
+    <title>Aplikasi Kasir Percetakan - Invoice</title>
     <style>
         body {
             font-family: Arial, sans-serif;

@@ -23,14 +23,28 @@
                 <div class="card">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Laporan Laba Rugi</h6>
-                        <div class="input-group input-group-sm w-25">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-info" id="cetak_neraca"><i class="fa fa-file-pdf-o"></i>
-                                    Print</button>
-                            </div>
-                            <input type="text" id="tanggal" value="" class="form-control"
-                                placeholder="mm/yyyy" />
+                        <div class="card-header pb-2">
+                            <form id="datepickerForm" method="GET" action="{{ url('laba-rugi') }}">
+                                @csrf
+                                <div class="input-group ml-auto">
+                                    <div class="input-group-prepend mr-2">
+                                        <label for="datepicker" class="input-group-text">Filter</label>
+                                        <input type="month" class="form-control" id="datepicker" name="filterTgl"
+                                            value="{{ $selectedDate ?? \Carbon\Carbon::now()->toDateString() }}"
+                                            autocomplete="off" autofocus>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success ml-2">
+                                            <a href="{{ route('cetak-laba-rugi', ['filterTgl' => $selectedDate ?? \Carbon\Carbon::now()->toDateString()]) }}"
+                                                target="_blank" class="text-white">
+                                                <i class="fa fa-print"></i> Cetak Laporan
+                                            </a>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
+
                     </div>
                     <div class="card-body">
                         <table class="table align-items-center table-flush mt-5" id="labarugi">
@@ -126,3 +140,18 @@
                 Content body end
             ***********************************-->
 @include('partials.footer')
+<script>
+    $(document).ready(function() {
+        $('#datepicker').datepicker({
+            format: 'yyyy-mm',
+            startView: "months",
+            minViewMode: "months",
+            endDate: new Date()
+        });
+
+        // Otomatis submit form saat tanggal dipilih
+        $('#datepicker').on('changeDate', function() {
+            $('#datepickerForm').submit();
+        });
+    });
+</script>

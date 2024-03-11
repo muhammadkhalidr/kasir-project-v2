@@ -28,4 +28,9 @@ class KasMasuk extends Model
     {
         return $this->belongsTo(Rekening::class, 'bank', 'id');
     }
+
+    public function orderans()
+    {
+        return $this->hasMany(DetailOrderan::class, 'id');
+    }
 }
